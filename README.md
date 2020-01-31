@@ -132,7 +132,7 @@ Note: either description or description_hash will be returned
       [tokens]: <Requested Chain Tokens Number> (note: can differ from mtokens)
     }
 
-```
+```node
 const {parsePaymentRequest} = require('invoices');
 
 // Decoded details of the payment request
