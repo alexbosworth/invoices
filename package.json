@@ -7,11 +7,11 @@
     "bolt07": "1.5.0",
     "bolt09": "0.0.2",
     "bech32": "1.1.4",
-    "bitcoinjs-lib": "5.1.7",
-    "bn.js": "5.1.1",
-    "secp256k1": "4.0.0"
+    "bitcoinjs-lib": "5.1.10",
+    "bn.js": "5.1.2",
+    "secp256k1": "4.0.1"
   },
-  "description": "Interaction helper for your Lightning Network daemon",
+  "description": "Methods for working with BOLT 11 payment requests",
   "devDependencies": {
     "tap": "14.10.7"
   },
@@ -35,5 +35,5 @@
   "scripts": {
     "test": "tap test/bolt11/*.js"
   },
-  "version": "1.0.2"
+  "version": "1.0.3"
 }
