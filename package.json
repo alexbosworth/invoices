@@ -4,8 +4,8 @@
     "url": "https://github.com/alexbosworth/invoices/issues"
   },
   "dependencies": {
-    "bolt07": "1.5.0",
-    "bolt09": "0.0.2",
+    "bolt07": "1.5.1",
+    "bolt09": "0.1.0",
     "bech32": "1.1.4",
     "bitcoinjs-lib": "5.1.10",
     "bn.js": "5.1.2",
@@ -35,5 +35,5 @@
   "scripts": {
     "test": "tap test/bolt11/*.js"
   },
-  "version": "1.0.3"
+  "version": "1.1.0"
 }
