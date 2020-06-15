@@ -2,5 +2,6 @@
   "bc": "bitcoin",
   "bcrt": "regtest",
   "ltc": "litecoin",
-  "tb": "testnet"
+  "tb": "testnet",
+  "sb": "simnet"
 }
