@@ -1,6 +1,6 @@
 # Versions
 
-## 1.1.0
+## 1.1.1
 
 - Add simnet support
 
