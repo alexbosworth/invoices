@@ -223,6 +223,7 @@ const tests = [
       chain_addresses: ['tb1qvzxxvnahw6gkj9aqpptktxpt6906cn2svvhayd'],
       cltv_delta: 9,
       created_at: new Date(1533923529 * msPerSec).toISOString(),
+      description: '',
       destination: '032bb4f2cd2bf877429f1d79f91de0794e4a3b7b772febbf60fc21bb3475f7cd5e',
       expires_at: new Date((1533923529 + 172800) * msPerSec).toISOString(),
       features: [],

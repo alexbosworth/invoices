@@ -18,5 +18,5 @@ module.exports = ({description}) => {
     return {};
   }
 
-  return {words: toWords(Buffer.from(description, encoding))};
+  return {words: toWords(Buffer.from(description || String(), encoding))};
 };

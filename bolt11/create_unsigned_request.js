@@ -61,7 +61,7 @@ const {sha256} = crypto;
   }
 */
 module.exports = args => {
-  if (!args.description && !args.description_hash) {
+  if (args.description === undefined && !args.description_hash) {
     throw new Error('ExpectedPaymentDescriptionOrDescriptionHashForPayReq');
   }
 

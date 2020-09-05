@@ -50,6 +50,24 @@ const tests = [
   {
     args: {
       created_at: '2017-06-01T10:57:38.000Z',
+      description: '',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'Test creating an empty description request',
+    expected: {
+      data: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404080',
+      hash: 'f499669af812a4d642d09eb9e1d79e63f434a5e0c0eaf177ee95b5561b295d18',
+      hrp: 'lnbc',
+    },
+    verify: {
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
+  {
+    args: {
+      created_at: '2017-06-01T10:57:38.000Z',
       description: '1 cup coffee',
       expires_at: '2017-06-01T10:58:38.000Z',
       id: '0001020304050607080900010203040506070809000102030405060708090102',

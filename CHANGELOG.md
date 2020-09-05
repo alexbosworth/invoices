@@ -1,5 +1,9 @@
 # Versions
 
+## 1.1.3
+
+- `createUnsignedRequest`: Allow empty descriptions
+
 ## 1.1.2
 
 - Add simnet support

@@ -94,5 +94,9 @@ module.exports = ({request}) => {
 
   details.is_expired = details.expires_at < new Date().toISOString();
 
+  if (!details.description && !details.description_hash) {
+    details.description = String();
+  }
+
   return details;
 };
