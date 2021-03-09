@@ -1,6 +1,7 @@
-const {toWords} = require('bech32');
+const {bech32} = require('bech32');
 
 const encoding = 'hex';
+const {toWords} = bech32;
 
 /** Hex data as bech32 words
 

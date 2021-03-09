@@ -1,4 +1,4 @@
-const {decode} = require('bech32');
+const {bech32} = require('bech32');
 const {ecdsaRecover} = require('secp256k1');
 
 const decodePrefix = require('./decode_prefix');
@@ -11,6 +11,7 @@ const taggedFields = require('./tagged_fields');
 const wordsAsNumber = require('./words_as_number');
 
 const asHex = arr => Buffer.from(arr).toString('hex');
+const {decode} = bech32;
 const lnPrefix = 'ln';
 const maxRequestLength = Number.MAX_SAFE_INTEGER;
 const msPerSec = 1e3;

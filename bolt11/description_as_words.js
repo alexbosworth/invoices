@@ -1,6 +1,7 @@
-const {toWords} = require('bech32');
+const {bech32} = require('bech32');
 
 const encoding = 'utf8';
+const {toWords} = bech32;
 
 /** Description string as words
 

@@ -1,11 +1,12 @@
 const {createHash} = require('crypto');
 
+const {bech32} = require('bech32');
 const {ecdsaRecover} = require('secp256k1');
-const {encode} = require('bech32');
 
 const hexAsWords = require('./hex_as_words');
 const wordsAsBuffer = require('./words_as_buffer');
 
+const {encode} = bech32;
 const {isArray} = Array;
 const {MAX_SAFE_INTEGER} = Number;
 const padding = '0';
