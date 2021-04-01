@@ -291,17 +291,17 @@ const tests = [
 ];
 
 tests.forEach(({description, expected, request}) => {
-  return test(description, ({deepIs, end, equal}) => {
+  return test(description, ({end, equal, strictSame}) => {
     const details = parsePaymentRequest({request});
 
-    deepIs(details.chain_addresses, expected.chain_addresses, 'Parse address');
+    strictSame(details.chain_addresses, expected.chain_addresses, 'Parse address');
     equal(details.cltv_delta, expected.cltv_delta, 'Parse cltv delta');
     equal(details.created_at, expected.created_at, 'Parse created at date');
     equal(details.description, expected.description, 'Parse description');
     equal(details.description_hash, expected.description_hash, 'Desc hash');
     equal(details.destination, expected.destination, 'Parse dest pubkey');
     equal(details.expires_at, expected.expires_at, 'Parse expiration date');
-    deepIs(details.features, expected.features, 'Parse feature bits');
+    strictSame(details.features, expected.features, 'Parse feature bits');
     equal(details.id, expected.id, 'Parse payment hash');
     equal(details.is_expired, expected.is_expired, 'Check expiration status');
     equal(details.mtokens, expected.mtokens, 'Parse millitokens amount');

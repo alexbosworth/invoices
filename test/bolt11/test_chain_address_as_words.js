@@ -37,11 +37,11 @@ const tests = [
 ];
 
 tests.forEach(({args, description, error, expected}) => {
-  return test(description, ({deepIs, end, equal, throws}) => {
+  return test(description, ({end, equal, strictSame, throws}) => {
     if (!!error) {
       throws(() => chainAddressAsWords(args), new Error(error), 'Got err');
     } else {
-      deepIs(chainAddressAsWords(args), expected, 'Got expected words');
+      strictSame(chainAddressAsWords(args), expected, 'Got expected words');
     }
 
     return end();

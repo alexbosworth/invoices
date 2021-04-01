@@ -1,6 +1,6 @@
 # Versions
 
-## 1.1.5
+## 1.1.7
 
 - `createUnsignedRequest`: Allow empty descriptions
 

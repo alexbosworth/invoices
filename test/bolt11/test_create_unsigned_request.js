@@ -271,7 +271,7 @@ const tests = [
 ];
 
 tests.forEach(({args, description, expected, verify}) => {
-  return test(description, ({deepIs, end, equal}) => {
+  return test(description, ({end, equal, strictSame}) => {
     const {hash, hrp, tags} = createUnsignedRequest(args);
 
     const data = wordsAsBuffer({words: tags}).toString('hex');
@@ -291,7 +291,7 @@ tests.forEach(({args, description, expected, verify}) => {
 
     const parsed = parsePaymentRequest({request});
 
-    deepIs(parsed.chain_addresses, args.chain_addresses, 'Expected fallbacks');
+    strictSame(parsed.chain_addresses, args.chain_addresses, 'Expected fallbacks');
     equal(parsed.cltv_delta, args.cltv_delta || 9, 'Request cltv is expected');
     equal(parsed.created_at, args.created_at, 'Request create_at is expected');
     equal(parsed.description, args.description, 'Req description expected');
@@ -299,7 +299,7 @@ tests.forEach(({args, description, expected, verify}) => {
     equal(parsed.destination, verify.destination, 'Destination key expected');
 
     if (!!args.features) {
-      deepIs(parsed.features, args.features, 'Got expected feature bits');
+      strictSame(parsed.features, args.features, 'Got expected feature bits');
     }
 
     if (!!args.mtokens) {
@@ -311,7 +311,7 @@ tests.forEach(({args, description, expected, verify}) => {
     }
 
     if (!!args.routes) {
-      deepIs(parsed.routes, args.routes, 'Payment request routes as expected');
+      strictSame(parsed.routes, args.routes, 'Payment request routes as expected');
     }
 
     if (!!args.tokens) {
