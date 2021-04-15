@@ -1,5 +1,10 @@
 # Versions
 
+## 1.2.0
+
+- `byteDecodeRequest`: Add method to derive a payment request from request bytes
+- `byteEncodeRequest`: Add method to derive bytes from a payment request
+
 ## 1.1.7
 
 - `createUnsignedRequest`: Allow empty descriptions

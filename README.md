@@ -5,6 +5,66 @@ as encoding unsigned requests and signing payment requests.
 
 ## Methods
 
+### byteDecodeRequest
+
+Derive a payment request from request data.
+
+    {
+      encoded: <Payment Request Details Hex String>
+      mtokens: <Millitokens Number String>
+      network: <Network Name String>
+    }
+
+    @throws
+    <Error>
+
+    @returns
+    {
+      request: <BOLT 11 Encoded Payment Request String>
+    }
+
+Example:
+
+```node
+const {byteDecodeRequest} = require('invoices');
+
+// Get a BOLT 11 payment request for this invoice data
+const {request} = byteDecodeRequest({
+  encoded: paymentRequestDetailsHexString,
+  mtokens: '0',
+  network: 'bitcoin',
+});
+```
+
+### byteEncodeRequest
+
+Derive bytes for payment request details
+
+    {
+      request: <BOLT 11 Encoded Payment Request String>
+    }
+
+    @throws
+    <Error>
+
+    @returns
+    {
+      encoded: <Payment Request Details Hex String>
+      mtokens: <Millitokens Number String>
+      network: <Network Name String>
+    }
+
+Example:
+
+```node
+const {byteEncodeRequest} = require('invoices');
+
+// Get the bytes for a payment request
+const {encoded, mtokens, network} = byteEncodeRequest({
+  request: bolt11EncodedPaymentRequestString,
+});
+```
+
 ### createSignedRequest
 
 Assemble a signed payment request

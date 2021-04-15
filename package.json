@@ -13,7 +13,7 @@
   },
   "description": "Methods for working with BOLT 11 payment requests",
   "devDependencies": {
-    "tap": "15.0.1"
+    "tap": "15.0.2"
   },
   "engines": {
     "node": ">=10.4.0"
@@ -35,5 +35,5 @@
   "scripts": {
     "test": "tap --branches=1 --functions=1 --lines=1 --statements=1 test/bolt11/*.js"
   },
-  "version": "1.1.7"
+  "version": "1.2.0"
 }
