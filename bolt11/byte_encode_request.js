@@ -1,14 +1,13 @@
 const {bech32} = require('bech32');
 
 const decodePrefix = require('./decode_prefix');
-const hrpAsTokens = require('./hrp_as_tokens');
+const hrpAsMtokens = require('./hrp_as_mtokens');
 const wordsAsBuffer = require('./words_as_buffer');
 
 const bufferAsHex = buffer => buffer.toString('hex');
 const {decode} = bech32;
 const lnPrefix = 'ln';
 const maxRequestLength = Number.MAX_SAFE_INTEGER;
-const trim = true;
 
 /** Derive bytes for payment request details
 
@@ -24,6 +23,7 @@ const trim = true;
     encoded: <Payment Request Details Hex String>
     mtokens: <Millitokens Number String>
     network: <Network Name String>
+    words: <Word Length Number>
   }
 */
 module.exports = ({request}) => {
@@ -39,9 +39,11 @@ module.exports = ({request}) => {
 
   const {amount, network, units} = decodePrefix({prefix});
 
-  const {mtokens} = hrpAsTokens({amount, units});
+  // Decode the request amount millitokens requested amount
+  const {mtokens} = hrpAsMtokens({amount, units});
 
-  const encoded = bufferAsHex(wordsAsBuffer({trim, words}));
+  // Encode the words as binary data in a  hex string
+  const encoded = bufferAsHex(wordsAsBuffer({words}));
 
-  return {encoded, mtokens, network};
+  return {encoded, network, mtokens, words: words.length};
 };

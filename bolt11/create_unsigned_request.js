@@ -24,6 +24,7 @@ const mtokPerTok = 1e3;
 const {now} = Date;
 const {parse} = Date;
 const {sha256} = crypto;
+const tokensAsMtokens = n => !n ? '0' : (BigInt(n) * BigInt(1e3)).toString();
 
 /** Create an unsigned payment request
 
@@ -90,7 +91,7 @@ module.exports = args => {
   }
 
   const createdAtWords = numberAsWords({number: floor(createdAt)}).words;
-  const mtokens = args.mtokens || args.tokens * mtokPerTok;
+  const mtokens = args.mtokens || tokensAsMtokens(args.tokens);
 
   const hrp = `ln${currencyPrefix.code}${mtokensAsHrp({mtokens}).hrp}`;
 

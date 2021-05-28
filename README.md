@@ -11,8 +11,9 @@ Derive a payment request from request data.
 
     {
       encoded: <Payment Request Details Hex String>
-      mtokens: <Millitokens Number String>
+      [mtokens]: <Millitokens Number String>
       network: <Network Name String>
+      words: <Words Count Number>
     }
 
     @throws
@@ -52,6 +53,7 @@ Derive bytes for payment request details
       encoded: <Payment Request Details Hex String>
       mtokens: <Millitokens Number String>
       network: <Network Name String>
+      words: <Word Length Number>
     }
 
 Example:

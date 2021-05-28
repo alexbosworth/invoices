@@ -4,6 +4,21 @@ const mtokensAsHrp = require('./../../bolt11/mtokens_as_hrp');
 
 const tests = [
   {
+    args: {mtokens: '1'},
+    description: 'The smallest possible',
+    expected: '10p',
+  },
+  {
+    args: {mtokens: '10'},
+    description: 'Test smaller than a nano',
+    expected: '100p',
+  },
+  {
+    args: {mtokens: '100'},
+    description: 'Test smaller than a token',
+    expected: '1n',
+  },
+  {
     args: {mtokens: '1000'}, description: 'Test nano tokens', expected: '10n',
   },
   {
@@ -11,9 +26,6 @@ const tests = [
   },
   {
     args: {mtokens: '100000'}, description: 'Test micro', expected: '1u',
-  },
-  {
-    args: {mtokens: '1', description: 'Test pico', expected: '10p'},
   },
   {
     args: {mtokens: '100000000'}, description: 'Test milli', expected: '1m',

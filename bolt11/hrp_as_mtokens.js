@@ -1,14 +1,11 @@
 const BN = require('bn.js');
 
-const dividedRemainder = require('./divided_remainder');
 const divisors = require('./conf/divisors');
 const parseHumanReadableValue = require('./parse_human_readable_value');
 
 const decBase = 10;
-const max = 3; // Maximum total divisibility
-const tokenDivisibility = new BN(1e8, 10);
+const mtokenDivisibility = new BN(1e11, 10);
 const valuePattern = /^\d+$/;
-const zeros = '000';
 
 /** Given a value string, return the number of millitokens
 
@@ -22,7 +19,7 @@ const zeros = '000';
 
   @returns
   {
-    mtokens: <Complete Channel Tokens Big Number String>
+    mtokens: <Millitokens String>
   }
 */
 module.exports = ({amount, units}) => {
@@ -34,27 +31,20 @@ module.exports = ({amount, units}) => {
   const {divisor, value} = parseHumanReadableValue({amount, units});
 
   // Exit with error when the value is not numeric
-  if (!value.match(valuePattern)) {
-    throw new Error('InvalidAmountFoundWhenParsingHrpAsTokens');
+  if (!valuePattern.test(value)) {
+    throw new Error('ExpectedValidNumericAmountToParseHrpAsMtokens');
   }
 
+  // Convert the value to a big number to do the big divisions
   const val = new BN(value, decBase);
 
   // Exit early when there is no divisor and we alraedy have the full value
   if (!divisor) {
-    return {mtokens: val.mul(tokenDivisibility).toString()};
+    return {mtokens: val.mul(mtokenDivisibility).toString()};
   }
 
   // HRPs can encode values smaller than tokens on the chain can represent
   const div = new BN(divisors[divisor], decBase);
 
-  const divmod = val.mul(tokenDivisibility).divmod(div);
-
-  const {mod} = divmod;
-
-  const isMillitokens = mod.toString() !== Number().toString();
-
-  const decimals = !isMillitokens ? zeros : dividedRemainder({div, mod, max});
-
-  return {mtokens: `${divmod.div.toString()}${decimals}`};
+  return {mtokens: val.mul(mtokenDivisibility).div(div).toString()};
 };

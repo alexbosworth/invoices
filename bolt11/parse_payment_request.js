@@ -3,7 +3,7 @@ const {ecdsaRecover} = require('secp256k1');
 
 const decodePrefix = require('./decode_prefix');
 const fieldAsDetails = require('./field_as_details');
-const hrpAsTokens = require('./hrp_as_tokens');
+const hrpAsMtokens = require('./hrp_as_mtokens');
 const requestDetails = require('./request_details');
 const signatureFromWords = require('./signature_from_words');
 const signatureHashFromWords = require('./signature_hash_from_words');
@@ -89,7 +89,7 @@ module.exports = ({request}) => {
       code: n.code,
       words: n.words,
     })),
-    mtokens: hrpAsTokens({amount, units}).mtokens,
+    mtokens: hrpAsMtokens({amount, units}).mtokens,
     timestamp: wordsAsNumber({words: timestampWords}) * msPerSec,
   });
 

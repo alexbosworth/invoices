@@ -1,5 +1,12 @@
 # Versions
 
+## 1.2.1
+
+Fix issues with millitoken value invoices and add additional test coverage for sub-token requests.
+
+- `byteDecodeRequest`: Fix decoding issue, add required word count argument
+- `byteEncodeRequest`: Return word count with encoding
+
 ## 1.2.0
 
 - `byteDecodeRequest`: Add method to derive a payment request from request bytes

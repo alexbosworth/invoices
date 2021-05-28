@@ -4,9 +4,10 @@ const {byteDecodeRequest} = require('./../../');
 
 const makeArgs = overrides => {
   const args = {
-    encoded: '0b675c0ac10d388683237d00319b98b8c56c7325aaee5728c2ec02506fcd790d8406bcbd6d3a81a1ea932b0b21d1023b637b130b61021b93cb83a37b1bab93932b731bc902932b3bab630ba34b7b73001120dfa2ed0f3bee3252b6132a943032fe0158340b6784a5a9b2b018ec3ed2ee3fa8a0b8102e27747c432917543ea7476b2d43a33d6a55198d0f3fc4a89b2e5c8bd0',
+    encoded: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404081a1fa83632b0b9b29031b7b739b4b232b91039bab83837b93a34b733903a3434b990383937b532b1ba038ec6891345e204145be8a3a99de38e98a39d6a569434e1845c8af7205afcfcc7f425fcd1463e93c32881ead0d6e356d467ec8c02553f9aab15e5738b11f127f00',
     mtokens: '150000',
     network: 'testnet',
+    words: 232,
   };
 
   Object.keys(overrides).forEach(k => args[k] = overrides[k]);
@@ -19,11 +20,6 @@ const tests = [
     args: makeArgs({encoded: undefined}),
     description: 'Encoded data is required',
     error: 'ExpectedHexEncodedPaymentRequestDataToDecodeRequest',
-  },
-  {
-    args: makeArgs({mtokens: undefined}),
-    description: 'Millitokens is required',
-    error: 'ExpectedAmountToDecodeByteEncodedRequest',
   },
   {
     args: makeArgs({network: undefined}),
@@ -39,7 +35,7 @@ const tests = [
     args: makeArgs({}),
     description: 'Byte encode a payment request',
     expected: {
-      request: 'lntb1500n1pdn4czkpp5ugdqer05qrrxuchrzkcue94th9w2xzasp9qm7d0yxcgp4uh4kn4qdpa2fjkzep6yprkcmmzv9kzqsmj09c8gmmrw4e8yetwvdujq5n9va6kcct5d9hkucqzysdlghdpua7uvjjkcfj49psxtlqzkp5pdncffdfk2cp3mp76thrl29qhqgzufm503pjj96586n5w6edgw3n66j4rxxs707y4zdjuhyt6quatqte',
+      request: 'lntb1500n1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaq8rkx3yf5tcsyz3d73gafnh3cax9rn449d9p5uxz9ezhhypd0elx87sjle52x86fux2ypatgddc6k63n7erqz25le42c4u4ecky03ylcqz03uuk',
     },
   },
 ];

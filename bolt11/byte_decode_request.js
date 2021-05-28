@@ -12,8 +12,9 @@ const limit = Number.MAX_SAFE_INTEGER;
 
   {
     encoded: <Payment Request Details Hex String>
-    mtokens: <Millitokens Number String>
+    [mtokens]: <Millitokens Number String>
     network: <Network Name String>
+    words: <Words Count Number>
   }
 
   @throws
@@ -24,19 +25,20 @@ const limit = Number.MAX_SAFE_INTEGER;
     request: <BOLT 11 Encoded Payment Request String>
   }
 */
-module.exports = ({encoded, mtokens, network}) => {
+module.exports = ({encoded, mtokens, network, words}) => {
   if (!isHex(encoded)) {
     throw new Error('ExpectedHexEncodedPaymentRequestDataToDecodeRequest');
-  }
-
-  if (!mtokens) {
-    throw new Error('ExpectedAmountToDecodeByteEncodedRequest');
   }
 
   if (!network) {
     throw new Error('ExpectedNetworkToDecodeByteEncodedRequest');
   }
 
+  if (!words) {
+    throw new Error('ExpectedWordsCountToDecodeByteEncodedRequest');
+  }
+
+  // Lookup the BOLT 11 network prefix for the request
   const currencyPrefix = keys(currencyCodes)
     .map(code => ({code, network: currencyCodes[code]}))
     .find((n) => n.network === network);
@@ -45,8 +47,11 @@ module.exports = ({encoded, mtokens, network}) => {
     throw new Error('ExpectedKnownNetworkToDecodeByteEncodedRequest');
   }
 
+  // Before the encoded data is a network code and the amount
   const prefix = `ln${currencyPrefix.code}${mtokensAsHrp({mtokens}).hrp}`;
-  const words = bech32.toWords(hexAsBuffer(encoded));
 
-  return {request: bech32.encode(prefix, words, limit)};
+  // The data of the request is encoded in 5 bit words ie bech32
+  const fiveBit = bech32.toWords(hexAsBuffer(encoded)).slice(Number(), words);
+
+  return {request: bech32.encode(prefix, fiveBit, limit)};
 };
