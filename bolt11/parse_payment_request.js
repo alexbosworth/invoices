@@ -45,7 +45,7 @@ const timestampWordLength = 7;
     }]
     id: <Payment Request Hash String>
     is_expired: <Invoice is Expired Bool>
-    [mtokens]: <Requested Milli-Tokens Value String> (can exceed Number limit)
+    mtokens: <Requested Milli-Tokens Value String> (can exceed Number limit)
     network: <Network Name String>
     [payment]: <Payment Identifier Hex Encoded String>
     [routes]: [[{
@@ -55,8 +55,8 @@ const timestampWordLength = 7;
       [fee_rate]: <Fee Rate Millitokens Per Million Number>
       public_key: <Forward Edge Public Key Hex String>
     }]]
-    [safe_tokens]: <Requested Chain Tokens Rounded Up Number>
-    [tokens]: <Requested Chain Tokens Number> (note: can differ from mtokens)
+    safe_tokens: <Requested Chain Tokens Rounded Up Number>
+    tokens: <Requested Chain Tokens Number> (note: can differ from mtokens)
   }
 */
 module.exports = ({request}) => {

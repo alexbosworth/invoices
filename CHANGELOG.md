@@ -1,5 +1,11 @@
 # Versions
 
+## 2.0.0
+
+### Breaking Change
+
+- `parsePaymentRequest`: Change undefined to zero for `mtokens`, `safe_tokens`, `tokens`
+
 ## 1.2.1
 
 Fix issues with millitoken value invoices and add additional test coverage for sub-token requests.

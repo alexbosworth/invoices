@@ -128,9 +128,9 @@ module.exports = ({destination, details, mtokens, network, timestamp}) => {
     created_at: asDateString(timestamp),
     expires_at: asDateString((defaultExpireSeconds * msPerSec) + timestamp),
     features: [],
-    mtokens: mtokens || undefined,
+    mtokens: mtokens || Number().toString(),
     routes: !!details.find(n => !!n.path) ? [] : undefined,
-    safe_tokens: !!mtokens ? amounts.safe : undefined,
-    tokens: !!mtokens ? amounts.tokens : undefined,
+    safe_tokens: !!mtokens ? amounts.safe : Number(),
+    tokens: !!mtokens ? amounts.tokens : Number(),
   });
 };
