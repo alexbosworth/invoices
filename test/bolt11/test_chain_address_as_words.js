@@ -1,4 +1,4 @@
-const {test} = require('tap');
+const {test} = require('@alexbosworth/tap');
 
 const chainAddressAsWords = require('./../../bolt11/chain_address_as_words');
 

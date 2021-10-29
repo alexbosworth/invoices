@@ -1,4 +1,4 @@
-const {test} = require('tap');
+const {test} = require('@alexbosworth/tap');
 
 const hrpAsMtokens = require('./../../bolt11/hrp_as_mtokens');
 

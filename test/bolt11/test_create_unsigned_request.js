@@ -1,6 +1,6 @@
 const sign = require('secp256k1').ecdsaSign;
 
-const {test} = require('tap');
+const {test} = require('@alexbosworth/tap');
 
 const {createSignedRequest} = require('./../../');
 const {createUnsignedRequest} = require('./../../');

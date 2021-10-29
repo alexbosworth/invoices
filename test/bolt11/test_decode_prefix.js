@@ -1,4 +1,4 @@
-const {test} = require('tap');
+const {test} = require('@alexbosworth/tap');
 
 const decodePrefix = require('./../../bolt11/decode_prefix');
 
