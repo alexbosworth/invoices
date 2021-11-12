@@ -7,7 +7,7 @@
     "bolt07": "1.7.4",
     "bolt09": "0.2.0",
     "bech32": "2.0.0",
-    "bitcoinjs-lib": "5.2.0",
+    "bitcoinjs-lib": "6.0.0",
     "bn.js": "5.2.0",
     "secp256k1": "4.0.2"
   },
@@ -35,5 +35,5 @@
   "scripts": {
     "test": "tap --branches=1 --functions=1 --lines=1 --statements=1 test/bolt11/*.js"
   },
-  "version": "2.0.1"
+  "version": "2.0.2"
 }
