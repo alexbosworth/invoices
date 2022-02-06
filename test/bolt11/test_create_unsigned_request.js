@@ -1,4 +1,4 @@
-const sign = require('secp256k1').ecdsaSign;
+const {sign} = require('tiny-secp256k1');
 
 const {test} = require('@alexbosworth/tap');
 
@@ -280,7 +280,7 @@ tests.forEach(({args, description, expected, verify}) => {
     equal(hash, expected.hash, 'Hash calculated for payment request');
     equal(hrp, expected.hrp, 'Hrp calculated for payment request');
 
-    const {signature} = sign(bufFromHex(hash), bufFromHex(verify.private_key));
+    const signature = sign(bufFromHex(hash), bufFromHex(verify.private_key));
 
     const {request} = createSignedRequest({
       hrp,

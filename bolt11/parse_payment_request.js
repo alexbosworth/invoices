@@ -1,5 +1,5 @@
 const {bech32} = require('bech32');
-const {ecdsaRecover} = require('secp256k1');
+const {recover} = require('tiny-secp256k1');
 
 const decodePrefix = require('./decode_prefix');
 const fieldAsDetails = require('./field_as_details');
@@ -83,7 +83,7 @@ module.exports = ({request}) => {
 
   const details = requestDetails({
     network,
-    destination: asHex(ecdsaRecover(signature, recovery, hash, true)),
+    destination: asHex(recover(hash, signature, recovery, true)),
     details: fields.map(n => fieldAsDetails({
       network,
       code: n.code,

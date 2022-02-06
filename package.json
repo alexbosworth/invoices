@@ -9,14 +9,14 @@
     "bech32": "2.0.0",
     "bitcoinjs-lib": "6.0.1",
     "bn.js": "5.2.0",
-    "secp256k1": "4.0.3"
+    "tiny-secp256k1": "2.2.0"
   },
   "description": "Methods for working with BOLT 11 payment requests",
   "devDependencies": {
     "@alexbosworth/tap": "15.0.10"
   },
   "engines": {
-    "node": ">=10.4.0"
+    "node": ">=12.20.0"
   },
   "keywords": [
     "bolt11",
@@ -35,5 +35,5 @@
   "scripts": {
     "test": "tap --branches=1 --functions=1 --lines=1 --statements=1 test/bolt11/*.js"
   },
-  "version": "2.0.3"
+  "version": "2.0.4"
 }
