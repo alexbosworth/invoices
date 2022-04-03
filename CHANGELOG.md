@@ -1,6 +1,6 @@
 # Versions
 
-## 2.0.4
+## 2.0.5
 
 ### Breaking Change
 
