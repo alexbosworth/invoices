@@ -1,5 +1,9 @@
 # Versions
 
+## 2.0.6
+
+- `createUnsignedRequest`: Include specified pubkey in unsigned request
+
 ## 2.0.5
 
 ### Breaking Change
