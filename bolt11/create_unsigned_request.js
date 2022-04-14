@@ -116,11 +116,6 @@ module.exports = args => {
     case 'destination_public_key':
       return {};
 
-      return {
-        field,
-        words: hexAsWords({hex: args.destination}).words,
-      };
-
     case 'expiry':
       if (!args.expires_at) {
         return {};
