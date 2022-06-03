@@ -4,11 +4,11 @@
     "url": "https://github.com/alexbosworth/invoices/issues"
   },
   "dependencies": {
-    "bolt07": "1.8.1",
+    "bolt07": "1.8.2",
     "bolt09": "0.2.3",
     "bech32": "2.0.0",
     "bitcoinjs-lib": "6.0.1",
-    "bn.js": "5.2.0",
+    "bn.js": "5.2.1",
     "tiny-secp256k1": "2.2.1"
   },
   "description": "Methods for working with BOLT 11 payment requests",
@@ -35,5 +35,5 @@
   "scripts": {
     "test": "tap --branches=1 --functions=1 --lines=1 --statements=1 test/bolt11/*.js"
   },
-  "version": "2.0.6"
+  "version": "2.0.7"
 }

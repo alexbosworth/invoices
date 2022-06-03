@@ -1,6 +1,6 @@
 # Versions
 
-## 2.0.6
+## 2.0.7
 
 - `createUnsignedRequest`: Include specified pubkey in unsigned request
 
