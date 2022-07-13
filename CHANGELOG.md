@@ -1,5 +1,9 @@
 # Versions
 
+## 2.1.0
+
+- Add support for the signet currency code
+
 ## 2.0.7
 
 - `createUnsignedRequest`: Include specified pubkey in unsigned request
