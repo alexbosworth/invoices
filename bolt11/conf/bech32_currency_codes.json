@@ -3,5 +3,6 @@
   "bcrt": "regtest",
   "ltc": "litecoin",
   "tb": "testnet",
+  "tbs": "signet",
   "sb": "simnet"
 }
