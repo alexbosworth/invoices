@@ -48,5 +48,10 @@
     "label": "min_final_cltv_expiry",
     "name": "c",
     "type": "number"
+  },
+  "27": {
+    "label": "metadata",
+    "name": "m",
+    "type": "words"
   }
 }

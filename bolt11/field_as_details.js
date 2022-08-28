@@ -6,6 +6,7 @@ const wordsAsChainAddress = require('./words_as_chain_address');
 const wordsAsHopHints = require('./words_as_hop_hints');
 const wordsAsNumber = require('./words_as_number');
 
+const bufferAsHex = buffer => buffer.toString('hex');
 const descriptionHashByteLength = 32;
 const paymentHashByteLength = 32;
 const trim = true;
@@ -96,6 +97,13 @@ module.exports = ({code, network, words}) => {
 
   case feature.feature_bits:
     return {features: featureFlagsFromWords({words}).features};
+
+  case feature.metadata:
+    try {
+      return {metadata: bufferAsHex(wordsAsBuffer({trim, words}))};
+    } catch (err) {
+      throw new Error('FailedToParsePaymentContextualMetadata');
+    }
 
   case feature.min_final_cltv_expiry:
     return {cltv_delta: wordsAsNumber({words})};

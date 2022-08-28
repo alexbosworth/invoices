@@ -51,6 +51,7 @@ const msPerSec = 1e3;
       type: <Feature Type String>
     }]
     id: <Payment Request Hash String>
+    [metadata]: <Payment Metadata Hex String>
     [mtokens]: <Requested Milli-Tokens Value String> (can exceed Number limit)
     network: <Network Name String>
     [payment]: <Payment Identifier Hex Encoded String>
@@ -95,6 +96,10 @@ module.exports = ({destination, details, mtokens, network, timestamp}) => {
 
     if (!!n.id) {
       sum.id = n.id;
+    }
+
+    if (!!n.metadata) {
+      sum.metadata = n.metadata;
     }
 
     if (!!n.payment) {

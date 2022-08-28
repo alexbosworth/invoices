@@ -288,6 +288,41 @@ const tests = [
     },
     request: 'lnbcrt1500n1pwldwwepp5wsnt5psyc0uxstrsz66yvulct3dank305mqsszqseaf6uvsvnp3sdpa2fjkzep6yprkcmmzv9kzqsmj09c8gmmrw4e8yetwvdujq5n9va6kcct5d9hkucqzrr9qzsqsp55jams2za3a9hgztc39tz6xsrpxrerfgrkdeqsdt93hazwlr9k78q03hl88h8fsu0pyz2ex4fsz62ycm48s55gqc9kjxahlnp6jj0rjq5ssyp2xr4qmsyec3szqphngxmkm65j8ttga2ulg3xzwmq5ry5xvqpet0rgz',
   },
+  {
+    description: 'Metadata blob request',
+    expected: {
+      cltv_delta: 9,
+      created_at: '2017-06-01T10:57:38.000Z',
+      description: 'payment metadata inside',
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      expires_at: '2017-06-01T11:57:38.000Z',
+      features: [
+        {
+          bit: 14,
+          is_required: true,
+          type: 'payment_identifier',
+        },
+        {
+          bit: 48,
+          is_required: true,
+          type: 'pay_includes_metadata',
+        },
+        {
+          bit: 8,
+          is_required: true,
+          type: 'tlv_onion',
+        },
+      ],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      is_expired: true,
+      metadata: '01fafaf0',
+      mtokens: '1000000000',
+      network: 'bitcoin',
+      payment: '1111111111111111111111111111111111111111111111111111111111111111',
+      tokens: 1000000,
+    },
+    request: 'lnbc10m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdp9wpshjmt9de6zqmt9w3skgct5vysxjmnnd9jx2mq8q8a04uqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9q2gqqqqqqsgq7hf8he7ecf7n4ffphs6awl9t6676rrclv9ckg3d3ncn7fct63p6s365duk5wrk202cfy3aj5xnnp5gs3vrdvruverwwq7yzhkf5a3xqpd05wjc',
+  },
 ];
 
 tests.forEach(({description, expected, request}) => {
@@ -304,6 +339,7 @@ tests.forEach(({description, expected, request}) => {
     strictSame(details.features, expected.features, 'Parse feature bits');
     equal(details.id, expected.id, 'Parse payment hash');
     equal(details.is_expired, expected.is_expired, 'Check expiration status');
+    equal(details.metadata, expected.metadata, 'Parse metadata blob');
     equal(details.mtokens, expected.mtokens, 'Parse millitokens amount');
     equal(details.network, expected.network, 'Parse network');
     equal(details.payment, expected.payment, 'Parse payment identifier');

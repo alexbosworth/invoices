@@ -151,6 +151,16 @@ module.exports = args => {
         words: chainAddressAsWords({address, network: args.network}).words,
       }));
 
+    case 'metadata':
+      if (!args.metadata) {
+        return {};
+      }
+
+      return {
+        field,
+        words: hexAsWords({hex: args.metadata}),
+      };
+
     case 'min_final_cltv_expiry':
       if (!args.cltv_delta) {
         return {};

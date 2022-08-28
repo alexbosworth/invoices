@@ -45,6 +45,7 @@ const timestampWordLength = 7;
     }]
     id: <Payment Request Hash String>
     is_expired: <Invoice is Expired Bool>
+    [metadata]: <Payment Metadata Hex String>
     mtokens: <Requested Milli-Tokens Value String> (can exceed Number limit)
     network: <Network Name String>
     [payment]: <Payment Identifier Hex Encoded String>
