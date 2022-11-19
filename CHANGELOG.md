@@ -1,5 +1,9 @@
 # Versions
 
+## 2.1.1
+
+- `parsePaymentRequest`: Change default CLTV delta from 9 to 18
+
 ## 2.1.0
 
 - Add support for the signet currency code

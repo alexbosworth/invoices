@@ -1,7 +1,7 @@
 const {safeTokens} = require('./../bolt00');
 
 const asDateString = ms => new Date(ms).toISOString();
-const defaultCltvDelta = 9;
+const defaultCltvDelta = 18;
 const defaultExpireSeconds = 3600;
 const defaultMtokens = '0';
 const msPerSec = 1e3;

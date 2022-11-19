@@ -42,7 +42,7 @@ const tests = [
   {
     description: 'Please make a donation of any amount using payment_hash',
     expected: {
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * msPerSec).toISOString(),
       description: 'Please consider supporting this project',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -59,7 +59,7 @@ const tests = [
   {
     description: 'Please send $3 for a cup of coffee to the same peer, within 1 minute',
     expected: {
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * msPerSec).toISOString(),
       description: '1 cup coffee',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -76,7 +76,7 @@ const tests = [
   {
     description: 'Please send 0.0025 BTC for a cup of nonsense (ナンセンス 1杯) to the same peer, within 1 minute',
     expected: {
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * msPerSec).toISOString(),
       description: 'ナンセンス 1杯',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -93,7 +93,7 @@ const tests = [
   {
     description: 'Now send $24 for an entire list of things (hashed)',
     expected: {
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * msPerSec).toISOString(),
       description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -111,7 +111,7 @@ const tests = [
     description: 'On mainnet, with fallback address 1RustyRX2oai4EYYDpQGWvEL62BBGqN9T with extra routing info',
     expected: {
       chain_addresses: ['1RustyRX2oai4EYYDpQGWvEL62BBGqN9T'],
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * msPerSec).toISOString(),
       description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -150,7 +150,7 @@ const tests = [
     description: 'On mainnet, with fallback (P2SH) address 3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX',
     expected: {
       chain_addresses: ['3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX'],
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * msPerSec).toISOString(),
       description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -168,7 +168,7 @@ const tests = [
     description: 'On mainnet, with fallback (P2WPKH) address bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
     expected: {
       chain_addresses: ['bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4'],
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * msPerSec).toISOString(),
       description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -186,7 +186,7 @@ const tests = [
     description: 'On mainnet, with fallback (P2WSH) address bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3',
     expected: {
       chain_addresses: ['bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3'],
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * msPerSec).toISOString(),
       description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -221,7 +221,7 @@ const tests = [
     description: 'Partial tokens',
     expected: {
       chain_addresses: ['tb1qvzxxvnahw6gkj9aqpptktxpt6906cn2svvhayd'],
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1533923529 * msPerSec).toISOString(),
       description: '',
       destination: '032bb4f2cd2bf877429f1d79f91de0794e4a3b7b772febbf60fc21bb3475f7cd5e',
@@ -250,7 +250,7 @@ const tests = [
   {
     description: 'Features and payment identifier',
     expected: {
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: new Date(1496314658 * 1e3).toISOString(),
       description: 'coffee beans',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
@@ -291,7 +291,7 @@ const tests = [
   {
     description: 'Metadata blob request',
     expected: {
-      cltv_delta: 9,
+      cltv_delta: 18,
       created_at: '2017-06-01T10:57:38.000Z',
       description: 'payment metadata inside',
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',

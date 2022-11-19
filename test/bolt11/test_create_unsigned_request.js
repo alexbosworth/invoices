@@ -292,7 +292,7 @@ tests.forEach(({args, description, expected, verify}) => {
     const parsed = parsePaymentRequest({request});
 
     strictSame(parsed.chain_addresses, args.chain_addresses, 'Expected fallbacks');
-    equal(parsed.cltv_delta, args.cltv_delta || 9, 'Request cltv is expected');
+    equal(parsed.cltv_delta, args.cltv_delta || 18, 'Request cltv expected');
     equal(parsed.created_at, args.created_at, 'Request create_at is expected');
     equal(parsed.description, args.description, 'Req description expected');
     equal(parsed.description_hash, args.description_hash, 'Got Desc hash');
