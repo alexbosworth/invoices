@@ -15,7 +15,7 @@ const {toWords} = bech32;
   }
 */
 module.exports = ({description}) => {
-  if (!description) {
+  if (description === undefined) {
     return {};
   }
 

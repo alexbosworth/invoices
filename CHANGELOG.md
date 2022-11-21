@@ -1,5 +1,9 @@
 # Versions
 
+## 2.1.2
+
+- `createUnsignedRequest`: Fix support for empty description requests
+
 ## 2.1.1
 
 - `parsePaymentRequest`: Change default CLTV delta from 9 to 18

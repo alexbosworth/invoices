@@ -56,8 +56,8 @@ const tests = [
     },
     description: 'Test creating an empty description request',
     expected: {
-      data: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404080',
-      hash: 'f499669af812a4d642d09eb9e1d79e63f434a5e0c0eaf177ee95b5561b295d18',
+      data: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404081a000',
+      hash: 'a7c24a7ac6369ea6b25ca3534cba0e5971d7b3ac93a2cb74e620b6eac52be9d9',
       hrp: 'lnbc',
     },
     verify: {
