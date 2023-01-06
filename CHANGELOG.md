@@ -1,6 +1,6 @@
 # Versions
 
-## 2.2.2
+## 2.2.3
 
 - `createUnsignedRequest`: Fix support for empty description requests
 
