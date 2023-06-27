@@ -1,6 +1,9 @@
 const {sign} = require('tiny-secp256k1');
 
-const {test} = require('@alexbosworth/tap');
+const {equal} = require('node:assert').strict;
+const strictSame = require('node:assert').strict.deepStrictEqual;
+const test = require('node:test');
+const {throws} = require('node:assert').strict;
 
 const {createSignedRequest} = require('./../../');
 const {createUnsignedRequest} = require('./../../');
@@ -271,7 +274,7 @@ const tests = [
 ];
 
 tests.forEach(({args, description, expected, verify}) => {
-  return test(description, ({end, equal, strictSame}) => {
+  return test(description, (t, end) => {
     const {hash, hrp, tags} = createUnsignedRequest(args);
 
     const data = wordsAsBuffer({words: tags}).toString('hex');
@@ -291,7 +294,7 @@ tests.forEach(({args, description, expected, verify}) => {
 
     const parsed = parsePaymentRequest({request});
 
-    strictSame(parsed.chain_addresses, args.chain_addresses, 'Expected fallbacks');
+    strictSame(parsed.chain_addresses, args.chain_addresses, 'Fallbacks');
     equal(parsed.cltv_delta, args.cltv_delta || 18, 'Request cltv expected');
     equal(parsed.created_at, args.created_at, 'Request create_at is expected');
     equal(parsed.description, args.description, 'Req description expected');
@@ -311,7 +314,7 @@ tests.forEach(({args, description, expected, verify}) => {
     }
 
     if (!!args.routes) {
-      strictSame(parsed.routes, args.routes, 'Payment request routes as expected');
+      strictSame(parsed.routes, args.routes, 'Payment request as expected');
     }
 
     if (!!args.tokens) {

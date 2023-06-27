@@ -1,5 +1,9 @@
 # Versions
 
+## 3.0.0
+
+- Node.js version 16 or higher is now required
+
 ## 2.2.3
 
 - `createUnsignedRequest`: Fix support for empty description requests

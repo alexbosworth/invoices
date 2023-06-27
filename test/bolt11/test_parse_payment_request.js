@@ -1,4 +1,7 @@
-const {test} = require('@alexbosworth/tap');
+const {equal} = require('node:assert').strict;
+const strictSame = require('node:assert').strict.deepStrictEqual;
+const test = require('node:test');
+const {throws} = require('node:assert').strict;
 
 const {parsePaymentRequest} = require('./../../');
 
@@ -326,7 +329,7 @@ const tests = [
 ];
 
 tests.forEach(({description, expected, request}) => {
-  return test(description, ({end, equal, strictSame}) => {
+  return test(description, (t, end) => {
     const details = parsePaymentRequest({request});
 
     strictSame(details.chain_addresses, expected.chain_addresses, 'Parse address');
