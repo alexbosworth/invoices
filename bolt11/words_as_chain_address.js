@@ -49,6 +49,7 @@ module.exports = ({network, words}) => {
     return {chain_address: toBase58Check(hash, net.scriptHash)};
 
   case addressVersions.witnessV0:
+  case addressVersions.witnessV1:
     return {chain_address: toBech32(hash, version, net.bech32)};
 
   default:

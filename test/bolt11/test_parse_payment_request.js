@@ -326,6 +326,38 @@ const tests = [
     },
     request: 'lnbc10m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdp9wpshjmt9de6zqmt9w3skgct5vysxjmnnd9jx2mq8q8a04uqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9q2gqqqqqqsgq7hf8he7ecf7n4ffphs6awl9t6676rrclv9ckg3d3ncn7fct63p6s365duk5wrk202cfy3aj5xnnp5gs3vrdvruverwwq7yzhkf5a3xqpd05wjc',
   },
+  {
+    description: 'P2TR fallback address',
+    expected: {
+      chain_addresses: [
+        'bc1pptdvg0d2nj99568qn6ssdy4cygnwuxgw2ukmnwgwz7jpqjz2kszse2s3lm',
+      ],
+      cltv_delta: 18,
+      created_at: '2017-06-01T10:57:38.000Z',
+      description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      expires_at: '2017-06-01T11:57:38.000Z',
+      features: [
+        {
+          bit: 14,
+          is_required: true,
+          type: 'payment_identifier',
+        },
+        {
+          bit: 8,
+          is_required: true,
+          type: 'tlv_onion',
+        },
+      ],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      is_expired: true,
+      mtokens: '2000000000',
+      network: 'bitcoin',
+      payment: '1111111111111111111111111111111111111111111111111111111111111111',
+      tokens: 2000000,
+    },
+    request: 'lnbc20m1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqsfp4pptdvg0d2nj99568qn6ssdy4cygnwuxgw2ukmnwgwz7jpqjz2kszs9qrsgqy606dznq28exnydt2r4c29y56xjtn3sk4mhgjtl4pg2y4ar3249rq4ajlmj9jy8zvlzw7cr8mggqzm842xfr0v72rswzq9xvr4hknfsqwmn6xd',
+  },
 ];
 
 tests.forEach(({description, expected, request}) => {
