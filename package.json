@@ -8,7 +8,7 @@
     "bitcoinjs-lib": "6.1.7",
     "bolt07": "1.9.4",
     "bolt09": "2.2.0",
-    "bn.js": "5.2.2",
+    "bn.js": "5.2.3",
     "tiny-secp256k1": "2.2.4"
   },
   "description": "Methods for working with BOLT 11 payment requests",
@@ -32,5 +32,5 @@
   "scripts": {
     "test": "npx nyc@17.1 node --experimental-test-coverage --test"
   },
-  "version": "5.0.0"
+  "version": "5.0.1"
 }
