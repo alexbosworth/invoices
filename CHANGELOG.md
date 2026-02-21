@@ -1,6 +1,6 @@
 # Versions
 
-## 5.0.1
+## 5.0.2
 
 - `parsePaymentRequest`: Add support for fallback P2TR addresses
 
