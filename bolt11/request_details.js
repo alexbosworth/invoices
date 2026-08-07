@@ -94,7 +94,7 @@ module.exports = ({destination, details, mtokens, network, timestamp}) => {
       sum.features = n.features;
     }
 
-    if (!!n.id) {
+    if (!!n.id && !sum.id) {
       sum.id = n.id;
     }
 

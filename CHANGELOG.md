@@ -1,5 +1,11 @@
 # Versions
 
+## 6.0.0
+
+### Breaking Changes
+
+- Node.js version 22 or higher is now required
+
 ## 5.0.2
 
 - `parsePaymentRequest`: Add support for fallback P2TR addresses
