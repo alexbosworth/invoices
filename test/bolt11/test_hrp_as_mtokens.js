@@ -16,6 +16,11 @@ const tests = [
     error: 'ExpectedValidNumericAmountToParseHrpAsMtokens',
   },
   {
+    args: {amount: '2500', units: 'x'},
+    description: 'A known amount multiplier is required',
+    error: 'InvalidAmountMultiplier',
+  },
+  {
     args: {amount: '1', units: ''},
     description: 'BTC is the basic unit with no divisor',
     expected: {mtokens: (1e11).toString()},
