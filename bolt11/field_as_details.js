@@ -49,12 +49,7 @@ const trim = true;
   }
 */
 module.exports = ({code, network, words}) => {
-  const field = taggedFields[code];
-
-  // Exit early when field is unknown
-  if (!field) {
-    return {};
-  }
+  const field = taggedFields[code] || {};
 
   const feature = Object.keys(taggedFields).reduce((sum, n) => {
     sum[taggedFields[n].label] = taggedFields[n].label;

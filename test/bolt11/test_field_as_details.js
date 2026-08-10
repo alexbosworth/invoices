@@ -35,6 +35,11 @@ const tests = [
     error: 'FailedToParsePaymentRequestFallbackAddress',
   },
   {
+    args: {code: 27, network: 'bitcoin'},
+    description: 'Metadata is invalid',
+    error: 'FailedToParsePaymentContextualMetadata',
+  },
+  {
     args: {code: 1, network: 'bitcoin'},
     description: 'Payment hash is invalid',
     error: 'FailedToParsePaymentRequestPaymentHash',
