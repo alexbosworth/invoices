@@ -15,6 +15,37 @@ const bufFromHex = hex => Buffer.from(hex, 'hex');
 const tests = [
   {
     args: {
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A description or description hash is required',
+    error: 'ExpectedPaymentDescriptionOrDescriptionHashForPayReq',
+  },
+  {
+    args: {
+      description: 'x'.repeat(640),
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A description within the byte limit is required',
+    error: 'ExpectedPaymentDescriptionWithinDescriptionByteLimit',
+  },
+  {
+    args: {description: 'coffee beans', network: 'bitcoin'},
+    description: 'A payment hash is required',
+    error: 'ExpectedPaymentHashWhenEncodingPaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'network',
+    },
+    description: 'A known network is required',
+    error: 'ExpectedKnownNetworkToEncodePaymentRequest',
+  },
+  {
+    args: {
       created_at: '2017-06-01T10:57:38.000Z',
       description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
       id: '0001020304050607080900010203040506070809000102030405060708090102',
@@ -271,10 +302,54 @@ const tests = [
       private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
     },
   },
+  {
+    args: {
+      cltv_delta: 144,
+      created_at: '2017-06-01T10:57:38.000Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'Payment request with a final cltv delta',
+    expected: {
+      data: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404081a0a31b7b33332b2903132b0b739860022400',
+      hash: 'a7d7be40da3f5939b58a0840674adbee0f7a221b3da5f7ff3639e4c99a445180',
+      hrp: 'lnbc',
+    },
+    verify: {
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
+  {
+    args: {
+      created_at: '2017-06-01T10:57:38.000Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      metadata: '01020304',
+      network: 'bitcoin',
+    },
+    description: 'Payment request with payment metadata',
+    expected: {
+      data: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404081a0a31b7b33332b2903132b0b73986c070102030400',
+      hash: 'fb94e6b958da3b329909bbf8c8789fa7de72f3e8af99ddf0eeab1b520ac61eaf',
+      hrp: 'lnbc',
+    },
+    verify: {
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
 ];
 
-tests.forEach(({args, description, expected, verify}) => {
+tests.forEach(({args, description, error, expected, verify}) => {
   return test(description, (t, end) => {
+    if (!!error) {
+      throws(() => createUnsignedRequest(args), new Error(error), 'Got err');
+
+      return end();
+    }
+
     const {hash, hrp, tags} = createUnsignedRequest(args);
 
     const data = wordsAsBuffer({words: tags}).toString('hex');
@@ -303,6 +378,10 @@ tests.forEach(({args, description, expected, verify}) => {
 
     if (!!args.features) {
       strictSame(parsed.features, args.features, 'Got expected feature bits');
+    }
+
+    if (!!args.metadata) {
+      equal(parsed.metadata, args.metadata, 'Payment metadata expected');
     }
 
     if (!!args.mtokens) {

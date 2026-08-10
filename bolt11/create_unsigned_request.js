@@ -158,7 +158,7 @@ module.exports = args => {
 
       return {
         field,
-        words: hexAsWords({hex: args.metadata}),
+        words: hexAsWords({hex: args.metadata}).words,
       };
 
     case 'min_final_cltv_expiry':
