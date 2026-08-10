@@ -9,6 +9,15 @@ const msPerSec = 1e3;
 
 const tests = [
   {
+    description: 'A payment request is required',
+    error: 'ExpectedPaymentRequest',
+  },
+  {
+    description: 'A request with the ln prefix is required',
+    error: 'ExpectedLnPrefix',
+    request: 'bcrt1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080',
+  },
+  {
     description: "Test word length",
     expected: {
       cltv_delta: 144,
@@ -360,8 +369,14 @@ const tests = [
   },
 ];
 
-tests.forEach(({description, expected, request}) => {
+tests.forEach(({description, error, expected, request}) => {
   return test(description, (t, end) => {
+    if (!!error) {
+      throws(() => parsePaymentRequest({request}), new Error(error), 'Err');
+
+      return end();
+    }
+
     const details = parsePaymentRequest({request});
 
     strictSame(details.chain_addresses, expected.chain_addresses, 'Parse address');
