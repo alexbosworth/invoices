@@ -19,7 +19,7 @@ const hasDescriptionHash = n => n.description_hash !== undefined;
 const hasLnPrefix = n => n.slice(Number(), 'ln'.length).toLowerCase() === 'ln';
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const isLowSRequired = true;
-const maxRequestLength = Number.MAX_SAFE_INTEGER;
+const maxRequestLength = 7089;
 const msPerSec = 1e3;
 const sigWordsCount = 104;
 const timestampWordLength = 7;
@@ -73,6 +73,11 @@ module.exports = ({request}) => {
 
   if (!hasLnPrefix(request)) {
     throw new Error('ExpectedLnPrefix');
+  }
+
+  // A QR code constrains the maximum length of a payment request
+  if (request.length > maxRequestLength) {
+    throw new Error('ExpectedPaymentRequestWithinMaximumLength');
   }
 
   const {prefix, words} = decode(request, maxRequestLength);

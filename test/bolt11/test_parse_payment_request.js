@@ -18,6 +18,11 @@ const tests = [
     request: 'bcrt1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080',
   },
   {
+    description: 'A payment request within the maximum length is required',
+    error: 'ExpectedPaymentRequestWithinMaximumLength',
+    request: 'ln'.padEnd(7090, 'q'),
+  },
+  {
     description: 'A pico amount that encodes fractional millitokens fails',
     error: 'ExpectedWholeMillitokensAmountToParseHrpAsMtokens',
     request: 'lnbc1p1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs42qugy3a024d7v30sjh984mcaz8hv4nfahvc6fuadka6d0telkehk7z97uec4q0w5c26mnh4dtr3vpxyxync6quh2465uh5xpcwc8nspsy3akd',
