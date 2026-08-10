@@ -147,8 +147,7 @@ module.exports = ({code, network, words}) => {
 
   case feature.routing:
     return {path: wordsAsHopHints({words}).hints};
-
-  default:
-    return {};
   }
+
+  return {};
 };

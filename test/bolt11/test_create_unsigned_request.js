@@ -8,6 +8,7 @@ const {throws} = require('node:assert').strict;
 const {createSignedRequest} = require('./../../');
 const {createUnsignedRequest} = require('./../../');
 const {parsePaymentRequest} = require('./../../');
+const taggedFields = require('./../../bolt11/conf/tagged_fields');
 const wordsAsBuffer = require('./../../bolt11/words_as_buffer');
 
 const bufFromHex = hex => Buffer.from(hex, 'hex');
@@ -402,4 +403,25 @@ tests.forEach(({args, description, error, expected, verify}) => {
 
     return end();
   });
+});
+
+// An unknown tagged field type in the configuration cannot be encoded
+test('An unexpected tagged field type cannot be encoded', (t, end) => {
+  taggedFields['99'] = {label: 'unexpected_field', name: 'z'};
+
+  try {
+    throws(
+      () => createUnsignedRequest({
+        description: 'coffee beans',
+        id: '0001020304050607080900010203040506070809000102030405060708090102',
+        network: 'bitcoin',
+      }),
+      new Error('UnexpectedTaggedFieldType'),
+      'Got unexpected tagged field type error'
+    );
+  } finally {
+    delete taggedFields['99'];
+  }
+
+  return end();
 });

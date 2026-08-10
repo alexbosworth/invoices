@@ -219,10 +219,9 @@ module.exports = args => {
 
         return {field, words};
       });
-
-    default:
-      throw new Error('UnexpectedTaggedFieldType');
     }
+
+    throw new Error('UnexpectedTaggedFieldType');
   }));
 
   const tagWords = fieldWords.filter(n => !!n.words).map(({field, words}) => {
