@@ -75,6 +75,21 @@ const tests = [
     description: 'Precise amounts use pico units: 0.00967878534',
     expected: {mtokens: '967878534'},
   },
+  {
+    args: {amount: '90071992547409910000', units: 'p'},
+    description: 'The largest safe amount of tokens is supported',
+    expected: {mtokens: '9007199254740991000'},
+  },
+  {
+    args: {amount: '90071992547409910010', units: 'p'},
+    description: 'Amounts of millitokens beyond safe token values fail',
+    error: 'ExpectedMillitokensWithinSafeRangeToParseHrpAsMtokens',
+  },
+  {
+    args: {amount: '100000000', units: ''},
+    description: 'Whole token amounts beyond safe token values fail',
+    error: 'ExpectedMillitokensWithinSafeRangeToParseHrpAsMtokens',
+  },
 ];
 
 tests.forEach(({args, description, error, expected}) => {
