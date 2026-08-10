@@ -6,6 +6,16 @@ const mtokensAsHrp = require('./../../bolt11/mtokens_as_hrp');
 
 const tests = [
   {
+    args: {mtokens: 1},
+    description: 'A string value is required',
+    error: 'ExpectedStringValueToConvertMtokensToHrp',
+  },
+  {
+    args: {mtokens: 'mtokens'},
+    description: 'A numeric string value is required',
+    error: 'ExpectedNumericStringValueToConvertMtokensToHrp',
+  },
+  {
     args: {mtokens: '1'},
     description: 'The smallest possible',
     expected: '10p',
@@ -52,8 +62,14 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, expected}) => {
+tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
+    if (!!error) {
+      throws(() => mtokensAsHrp(args), new Error(error), 'Got expected error');
+
+      return end();
+    }
+
     const {hrp} = mtokensAsHrp(args);
 
     strictSame(hrp, expected, 'Hrp derived from mtokens');
