@@ -23,6 +23,11 @@ const tests = [
     request: 'lnbc1p1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs42qugy3a024d7v30sjh984mcaz8hv4nfahvc6fuadka6d0telkehk7z97uec4q0w5c26mnh4dtr3vpxyxync6quh2465uh5xpcwc8nspsy3akd',
   },
   {
+    description: 'A description or a description hash is required',
+    error: 'ExpectedDescriptionOrDescriptionHashInPaymentRequest',
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsmux4cg7ekl35nvz5y34s7ny87876k23qew3ld9js4s9k28uncg8hqpnefpwhu3p93w66a8nlwwgrxycxpynhy6r2nur23h2cj2w7jyqqeklgla',
+  },
+  {
     description: 'A description and a description hash are mutually exclusive',
     error: 'UnexpectedDescriptionAndDescriptionHashInRequest',
     request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygshp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqs6m5mwgzej2e0636ya683mlqj7zdhhxecuqhwlhtl77ltlz3g3p89zwqnlmazg93v3x2cv7hjdztr4srkeyrcypr8yvn5np9s9uzktysq5fhwhu',

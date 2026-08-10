@@ -99,6 +99,11 @@ module.exports = ({request}) => {
     throw new Error('UnexpectedDescriptionAndDescriptionHashInRequest');
   }
 
+  // Either a description or a description hash is required
+  if (!elements.some(hasDescription) && !elements.some(hasDescriptionHash)) {
+    throw new Error('ExpectedDescriptionOrDescriptionHashInPaymentRequest');
+  }
+
   // The destination public key may be specified in a tagged field
   const [key] = elements.map(n => n.destination).filter(n => !!n);
 
