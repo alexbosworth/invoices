@@ -27,7 +27,6 @@ module.exports = ({network, words}) => {
     throw new Error('ExpectedWordsToConvertToChainAddress');
   }
 
-  let hash;
   const net = networks[network];
   const [version, ...hashWords] = words;
 
@@ -35,11 +34,7 @@ module.exports = ({network, words}) => {
     throw new Error('UnrecognizedNetworkForChainAddress');
   }
 
-  try {
-    hash = wordsAsBuffer({words: hashWords, trim: true});
-  } catch (err) {
-    throw new Error('FailedToConvertChainAddressWordsToBuffer');
-  }
+  const hash = wordsAsBuffer({words: hashWords, trim: true});
 
   switch (version) {
   case addressVersions.p2pkh:
@@ -51,9 +46,8 @@ module.exports = ({network, words}) => {
   case addressVersions.witnessV0:
   case addressVersions.witnessV1:
     return {chain_address: toBech32(hash, version, net.bech32)};
-
-  default:
-    return {};
   }
+
+  return {};
 };
 

@@ -45,17 +45,11 @@ module.exports = ({words}) => {
 
     routesBuffer = routesBuffer.slice(51);
 
-    let encodedChanId;
-
-    try {
-      encodedChanId = encodeChanId({
-        block_height: idComponents.block_height,
-        block_index: idComponents.block_index,
-        output_index: idComponents.output_index,
-      });
-    } catch (err) {
-      throw new Error('FailedToEncodeChanIdForHopHint');
-    }
+    const encodedChanId = encodeChanId({
+      block_height: idComponents.block_height,
+      block_index: idComponents.block_index,
+      output_index: idComponents.output_index,
+    });
 
     hints.push({
       base_fee_mtokens: baseFee.toString(),
