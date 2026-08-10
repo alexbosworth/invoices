@@ -29,6 +29,11 @@ const tests = [
     error: 'ExpectedNetworkToDecodeByteEncodedRequest',
   },
   {
+    args: makeArgs({words: undefined}),
+    description: 'A words count is required',
+    error: 'ExpectedWordsCountToDecodeByteEncodedRequest',
+  },
+  {
     args: makeArgs({network: 'network'}),
     description: 'A known network is required',
     error: 'ExpectedKnownNetworkToDecodeByteEncodedRequest',
