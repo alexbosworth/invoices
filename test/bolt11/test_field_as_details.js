@@ -49,6 +49,21 @@ const tests = [
     description: 'Payment identifier is invalid',
     error: 'FailedToParsePaymentRequestPaymentIdentifier',
   },
+  {
+    args: {code: 16, network: 'bitcoin', words: [0]},
+    description: 'Payment identifier length is invalid',
+    error: 'UnexpectedByteLengthForPaymentIdentifier',
+  },
+  {
+    args: {code: 19, network: 'bitcoin'},
+    description: 'Destination public key is invalid',
+    error: 'FailedToParsePaymentRequestDestinationKey',
+  },
+  {
+    args: {code: 19, network: 'bitcoin', words: [0]},
+    description: 'Destination public key length is invalid',
+    error: 'UnexpectedByteLengthForDestinationPublicKey',
+  },
 ];
 
 tests.forEach(({args, description, error, expected}) => {

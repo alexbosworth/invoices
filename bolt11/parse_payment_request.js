@@ -1,5 +1,7 @@
 const {bech32} = require('bech32');
+const {isPoint} = require('tiny-secp256k1');
 const {recover} = require('tiny-secp256k1');
+const {verify} = require('tiny-secp256k1');
 
 const decodePrefix = require('./decode_prefix');
 const fieldAsDetails = require('./field_as_details');
@@ -12,7 +14,11 @@ const wordsAsNumber = require('./words_as_number');
 
 const asHex = arr => Buffer.from(arr).toString('hex');
 const {decode} = bech32;
-const lnPrefix = 'ln';
+const hasDescription = n => n.description !== undefined;
+const hasDescriptionHash = n => n.description_hash !== undefined;
+const hasLnPrefix = n => n.slice(Number(), 'ln'.length).toLowerCase() === 'ln';
+const hexAsBuffer = hex => Buffer.from(hex, 'hex');
+const isLowSRequired = true;
 const maxRequestLength = Number.MAX_SAFE_INTEGER;
 const msPerSec = 1e3;
 const sigWordsCount = 104;
@@ -65,7 +71,7 @@ module.exports = ({request}) => {
     throw new Error('ExpectedPaymentRequest');
   }
 
-  if (request.slice(Number(), lnPrefix.length).toLowerCase() !== lnPrefix) {
+  if (!hasLnPrefix(request)) {
     throw new Error('ExpectedLnPrefix');
   }
 
@@ -82,14 +88,34 @@ module.exports = ({request}) => {
 
   const {fields} = taggedFields({words: wordsWithTags.slice()});
 
+  const elements = fields.map(n => fieldAsDetails({
+    network,
+    code: n.code,
+    words: n.words,
+  }));
+
+  // A description and a description hash are mutually exclusive
+  if (elements.some(hasDescription) && elements.some(hasDescriptionHash)) {
+    throw new Error('UnexpectedDescriptionAndDescriptionHashInRequest');
+  }
+
+  // The destination public key may be specified in a tagged field
+  const [key] = elements.map(n => n.destination).filter(n => !!n);
+
+  // A specified destination key must be a valid public key
+  if (!!key && !isPoint(hexAsBuffer(key))) {
+    throw new Error('InvalidDestinationPublicKeyInPaymentRequest');
+  }
+
+  // A specified destination key is used to check the signature directly
+  if (!!key && !verify(hash, hexAsBuffer(key), signature, isLowSRequired)) {
+    throw new Error('InvalidSignatureForDestinationPublicKey');
+  }
+
   const details = requestDetails({
     network,
-    destination: asHex(recover(hash, signature, recovery, true)),
-    details: fields.map(n => fieldAsDetails({
-      network,
-      code: n.code,
-      words: n.words,
-    })),
+    destination: key || asHex(recover(hash, signature, recovery, true)),
+    details: elements,
     mtokens: hrpAsMtokens({amount, units}).mtokens,
     timestamp: wordsAsNumber({words: timestampWords}) * msPerSec,
   });

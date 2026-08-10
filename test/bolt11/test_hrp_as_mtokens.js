@@ -26,6 +26,16 @@ const tests = [
     expected: {mtokens: '1'},
   },
   {
+    args: {amount: '1', units: 'p'},
+    description: 'Pico amounts that encode fractional millitokens fail',
+    error: 'ExpectedWholeMillitokensAmountToParseHrpAsMtokens',
+  },
+  {
+    args: {amount: '2500000001', units: 'p'},
+    description: 'Pico amounts must encode whole millitokens',
+    error: 'ExpectedWholeMillitokensAmountToParseHrpAsMtokens',
+  },
+  {
     args: {amount: '10', units: 'n'},
     description: 'Nano tokens are similar to pico but 10 of them is 1 token',
     expected: {mtokens: '1000'},

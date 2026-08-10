@@ -46,5 +46,12 @@ module.exports = ({amount, units}) => {
   // HRPs can encode values smaller than tokens on the chain can represent
   const div = new BN(divisors[divisor], decBase);
 
-  return {mtokens: val.mul(mtokenDivisibility).div(div).toString()};
+  const divided = val.mul(mtokenDivisibility).divmod(div);
+
+  // Exit with error when the amount encodes fractional millitokens
+  if (!divided.mod.isZero()) {
+    throw new Error('ExpectedWholeMillitokensAmountToParseHrpAsMtokens');
+  }
+
+  return {mtokens: divided.div.toString()};
 };

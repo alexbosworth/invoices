@@ -8,7 +8,9 @@ const wordsAsNumber = require('./words_as_number');
 
 const bufferAsHex = buffer => buffer.toString('hex');
 const descriptionHashByteLength = 32;
+const destinationKeyByteLength = 33;
 const paymentHashByteLength = 32;
+const paymentIdentifierByteLength = 32;
 const trim = true;
 
 /** Interpret a tagged field as payment request details
@@ -28,6 +30,7 @@ const trim = true;
     [cltv_delta]: <CLTV Delta Number>
     [description]: <Description String>
     [description_hash]: <Description Hash Hex String>
+    [destination]: <Destination Public Key Hex String>
     [expiry_seconds]: <Seconds After Creation Until Soft Expiration Number>
     [features]: [{
       bit: <BOLT 09 Feature Bit Number>
@@ -83,6 +86,19 @@ module.exports = ({code, network, words}) => {
       throw new Error('InvalidDescriptionInPaymentRequest');
     }
 
+  case feature.destination_public_key:
+    try {
+      wordsAsBuffer({trim, words});
+    } catch (err) {
+      throw new Error('FailedToParsePaymentRequestDestinationKey');
+    }
+
+    if (wordsAsBuffer({trim, words}).length !== destinationKeyByteLength) {
+      throw new Error('UnexpectedByteLengthForDestinationPublicKey');
+    }
+
+    return {destination: bufferAsHex(wordsAsBuffer({trim, words}))};
+
   case feature.fallback_address:
     try {
       return {
@@ -123,10 +139,16 @@ module.exports = ({code, network, words}) => {
 
   case feature.payment_identifier:
     try {
-      return {payment: wordsAsBuffer({trim, words}).toString('hex')};
+      wordsAsBuffer({trim, words});
     } catch (err) {
       throw new Error('FailedToParsePaymentRequestPaymentIdentifier');
     }
+
+    if (wordsAsBuffer({trim, words}).length !== paymentIdentifierByteLength) {
+      throw new Error('UnexpectedByteLengthForPaymentIdentifier');
+    }
+
+    return {payment: bufferAsHex(wordsAsBuffer({trim, words}))};
 
   case feature.routing:
     return {path: wordsAsHopHints({words}).hints};

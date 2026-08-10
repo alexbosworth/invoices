@@ -77,7 +77,7 @@ tests.forEach(({args, description, error, expected}) => {
       const {request} = byteDecodeRequest(details);
 
       const original = parsePaymentRequest({request: args.request});
-      const decoded = parsePaymentRequest({request})
+      const decoded = parsePaymentRequest({request});
 
       strictSame(original, decoded, 'Original payment details preserved');
       strictSame(details, expected, 'Got expected byte encoding');

@@ -18,6 +18,41 @@ const tests = [
     request: 'bcrt1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080',
   },
   {
+    description: 'A pico amount that encodes fractional millitokens fails',
+    error: 'ExpectedWholeMillitokensAmountToParseHrpAsMtokens',
+    request: 'lnbc1p1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs42qugy3a024d7v30sjh984mcaz8hv4nfahvc6fuadka6d0telkehk7z97uec4q0w5c26mnh4dtr3vpxyxync6quh2465uh5xpcwc8nspsy3akd',
+  },
+  {
+    description: 'A description and a description hash are mutually exclusive',
+    error: 'UnexpectedDescriptionAndDescriptionHashInRequest',
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygshp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqs6m5mwgzej2e0636ya683mlqj7zdhhxecuqhwlhtl77ltlz3g3p89zwqnlmazg93v3x2cv7hjdztr4srkeyrcypr8yvn5np9s9uzktysq5fhwhu',
+  },
+  {
+    description: 'A payment identifier must be the expected byte length',
+    error: 'UnexpectedByteLengthForPaymentIdentifier',
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5spjzyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyzckc2t6dy0sxfpy2yk2w2pp4vf26swkurpt8awkf6h7cs749ey8hsqvkul5fq74emn5nktrkp5yf72cakqm4dvdsv4rd8trwh7tz4kgpsx2qep',
+  },
+  {
+    description: 'A destination public key must be the expected byte length',
+    error: 'UnexpectedByteLengthForDestinationPublicKey',
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsu244axjc2rpwl6ywgcc2gjpwktxjg7l8magay0jt698jjp8jxgznls8vuvr3wvk0ln6vp7e309fxs4dwcerqfkll379gk259uwnzn7cpxvlgf2',
+  },
+  {
+    description: 'A destination public key must be a valid public key',
+    error: 'InvalidDestinationPublicKeyInPaymentRequest',
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp4qtllllllllllllllllllllllllllllllllllllllllllllllllll7vse9g0dp8awcl65cpuujze54uyd9nmjnqq3vkqa249vx0gkheae3jrsgz67aevaf5xhjsecx7mgck4v0k2ctx50fs4cqnvrrns88wmcpfdantr',
+  },
+  {
+    description: 'A signature must be valid for a given destination public key',
+    error: 'InvalidSignatureForDestinationPublicKey',
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp4qvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc7h7364g7pfuhh9etce8y399rcr0ap87drcl7l6af6syrjsalrthw5qxdugelrlcswc355cla0pnmctlgnf5jgagg9fs0xyq4jg5kverqp6ryc0z',
+  },
+  {
+    description: 'A low-S signature is required with a destination public key',
+    error: 'InvalidSignatureForDestinationPublicKey',
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp4qvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc738hxj8g6cccxpyv7v9azt5ephff75xmpd5az8zwgdl28zjevj9l07stkxrymwcyecs06fh3tvd7nkjdcttxc4jfly0ehlu5xpejmdjqq27lun0',
+  },
+  {
     description: "Test word length",
     expected: {
       cltv_delta: 144,
@@ -367,10 +402,32 @@ const tests = [
     },
     request: 'lnbc20m1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqsfp4pptdvg0d2nj99568qn6ssdy4cygnwuxgw2ukmnwgwz7jpqjz2kszs9qrsgqy606dznq28exnydt2r4c29y56xjtn3sk4mhgjtl4pg2y4ar3249rq4ajlmj9jy8zvlzw7cr8mggqzm842xfr0v72rswzq9xvr4hknfsqwmn6xd',
   },
+  {
+    description: 'A destination public key field validates the signature',
+    expected: {
+      cltv_delta: 18,
+      created_at: new Date(1496314658 * msPerSec).toISOString(),
+      description: 'coffee',
+      destination: '031b84c5567b126440995d3ed5aaba0565d71e1834604819ff9c17f5e9d5dd078f',
+      expires_at: new Date((1496314658 + 3600) * msPerSec).toISOString(),
+      features: [],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      is_expired: true,
+      mtokens: '0',
+      network: 'bitcoin',
+      payment: '1111111111111111111111111111111111111111111111111111111111111111',
+      tokens: 0,
+    },
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp4qvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc738hxj8g6cccxpyv7v9azt5ephff75xmpd5az8zwgdl28zjevj9lqp05feumy38mx80s9kgw5njpvxu8ksgvjglmpzlx9ymqxc8gg57gphadln3',
+  },
 ];
 
-tests.forEach(({description, error, expected, request}) => {
+tests.forEach(args => {
+  const {description, error, expected} = args;
+
   return test(description, (t, end) => {
+    const {request} = args;
+
     if (!!error) {
       throws(() => parsePaymentRequest({request}), new Error(error), 'Err');
 
