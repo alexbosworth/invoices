@@ -2,6 +2,7 @@ const {address} = require('bitcoinjs-lib');
 const {networks} = require('bitcoinjs-lib');
 
 const addressVersions = require('./conf/address_versions');
+const {chainNetworks} = require('./conf/address_versions');
 const wordsAsBuffer = require('./words_as_buffer');
 
 const {toBase58Check} = address;
@@ -27,7 +28,8 @@ module.exports = ({network, words}) => {
     throw new Error('ExpectedWordsToConvertToChainAddress');
   }
 
-  const net = networks[network];
+  // Signet shares the same chain address parameters as testnet
+  const net = networks[chainNetworks[network]];
   const [version, ...hashWords] = words;
 
   if (!net) {

@@ -431,6 +431,42 @@ const tests = [
     request: 'lnbc20m1pvjluezsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygspp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqhp58yjmdan79s6qqdhdzgynm4zwqd5d7xmw5fk98klysy043l2ahrqsfp4pptdvg0d2nj99568qn6ssdy4cygnwuxgw2ukmnwgwz7jpqjz2kszs9qrsgqy606dznq28exnydt2r4c29y56xjtn3sk4mhgjtl4pg2y4ar3249rq4ajlmj9jy8zvlzw7cr8mggqzm842xfr0v72rswzq9xvr4hknfsqwmn6xd',
   },
   {
+    description: 'Signet request with a fallback address and route hints',
+    expected: {
+      chain_addresses: ['tb1q6qh9jsxr9tsf4fu5q29p26fmc8zh8m3rsjsp3c'],
+      cltv_delta: 147,
+      created_at: '2023-02-13T19:04:04.000Z',
+      description: 'Test',
+      destination: '031d1bbeca35a5490fce8e9c9e8a77487e32157d11a18b77b162612cc6a6a92482',
+      expires_at: '2023-02-14T19:04:04.000Z',
+      features: [
+        {bit: 149, is_required: false, type: undefined},
+        {bit: 15, is_required: false, type: 'payment_identifier'},
+        {bit: 17, is_required: false, type: 'multipath_payments_v0'},
+        {bit: 9, is_required: false, type: 'tlv_onion'},
+      ],
+      id: '8f629ed0ac74d28242459d61950c54c160ce52e175d6eb19f925a2bd73f84469',
+      is_expired: true,
+      mtokens: '0',
+      network: 'signet',
+      payment: '85b857970c81aa41f2c6dd3ba33d2ae1e995de8d321cd520a23d336f113c2e77',
+      routes: [[
+        {
+          public_key: '03108c224ee3889c2d472f9bbe410f45dcaae6e664ec42c06feefc3c7e25805869',
+        },
+        {
+          base_fee_mtokens: '0',
+          channel: '115966x2x1',
+          cltv_delta: 6,
+          fee_rate: 100,
+          public_key: '031d1bbeca35a5490fce8e9c9e8a77487e32157d11a18b77b162612cc6a6a92482',
+        },
+      ]],
+      tokens: 0,
+    },
+    request: 'lntbs1p374zdypp53a3fa59vwnfgysj9n4se2rz5c9svu5hpwhtwkx0eyk3t6ulcg35ssp5sku909cvsx4yrukxm5a6x0f2u85eth5dxgwd2g9z85ek7yfu9emsdq823jhxaqcqzynxqyz5vq9q7sqqqqqqqqqqqqqqqqqqqqqqqqq9qsqfppq6qh9jsxr9tsf4fu5q29p26fmc8zh8m3rrzjqvggcgjwuwyfct2897dmusg0ghw24ehxvnky9sr0am7rcl39spvxjqwylcqqqqsqqyqqqqqqqqqqqeqqqc8vj4p363fva9zczjvmw2ugru9wcqufsf6ukylwk0ajqcm8q54788zrnjsz7qdrlvzt8s3kk6p5pnua93kzzmf7fjgu3e30d8rnyy6ecpq8frd8',
+  },
+  {
     description: 'A destination public key field validates the signature',
     expected: {
       cltv_delta: 18,

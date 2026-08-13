@@ -1,5 +1,6 @@
 const {networks} = require('bitcoinjs-lib');
 
+const {chainNetworks} = require('./conf/address_versions');
 const {p2pkh} = require('./conf/address_versions');
 const {p2sh} = require('./conf/address_versions');
 
@@ -30,7 +31,7 @@ module.exports = ({network, prefix, version}) => {
     throw new Error('ExpectedNetworkToDeriveAddressVersion');
   }
 
-  if (!networks[network]) {
+  if (!networks[chainNetworks[network]]) {
     throw new Error('UnexpectedNetworkToDeriveAddressVersion');
   }
 
@@ -39,10 +40,10 @@ module.exports = ({network, prefix, version}) => {
   }
 
   switch (version) {
-  case networks[network].pubKeyHash:
+  case networks[chainNetworks[network]].pubKeyHash:
     return {version: p2pkh};
 
-  case networks[network].scriptHash:
+  case networks[chainNetworks[network]].scriptHash:
     return {version: p2sh};
 
   default:

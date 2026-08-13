@@ -2,6 +2,7 @@ const {address} = require('bitcoinjs-lib');
 const {networks} = require('bitcoinjs-lib');
 
 const addressVersion = require('./address_version');
+const {chainNetworks} = require('./conf/address_versions');
 
 const base58 = n => { try { return address.fromBase58Check(n); } catch (e) {}};
 const bech32 = n => { try { return address.fromBech32(n); } catch (e) {}};
@@ -27,7 +28,7 @@ module.exports = ({address, network}) => {
     throw new Error('ExpectedAddressToDeriveChainAddressDetails');
   }
 
-  if (!network || !networks[network]) {
+  if (!network || !networks[chainNetworks[network]]) {
     throw new Error('ExpectedNetworkToDeriveChainAddressDetails');
   }
 
