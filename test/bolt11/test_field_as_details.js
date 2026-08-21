@@ -21,8 +21,8 @@ const tests = [
   },
   {
     args: {code: 23, network: 'bitcoin', words: []},
-    description: 'Description hash length is invalid',
-    error: 'UnexpectedByteLengthOfDescriptionHash',
+    description: 'A description hash with an unexpected length is skipped',
+    expected: {},
   },
   {
     args: {code: 13, network: 'bitcoin'},
@@ -46,8 +46,8 @@ const tests = [
   },
   {
     args: {code: 1, network: 'bitcoin', words: [0]},
-    description: 'Payment hash length is invalid',
-    error: 'UnexpectedByteLengthForPaymentHash',
+    description: 'A payment hash with an unexpected length is skipped',
+    expected: {},
   },
   {
     args: {code: 16, network: 'bitcoin'},
@@ -56,8 +56,8 @@ const tests = [
   },
   {
     args: {code: 16, network: 'bitcoin', words: [0]},
-    description: 'Payment identifier length is invalid',
-    error: 'UnexpectedByteLengthForPaymentIdentifier',
+    description: 'A payment identifier with an unexpected length is skipped',
+    expected: {},
   },
   {
     args: {code: 19, network: 'bitcoin'},
@@ -66,8 +66,8 @@ const tests = [
   },
   {
     args: {code: 19, network: 'bitcoin', words: [0]},
-    description: 'Destination public key length is invalid',
-    error: 'UnexpectedByteLengthForDestinationPublicKey',
+    description: 'A destination public key with an unexpected length is skipped',
+    expected: {},
   },
 ];
 

@@ -7,10 +7,10 @@ const wordsAsHopHints = require('./words_as_hop_hints');
 const wordsAsNumber = require('./words_as_number');
 
 const bufferAsHex = buffer => buffer.toString('hex');
-const descriptionHashByteLength = 32;
-const destinationKeyByteLength = 33;
-const paymentHashByteLength = 32;
-const paymentIdentifierByteLength = 32;
+const descriptionHashWordLength = 52;
+const destinationKeyWordLength = 53;
+const paymentHashWordLength = 52;
+const paymentIdentifierWordLength = 52;
 const trim = true;
 
 /** Interpret a tagged field as payment request details
@@ -66,13 +66,12 @@ module.exports = ({code, network, words}) => {
       throw new Error('FailedToParsePaymentRequestDescriptionHash');
     }
 
-    const descriptionHash = wordsAsBuffer({trim, words});
-
-    if (descriptionHash.length !== descriptionHashByteLength) {
-      throw new Error('UnexpectedByteLengthOfDescriptionHash');
+    // Skip over description hash fields that have unexpected data lengths
+    if (words.length !== descriptionHashWordLength) {
+      return {};
     }
 
-    return {description_hash: descriptionHash.toString('hex')};
+    return {description_hash: wordsAsBuffer({trim, words}).toString('hex')};
 
   case feature.description:
     try {
@@ -88,8 +87,9 @@ module.exports = ({code, network, words}) => {
       throw new Error('FailedToParsePaymentRequestDestinationKey');
     }
 
-    if (wordsAsBuffer({trim, words}).length !== destinationKeyByteLength) {
-      throw new Error('UnexpectedByteLengthForDestinationPublicKey');
+    // Skip over destination key fields that have unexpected data lengths
+    if (words.length !== destinationKeyWordLength) {
+      return {};
     }
 
     return {destination: bufferAsHex(wordsAsBuffer({trim, words}))};
@@ -126,8 +126,9 @@ module.exports = ({code, network, words}) => {
       throw new Error('FailedToParsePaymentRequestPaymentHash');
     }
 
-    if (wordsAsBuffer({trim, words}).length !== paymentHashByteLength) {
-      throw new Error('UnexpectedByteLengthForPaymentHash');
+    // Skip over payment hash fields that have unexpected data lengths
+    if (words.length !== paymentHashWordLength) {
+      return {};
     }
 
     return {id: wordsAsBuffer({trim, words}).toString('hex')};
@@ -139,8 +140,9 @@ module.exports = ({code, network, words}) => {
       throw new Error('FailedToParsePaymentRequestPaymentIdentifier');
     }
 
-    if (wordsAsBuffer({trim, words}).length !== paymentIdentifierByteLength) {
-      throw new Error('UnexpectedByteLengthForPaymentIdentifier');
+    // Skip over payment identifier fields that have unexpected data lengths
+    if (words.length !== paymentIdentifierWordLength) {
+      return {};
     }
 
     return {payment: bufferAsHex(wordsAsBuffer({trim, words}))};

@@ -5,6 +5,23 @@
     "signet": "testnet",
     "testnet": "testnet"
   },
+  "networks": {
+    "bitcoin": {
+      "bech32": "bc",
+      "pubKeyHash": 0,
+      "scriptHash": 5
+    },
+    "regtest": {
+      "bech32": "bcrt",
+      "pubKeyHash": 111,
+      "scriptHash": 196
+    },
+    "testnet": {
+      "bech32": "tb",
+      "pubKeyHash": 111,
+      "scriptHash": 196
+    }
+  },
   "p2pkh": 17,
   "p2sh": 18,
   "witnessV0": 0,

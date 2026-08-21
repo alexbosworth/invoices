@@ -1,6 +1,5 @@
 const {createHash} = require('crypto');
 
-const {crypto} = require('bitcoinjs-lib');
 const {featureFlagsAsWords} = require('bolt09');
 
 const chainAddressAsWords = require('./chain_address_as_words');
@@ -23,7 +22,6 @@ const msPerSec = 1e3;
 const mtokPerTok = 1e3;
 const {now} = Date;
 const {parse} = Date;
-const {sha256} = crypto;
 const tokensAsMtokens = n => !n ? '0' : (BigInt(n) * BigInt(1e3)).toString();
 
 /** Create an unsigned payment request

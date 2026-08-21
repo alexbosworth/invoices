@@ -1,11 +1,14 @@
-const {address} = require('bitcoinjs-lib');
-const {networks} = require('bitcoinjs-lib');
+const {decodeBase58Address} = require('@alexbosworth/blockchain');
+const {decodeBech32Address} = require('@alexbosworth/blockchain');
 
 const addressVersion = require('./address_version');
 const {chainNetworks} = require('./conf/address_versions');
+const {networks} = require('./conf/address_versions');
 
-const base58 = n => { try { return address.fromBase58Check(n); } catch (e) {}};
-const bech32 = n => { try { return address.fromBech32(n); } catch (e) {}};
+const bufferAsHex = buffer => buffer.toString('hex');
+const decodeBase58 = address => decodeBase58Address({address});
+const decodeBech32 = address => decodeBech32Address({address});
+const isBech32 = (prefix, n) => n.toLowerCase().startsWith(`${prefix}1`);
 
 /** Derive chain address details
 
@@ -32,18 +35,22 @@ module.exports = ({address, network}) => {
     throw new Error('ExpectedNetworkToDeriveChainAddressDetails');
   }
 
-  const details = base58(address) || bech32(address);
+  const {bech32} = networks[chainNetworks[network]];
 
-  // Exit early: address does not parse as a bech32 or base58 address
-  if (!details) {
+  // The bech32 prefix determines if an address is bech32 or base58 encoded
+  const decode = isBech32(bech32, address) ? decodeBech32 : decodeBase58;
+
+  // Confirm the address parses with the selected encoding
+  try {
+    decode(address);
+  } catch (err) {
     throw new Error('ExpectedValidAddressToDeriveChainDetails');
   }
 
-  const {prefix} = details;
-  const {version} = details;
+  const {hash, prefix, program, version} = decode(address);
 
   return {
-    hash: (details.data || details.hash).toString('hex'),
+    hash: bufferAsHex(program || hash),
     version: addressVersion({network, prefix, version}).version,
   };
 };
