@@ -213,6 +213,29 @@ const tests = [
   },
   {
     args: {
+      chain_addresses: [
+        '1RustyRX2oai4EYYDpQGWvEL62BBGqN9T',
+        'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+      ],
+      created_at: '2017-06-01T10:57:38.000Z',
+      description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      tokens: 2000000,
+    },
+    description: 'Payment request with multiple fallback addresses',
+    expected: {
+      data: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404081210c412d87df707a83726509119331019371593647a2521081d479dba066465b515250711746ce8c8fc50cef5ae1a1c92db7b3f161a001b7689049eea2701b46f8db7513629edf2408fac7eaedc60800',
+      hash: 'cb12f07a83e2c28af9cbba95ffbf54812369be93448e124271f28ece026d7267',
+      hrp: 'lnbc20m',
+    },
+    verify: {
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
+  {
+    args: {
       chain_addresses: ['3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX'],
       created_at: '2017-06-01T10:57:38.000Z',
       description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',

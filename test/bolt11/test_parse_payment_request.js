@@ -23,6 +23,21 @@ const tests = [
     request: 'ln'.padEnd(7090, 'q'),
   },
   {
+    description: 'A payment request with a valid checksum is required',
+    error: 'Invalid checksum for lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaq8rkx3yf5tcsyz3d73gafnh3cax9rn449d9p5uxz9ezhhypd0elx87sjle52x86fux2ypatgddc6k63n7erqz25le42c4u4ecky03ylcqca784x',
+    request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaq8rkx3yf5tcsyz3d73gafnh3cax9rn449d9p5uxz9ezhhypd0elx87sjle52x86fux2ypatgddc6k63n7erqz25le42c4u4ecky03ylcqca784x',
+  },
+  {
+    description: 'A payment request with consistent letter case is required',
+    error: 'Mixed-case string lnbc2500u1PvJlUeZ',
+    request: 'lnbc2500u1PvJlUeZ',
+  },
+  {
+    description: 'A payment request with a separator character is required',
+    error: 'No separator character for lnbc2500u',
+    request: 'lnbc2500u',
+  },
+  {
     description: 'A pico amount that encodes fractional millitokens fails',
     error: 'ExpectedWholeMillitokensAmountToParseHrpAsMtokens',
     request: 'lnbc1p1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs42qugy3a024d7v30sjh984mcaz8hv4nfahvc6fuadka6d0telkehk7z97uec4q0w5c26mnh4dtr3vpxyxync6quh2465uh5xpcwc8nspsy3akd',
@@ -380,8 +395,8 @@ const tests = [
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
       expires_at: new Date((1496314658 + 3600) * msPerSec).toISOString(),
       features: [
-        {bit: 14, is_required: true, type: 'payment_identifier'},
         {bit: 8, is_required: true, type: 'tlv_onion'},
+        {bit: 14, is_required: true, type: 'payment_identifier'},
         {bit: 99, is_required: false, type: undefined},
       ],
       id: '0001020304050607080900010203040506070809000102030405060708090102',
@@ -403,8 +418,8 @@ const tests = [
       destination: '0212cfa0137a4bfa5b76de84c3a89ceff01c5f22d0dbf1360258000b8372a58e70',
       expires_at: new Date((1496314658 + 3600) * msPerSec).toISOString(),
       features: [
-        {bit: 14, is_required: true, type: 'payment_identifier'},
         {bit: 8, is_required: true, type: 'tlv_onion'},
+        {bit: 14, is_required: true, type: 'payment_identifier'},
       ],
       id: '0001020304050607080900010203040506070809000102030405060708090102',
       is_expired: true,
@@ -444,6 +459,11 @@ const tests = [
       expires_at: '2017-06-01T11:57:38.000Z',
       features: [
         {
+          bit: 8,
+          is_required: true,
+          type: 'tlv_onion',
+        },
+        {
           bit: 14,
           is_required: true,
           type: 'payment_identifier',
@@ -452,11 +472,6 @@ const tests = [
           bit: 48,
           is_required: true,
           type: 'pay_includes_metadata',
-        },
-        {
-          bit: 8,
-          is_required: true,
-          type: 'tlv_onion',
         },
       ],
       id: '0001020304050607080900010203040506070809000102030405060708090102',
@@ -482,14 +497,14 @@ const tests = [
       expires_at: '2017-06-01T11:57:38.000Z',
       features: [
         {
-          bit: 14,
-          is_required: true,
-          type: 'payment_identifier',
-        },
-        {
           bit: 8,
           is_required: true,
           type: 'tlv_onion',
+        },
+        {
+          bit: 14,
+          is_required: true,
+          type: 'payment_identifier',
         },
       ],
       id: '0001020304050607080900010203040506070809000102030405060708090102',
@@ -511,10 +526,10 @@ const tests = [
       destination: '031d1bbeca35a5490fce8e9c9e8a77487e32157d11a18b77b162612cc6a6a92482',
       expires_at: '2023-02-14T19:04:04.000Z',
       features: [
-        {bit: 149, is_required: false, type: undefined},
+        {bit: 9, is_required: false, type: 'tlv_onion'},
         {bit: 15, is_required: false, type: 'payment_identifier'},
         {bit: 17, is_required: false, type: 'multipath_payments_v0'},
-        {bit: 9, is_required: false, type: 'tlv_onion'},
+        {bit: 149, is_required: false, type: undefined},
       ],
       id: '8f629ed0ac74d28242459d61950c54c160ce52e175d6eb19f925a2bd73f84469',
       is_expired: true,
@@ -554,6 +569,24 @@ const tests = [
       tokens: 0,
     },
     request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp4qvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc738hxj8g6cccxpyv7v9azt5ephff75xmpd5az8zwgdl28zjevj9lqp05feumy38mx80s9kgw5njpvxu8ksgvjglmpzlx9ymqxc8gg57gphadln3',
+  },
+  {
+    description: 'A payment request that has yet to expire is not expired',
+    expected: {
+      cltv_delta: 18,
+      created_at: '2026-01-01T00:00:00.000Z',
+      description: 'valid for a century',
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      expires_at: '2126-01-01T00:00:00.000Z',
+      features: [],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      is_expired: false,
+      mtokens: '2500000000',
+      network: 'bitcoin',
+      safe_tokens: 2500000,
+      tokens: 2500000,
+    },
+    request: 'lnbc25m1p54twgqpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqxq8z7p0ssqdqlweskc6tyypnx7u3qvysxxetww36hy7gr4f9scvxhcr4ldxdq9hkpc5rw0l6qka5f7jvza5nuj43u3aqy94hw2zg6tu7n8kzkxed6j25zts5qedu0phyy9qhe5fgegg7tuskf3sp0kakl5',
   },
 ];
 
