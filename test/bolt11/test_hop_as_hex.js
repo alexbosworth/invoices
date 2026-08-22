@@ -51,6 +51,49 @@ const tests = [
       hex: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad0922a70004510001000003e8000009c40090',
     },
   },
+  {
+    args: makeArgs({
+      base_fee_mtokens: '4294967295',
+      cltv_delta: 65535,
+      fee_rate: 4294967295,
+    }),
+    description: 'Maximum field values are encoded as hex',
+    expected: {
+      hex: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad0922a70004510001ffffffffffffffffffff',
+    },
+  },
+  {
+    args: makeArgs({fee_rate: 0}),
+    description: 'A zero fee rate is encoded as hex',
+    expected: {
+      hex: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad0922a70004510001000003e8000000000090',
+    },
+  },
+  {
+    args: makeArgs({base_fee_mtokens: '4294967296'}),
+    description: 'A base fee beyond the encodeable range fails',
+    error: 'ExpectedEncodeableBaseFeeMtokensToConvertHopToHex',
+  },
+  {
+    args: makeArgs({base_fee_mtokens: 'mtokens'}),
+    description: 'A numeric base fee is required',
+    error: 'ExpectedEncodeableBaseFeeMtokensToConvertHopToHex',
+  },
+  {
+    args: makeArgs({cltv_delta: 65536}),
+    description: 'A cltv delta beyond the encodeable range fails',
+    error: 'ExpectedEncodeableCltvDeltaToConvertHopToHex',
+  },
+  {
+    args: makeArgs({fee_rate: 4294967296}),
+    description: 'A fee rate beyond the encodeable range fails',
+    error: 'ExpectedEncodeableHopFeeRateToConvertHopToHex',
+  },
+  {
+    args: makeArgs({fee_rate: -1}),
+    description: 'An unsigned fee rate is required',
+    error: 'ExpectedEncodeableHopFeeRateToConvertHopToHex',
+  },
 ];
 
 tests.forEach(({args, description, error, expected}) => {

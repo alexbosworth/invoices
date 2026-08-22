@@ -1,12 +1,10 @@
-const BN = require('bn.js');
-
 const divisors = require('./conf/divisors');
 const parseHumanReadableValue = require('./parse_human_readable_value');
 
-const decBase = 10;
 const defaultDivisor = '1';
-const maxMtokens = new BN(Number.MAX_SAFE_INTEGER).muln(1e3);
-const mtokenDivisibility = new BN(1e11, 10);
+const maxMtokens = BigInt(Number.MAX_SAFE_INTEGER) * BigInt(1e3);
+const mtokenDivisibility = BigInt(1e11);
+const none = BigInt(Number());
 const valuePattern = /^\d+$/;
 
 /** Given a value string, return the number of millitokens
@@ -38,22 +36,22 @@ module.exports = ({amount, units}) => {
   }
 
   // Convert the value to a big number to do the big divisions
-  const val = new BN(value, decBase);
+  const val = BigInt(value);
 
   // HRPs can encode values smaller than tokens on the chain can represent
-  const div = new BN(divisors[divisor] || defaultDivisor, decBase);
+  const div = BigInt(divisors[divisor] || defaultDivisor);
 
-  const divided = val.mul(mtokenDivisibility).divmod(div);
+  const mtokens = val * mtokenDivisibility / div;
 
   // Exit with error when the amount encodes fractional millitokens
-  if (!divided.mod.isZero()) {
+  if (val * mtokenDivisibility % div !== none) {
     throw new Error('ExpectedWholeMillitokensAmountToParseHrpAsMtokens');
   }
 
   // Exit with error when the amount exceeds the safe range for tokens
-  if (divided.div.gt(maxMtokens)) {
+  if (mtokens > maxMtokens) {
     throw new Error('ExpectedMillitokensWithinSafeRangeToParseHrpAsMtokens');
   }
 
-  return {mtokens: divided.div.toString()};
+  return {mtokens: mtokens.toString()};
 };

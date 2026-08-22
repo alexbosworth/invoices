@@ -90,6 +90,26 @@ const tests = [
     description: 'Whole token amounts beyond safe token values fail',
     error: 'ExpectedMillitokensWithinSafeRangeToParseHrpAsMtokens',
   },
+  {
+    args: {amount: '0', units: ''},
+    description: 'A zero amount encodes zero millitokens',
+    expected: {mtokens: '0'},
+  },
+  {
+    args: {amount: '007', units: 'm'},
+    description: 'Leading zeros in an amount are supported',
+    expected: {mtokens: '700000000'},
+  },
+  {
+    args: {amount: '1.5', units: 'm'},
+    description: 'Decimal amounts are not valid numeric amounts',
+    error: 'ExpectedValidNumericAmountToParseHrpAsMtokens',
+  },
+  {
+    args: {amount: '123456789012345670', units: 'p'},
+    description: 'Amounts beyond float precision are exactly represented',
+    expected: {mtokens: '12345678901234567'},
+  },
 ];
 
 tests.forEach(({args, description, error, expected}) => {
