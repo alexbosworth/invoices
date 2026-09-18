@@ -1,3 +1,5 @@
+const {equal} = require('node:assert').strict;
+const {notEqual} = require('node:assert').strict;
 const strictSame = require('node:assert').strict.deepStrictEqual;
 const test = require('node:test');
 const {throws} = require('node:assert').strict;
@@ -5,6 +7,7 @@ const {throws} = require('node:assert').strict;
 const {bech32} = require('bech32');
 
 const createSignedRequest = require('./../../bolt11/create_signed_request');
+const {parsePaymentRequest} = require('./../../');
 
 // From the BOLT 11 spec example: "Please send $3 for a cup of coffee"
 const request = 'lnbc2500u1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyq' +
@@ -26,6 +29,16 @@ const decoded = bech32.decode(request, Number.MAX_SAFE_INTEGER);
 const tags = decoded.words.slice(
   Number(),
   decoded.words.length - signatureWordsCount
+);
+
+// From the bLIP 39 test vector: a request with two blinded paths
+const blindedRequest = 'lnbc20m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4js5fdqqqqq2qqqqqpgqyzqqqqqqqqqqqqyqqqqqqqqqqqvsqqqqlnxy0ffrlt2y2jgtzw89kgr3zg4dlwtlfycn3yuek8x5eucnuchqps82xf0m2u6sx5wnjw7xxgnxz5kf09quqsv5zvkgj7d5kpzttp4qz7q5qsyqcyq5pzq2feycsemrh7wvendc4kw3tsmkt25a36ev6kfehrv7ecfkrp5zs9q5zqxqspqtr4avek5quzjn427asptzews5wrczfhychr2sq6ue9phmn35tjqcrspqgpsgpgxquyqjzstpsxsu59zqqqqqpqqqqqqyqq2qqqqqqqqqqqqqqqqqqqqqqqqpgqqqqk8t6endgpc99824amqzk9japgu8synwf3wx4qp4ej2r0h8rghypsqsygpf8ynzr8vwleenxdhzke69wrwed2nk8t9n2e8xudnm8pxcvxs2q5qsyqcyq5y4rdlhtf84f8rgdj34275juwls2ftxtcfh035863q3p9k6s94hpxhdmzfn5gxpsazdznxs56j4vt3fdhe00g9v2l3szher50hp4xlggqkxf77f';
+
+const blinded = bech32.decode(blindedRequest, Number.MAX_SAFE_INTEGER);
+
+const blindedTags = blinded.words.slice(
+  Number(),
+  blinded.words.length - signatureWordsCount
 );
 
 const makeArgs = overrides => {
@@ -68,6 +81,11 @@ const tests = [
     error: 'ExpectedValidSignatureForSignedPaymentRequest',
   },
   {
+    args: makeArgs({destination: undefined, signature: undefined}),
+    description: 'A signature is required for a request without blinded paths',
+    error: 'ExpectedSignatureForPaymentRequestWithoutBlindedPaths',
+  },
+  {
     args: makeArgs({}),
     description: 'A signed payment request is assembled',
     expected: {request},
@@ -84,4 +102,28 @@ tests.forEach(({args, description, error, expected}) => {
 
     return end();
   });
+});
+
+// A request with blinded paths is signed with a random ephemeral key
+test('A request with blinded paths is signed without a signature', (t, end) => {
+  const original = parsePaymentRequest({request: blindedRequest});
+
+  const {request} = createSignedRequest({
+    hrp: blinded.prefix,
+    tags: blindedTags,
+  });
+
+  const signed = parsePaymentRequest({request});
+
+  strictSame(signed.paths, original.paths, 'Signed request has blinded paths');
+  equal(signed.id, original.id, 'Signed request has the payment hash');
+  notEqual(signed.destination, original.destination, 'Ephemeral key is used');
+
+  const again = createSignedRequest({hrp: blinded.prefix, tags: blindedTags});
+
+  const resigned = parsePaymentRequest({request: again.request});
+
+  notEqual(resigned.destination, signed.destination, 'Ephemeral key is random');
+
+  return end();
 });

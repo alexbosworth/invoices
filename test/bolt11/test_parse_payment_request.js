@@ -588,6 +588,69 @@ const tests = [
     },
     request: 'lnbc25m1p54twgqpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqxq8z7p0ssqdqlweskc6tyypnx7u3qvysxxetww36hy7gr4f9scvxhcr4ldxdq9hkpc5rw0l6qka5f7jvza5nuj43u3aqy94hw2zg6tu7n8kzkxed6j25zts5qedu0phyy9qhe5fgegg7tuskf3sp0kakl5',
   },
+  {
+    description: 'A payment request with blinded paths has paths',
+    expected: {
+      cltv_delta: 18,
+      created_at: new Date(1496314658 * msPerSec).toISOString(),
+      description: '1 cup coffee',
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      expires_at: new Date((1496314658 + 3600) * msPerSec).toISOString(),
+      features: [],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      is_expired: true,
+      mtokens: '2000000000',
+      network: 'bitcoin',
+      paths: [
+        {
+          base_fee_mtokens: '40',
+          cltv_delta: 130,
+          features: [],
+          fee_rate: 20,
+          hops: [
+            {
+              encrypted_data: '0102030405',
+              relay_key: '03a8c97ed5cd40d474e4ef18c899854b25e5070106504cb225e6d2c112d61a805e',
+            },
+            {
+              encrypted_data: '0504030201',
+              relay_key: '0220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a',
+            },
+            {
+              encrypted_data: '0102030405060708090a0b0c0d0e',
+              relay_key: '02c75eb336a038294eaaf760158b2e851c3c0937262e35401ae64a1bee71a2e40c',
+            },
+          ],
+          introduction_node: '03a8c97ed5cd40d474e4ef18c899854b25e5070106504cb225e6d2c112d61a805e',
+          key: '03f3311e948feb5115242c4e396c81c448ab7ee5fd24c4e24e66c73533cc4f98b8',
+          max_htlc_mtokens: '100',
+          min_htlc_mtokens: '2',
+        },
+        {
+          base_fee_mtokens: '4',
+          cltv_delta: 10,
+          features: [],
+          fee_rate: 2,
+          hops: [{
+            encrypted_data: '0102030405',
+            relay_key: '0220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a',
+          }],
+          introduction_node: '0220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a',
+          key: '02c75eb336a038294eaaf760158b2e851c3c0937262e35401ae64a1bee71a2e40c',
+          max_htlc_mtokens: '10',
+          min_htlc_mtokens: '0',
+        },
+      ],
+      safe_tokens: 2000000,
+      tokens: 2000000,
+    },
+    request: 'lnbc20m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4js5fdqqqqq2qqqqqpgqyzqqqqqqqqqqqqyqqqqqqqqqqqvsqqqqlnxy0ffrlt2y2jgtzw89kgr3zg4dlwtlfycn3yuek8x5eucnuchqps82xf0m2u6sx5wnjw7xxgnxz5kf09quqsv5zvkgj7d5kpzttp4qz7q5qsyqcyq5pzq2feycsemrh7wvendc4kw3tsmkt25a36ev6kfehrv7ecfkrp5zs9q5zqxqspqtr4avek5quzjn427asptzews5wrczfhychr2sq6ue9phmn35tjqcrspqgpsgpgxquyqjzstpsxsu59zqqqqqpqqqqqqyqq2qqqqqqqqqqqqqqqqqqqqqqqqpgqqqqk8t6endgpc99824amqzk9japgu8synwf3wx4qp4ej2r0h8rghypsqsygpf8ynzr8vwleenxdhzke69wrwed2nk8t9n2e8xudnm8pxcvxs2q5qsyqcyq5y4rdlhtf84f8rgdj34275juwls2ftxtcfh035863q3p9k6s94hpxhdmzfn5gxpsazdznxs56j4vt3fdhe00g9v2l3szher50hp4xlggqkxf77f',
+  },
+  {
+    description: 'A payment request cannot have both route hints and blinded paths',
+    error: 'UnexpectedRouteHintsAndBlindedPathsInRequest',
+    request: 'lnbc20m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4js5fdqqqqq2qqqqqpgqyzqqqqqqqqqqqqyqqqqqqqqqqqvsqqqqlnxy0ffrlt2y2jgtzw89kgr3zg4dlwtlfycn3yuek8x5eucnuchqps82xf0m2u6sx5wnjw7xxgnxz5kf09quqsv5zvkgj7d5kpzttp4qz7q5qsyqcyq5pzq2feycsemrh7wvendc4kw3tsmkt25a36ev6kfehrv7ecfkrp5zs9q5zqxqspqtr4avek5quzjn427asptzews5wrczfhychr2sq6ue9phmn35tjqcrspqgpsgpgxquyqjzstpsxsu59zqqqqqpqqqqqqyqq2qqqqqqqqqqqqqqqqqqqqqqqqpgqqqqk8t6endgpc99824amqzk9japgu8synwf3wx4qp4ej2r0h8rghypsqsygpf8ynzr8vwleenxdhzke69wrwed2nk8t9n2e8xudnm8pxcvxs2q5qsyqcyq5rzjq20q82gphp2nflc7jtzrcazrra7wwgzxqc8u7754cdlpfrmccae92qgzqvzq2ps8pqqqqqqpqqqqq9qqqvyp0lqgz2r9zwud5q6h8kjcgld94klwg6szamped2zj8s0nzrygpjflwq02jv0qnax85se4gyvhe3e653g6fpsj609r0m9dteyy07rusqq4jqnz',
+  },
 ];
 
 tests.forEach(args => {
@@ -617,6 +680,7 @@ tests.forEach(args => {
     equal(details.metadata, expected.metadata, 'Parse metadata blob');
     equal(details.mtokens, expected.mtokens, 'Parse millitokens amount');
     equal(details.network, expected.network, 'Parse network');
+    strictSame(details.paths, expected.paths, 'Parse blinded paths');
     equal(details.payment, expected.payment, 'Parse payment identifier');
     equal(details.tokens, expected.tokens, 'Parse tokens amount');
 

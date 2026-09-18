@@ -1,6 +1,7 @@
 const {featureFlagsFromWords} = require('bolt09');
 
 const taggedFields = require('./conf/tagged_fields');
+const wordsAsBlindedPath = require('./words_as_blinded_path');
 const wordsAsBuffer = require('./words_as_buffer');
 const wordsAsChainAddress = require('./words_as_chain_address');
 const wordsAsHopHints = require('./words_as_hop_hints');
@@ -26,6 +27,24 @@ const trim = true;
 
   @returns
   {
+    [blinded_path]: {
+      base_fee_mtokens: <Accumulated Base Fee Millitokens String>
+      cltv_delta: <Accumulated CLTV Expiry Delta Number>
+      features: [{
+        bit: <BOLT 09 Feature Bit Number>
+        is_required: <Feature Support is Required To Pay Bool>
+        type: <Feature Type String>
+      }]
+      fee_rate: <Accumulated Fee Rate Millitokens Per Million Number>
+      hops: [{
+        encrypted_data: <Encrypted Recipient Data Hex String>
+        relay_key: <Relaying Node Public Key Hex String>
+      }]
+      introduction_node: <Introduction Node Public Key Hex String>
+      key: <First Hop Path Key Public Key Hex String>
+      max_htlc_mtokens: <Maximum HTLC Millitokens String>
+      min_htlc_mtokens: <Minimum HTLC Millitokens String>
+    }
     [chain_address]: <Chain Address String>
     [cltv_delta]: <CLTV Delta Number>
     [description]: <Description String>
@@ -59,6 +78,9 @@ module.exports = ({code, network, words}) => {
   {});
 
   switch (field.label) {
+  case feature.blinded_path:
+    return {blinded_path: wordsAsBlindedPath({words}).path};
+
   case feature.description_hash:
     try {
       wordsAsBuffer({trim, words}).toString('hex');

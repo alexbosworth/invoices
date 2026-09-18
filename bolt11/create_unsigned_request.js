@@ -2,6 +2,7 @@ const {createHash} = require('crypto');
 
 const {featureFlagsAsWords} = require('bolt09');
 
+const blindedPathAsHex = require('./blinded_path_as_hex');
 const chainAddressAsWords = require('./chain_address_as_words');
 const currencyCodes = require('./conf/bech32_currency_codes');
 const descriptionAsWords = require('./description_as_words');
@@ -16,6 +17,7 @@ const decBase = 10;
 const defaultExpireMs = 1e3 * 60 * 60 * 24;
 const flatten = arr => [].concat(...arr);
 const {floor} = Math;
+const {isArray} = Array;
 const {keys} = Object;
 const maxDescriptionLen = 639;
 const msPerSec = 1e3;
@@ -26,13 +28,16 @@ const tokensAsMtokens = n => !n ? '0' : (BigInt(n) * BigInt(1e3)).toString();
 
 /** Create an unsigned payment request
 
+`paths` are bLIP 39 blinded paths. If using, omit `destination`, `payment`, and
+`routes`
+
   {
     [chain_addresses]: [<Chain Address String>]
     [cltv_delta]: <CLTV Delta Number>
     [created_at]: <Invoice Creation Date ISO 8601 String>
     [description]: <Description String>
     [description_hash]: <Description Hash Hex String>
-    destination: <Public Key String>
+    [destination]: <Public Key String>
     [expires_at]: <ISO 8601 Date String>
     features: [{
       bit: <BOLT 09 Feature Bit Number>
@@ -40,6 +45,22 @@ const tokensAsMtokens = n => !n ? '0' : (BigInt(n) * BigInt(1e3)).toString();
     id: <Preimage SHA256 Hash Hex String>
     [mtokens]: <Requested Milli-Tokens Value String> (can exceed Number limit)
     network: <Network Name String>
+    [paths]: [{
+      base_fee_mtokens: <Accumulated Base Fee Millitokens String>
+      cltv_delta: <Accumulated CLTV Expiry Delta Number>
+      [features]: [{
+        bit: <BOLT 09 Feature Bit Number>
+      }]
+      fee_rate: <Accumulated Fee Rate Millitokens Per Million Number>
+      hops: [{
+        encrypted_data: <Encrypted Recipient Data Hex String>
+        relay_key: <Relaying Node Public Key Hex String>
+      }]
+      [introduction_node]: <Introduction Node Public Key Hex String>
+      key: <First Hop Path Key Public Key Hex String>
+      max_htlc_mtokens: <Maximum HTLC Millitokens String>
+      min_htlc_mtokens: <Minimum HTLC Millitokens String>
+    }]
     [payment]: <Payment Identifier Hex String>
     [routes]: [[{
       [base_fee_mtokens]: <Base Fee Millitokens String>
@@ -72,6 +93,20 @@ module.exports = args => {
     throw new Error('ExpectedPaymentHashWhenEncodingPaymentRequest');
   }
 
+  if (args.paths !== undefined && !isArray(args.paths)) {
+    throw new Error('ExpectedArrayOfBlindedPathsToEncodePaymentRequest');
+  }
+
+  // Blinded paths replace route hints, a request cannot have both
+  if (!!args.paths && !!args.routes) {
+    throw new Error('UnexpectedRoutesAndBlindedPathsInPaymentRequest');
+  }
+
+  // A path id in the encrypted data replaces the payment identifier
+  if (!!args.paths && !!args.payment) {
+    throw new Error('UnexpectedPaymentIdAndBlindedPathsInPaymentRequest');
+  }
+
   const createdAt = floor((parse(args.created_at) || now()) / msPerSec);
 
   const defaultExpiresAt = new Date(createdAt + defaultExpireMs).toISOString();
@@ -95,6 +130,16 @@ module.exports = args => {
 
   const fieldWords = flatten(keys(taggedFields).map(field => {
     switch (taggedFields[field].label) {
+    case 'blinded_path':
+      if (!args.paths) {
+        return {};
+      }
+
+      return args.paths.map(path => ({
+        field,
+        words: hexAsWords({hex: blindedPathAsHex(path).hex}).words,
+      }));
+
     case 'description':
       return {
         field,

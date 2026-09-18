@@ -4,8 +4,9 @@
     "url": "https://github.com/alexbosworth/invoices/issues"
   },
   "dependencies": {
-    "@alexbosworth/blockchain": "4.5.3",
+    "@alexbosworth/blockchain": "4.8.0",
     "bech32": "2.0.0",
+    "bolt01": "4.0.0",
     "bolt07": "2.0.0",
     "bolt09": "3.0.0",
     "tiny-secp256k1": "2.2.4"
@@ -31,5 +32,5 @@
   "scripts": {
     "test": "node --experimental-test-coverage --test"
   },
-  "version": "6.1.4"
+  "version": "6.2.0"
 }

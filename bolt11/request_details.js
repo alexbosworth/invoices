@@ -11,6 +11,24 @@ const msPerSec = 1e3;
   {
     destination: <Public Key Hex String>
     details: [{
+      [blinded_path]: {
+        base_fee_mtokens: <Accumulated Base Fee Millitokens String>
+        cltv_delta: <Accumulated CLTV Expiry Delta Number>
+        features: [{
+          bit: <BOLT 09 Feature Bit Number>
+          is_required: <Feature Support is Required To Pay Bool>
+          type: <Feature Type String>
+        }]
+        fee_rate: <Accumulated Fee Rate Millitokens Per Million Number>
+        hops: [{
+          encrypted_data: <Encrypted Recipient Data Hex String>
+          relay_key: <Relaying Node Public Key Hex String>
+        }]
+        introduction_node: <Introduction Node Public Key Hex String>
+        key: <First Hop Path Key Public Key Hex String>
+        max_htlc_mtokens: <Maximum HTLC Millitokens String>
+        min_htlc_mtokens: <Minimum HTLC Millitokens String>
+      }
       [chain_address]: <Chain Address String>
       [cltv_delta]: <CLTV Delta Number>
       [description]: <Description String>
@@ -54,6 +72,24 @@ const msPerSec = 1e3;
     [metadata]: <Payment Metadata Hex String>
     [mtokens]: <Requested Milli-Tokens Value String> (can exceed Number limit)
     network: <Network Name String>
+    [paths]: [{
+      base_fee_mtokens: <Accumulated Base Fee Millitokens String>
+      cltv_delta: <Accumulated CLTV Expiry Delta Number>
+      features: [{
+        bit: <BOLT 09 Feature Bit Number>
+        is_required: <Feature Support is Required To Pay Bool>
+        type: <Feature Type String>
+      }]
+      fee_rate: <Accumulated Fee Rate Millitokens Per Million Number>
+      hops: [{
+        encrypted_data: <Encrypted Recipient Data Hex String>
+        relay_key: <Relaying Node Public Key Hex String>
+      }]
+      introduction_node: <Introduction Node Public Key Hex String>
+      key: <First Hop Path Key Public Key Hex String>
+      max_htlc_mtokens: <Maximum HTLC Millitokens String>
+      min_htlc_mtokens: <Minimum HTLC Millitokens String>
+    }]
     [payment]: <Payment Identifier Hex Encoded String>
     [routes]: [[{
       [base_fee_mtokens]: <Base Fee Millitokens String>
@@ -70,6 +106,10 @@ module.exports = ({destination, details, mtokens, network, timestamp}) => {
   const amounts = safeTokens({mtokens: mtokens || defaultMtokens});
 
   return details.reduce((sum, n) => {
+    if (!!n.blinded_path) {
+      sum.paths.push(n.blinded_path);
+    }
+
     if (!!n.chain_address) {
       sum.chain_addresses.push(n.chain_address);
     }
@@ -134,6 +174,7 @@ module.exports = ({destination, details, mtokens, network, timestamp}) => {
     expires_at: asDateString((defaultExpireSeconds * msPerSec) + timestamp),
     features: [],
     mtokens: mtokens || Number().toString(),
+    paths: !!details.find(n => !!n.blinded_path) ? [] : undefined,
     routes: !!details.find(n => !!n.path) ? [] : undefined,
     safe_tokens: !!mtokens ? amounts.safe : Number(),
     tokens: !!mtokens ? amounts.tokens : Number(),

@@ -71,10 +71,12 @@ const {encoded, mtokens, network} = byteEncodeRequest({
 
 Assemble a signed payment request
 
+`signature` is not required when using blinded paths in the request
+
     {
-      destination: <Destination Public Key Hex String>
+      [destination]: <Destination Public Key Hex String>
       hrp: <Request Human Readable Part String>
-      signature: <Request Hash Signature Hex String>
+      [signature]: <Request Hash Signature Hex String>
       tags: [<Request Tag Word Number>]
     }
 
@@ -105,13 +107,16 @@ const {request} = createSignedRequest({
 
 Create an unsigned payment request
 
+`paths` are bLIP 39 blinded paths. If using, omit `destination`, `payment`, and
+`routes`
+
     {
       [chain_addresses]: [<Chain Address String>]
       [cltv_delta]: <CLTV Delta Number>
       [created_at]: <Invoice Creation Date ISO 8601 String>
       [description]: <Description String>
       [description_hash]: <Description Hash Hex String>
-      destination: <Public Key String>
+      [destination]: <Public Key String>
       [expires_at]: <ISO 8601 Date String>
       features: [{
         bit: <BOLT 09 Feature Bit Number>
@@ -119,6 +124,22 @@ Create an unsigned payment request
       id: <Preimage SHA256 Hash Hex String>
       [mtokens]: <Requested Milli-Tokens Value String> (can exceed Number limit)
       network: <Network Name String>
+      [paths]: [{
+        base_fee_mtokens: <Accumulated Base Fee Millitokens String>
+        cltv_delta: <Accumulated CLTV Expiry Delta Number>
+        [features]: [{
+          bit: <BOLT 09 Feature Bit Number>
+        }]
+        fee_rate: <Accumulated Fee Rate Millitokens Per Million Number>
+        hops: [{
+          encrypted_data: <Encrypted Recipient Data Hex String>
+          relay_key: <Relaying Node Public Key Hex String>
+        }]
+        [introduction_node]: <Introduction Node Public Key Hex String>
+        key: <First Hop Path Key Public Key Hex String>
+        max_htlc_mtokens: <Maximum HTLC Millitokens String>
+        min_htlc_mtokens: <Minimum HTLC Millitokens String>
+      }]
       [payment]: <Payment Identifier Hex String>
       [routes]: [[{
         [base_fee_mtokens]: <Base Fee Millitokens String>
@@ -157,6 +178,8 @@ Parse a BOLT 11 payment request into its component data
 
 Note: either description or description_hash will be returned
 
+`paths` are bLIP 39 blinded paths.
+
     {
       request: <BOLT 11 Payment Request String>
     }
@@ -182,6 +205,24 @@ Note: either description or description_hash will be returned
       is_expired: <Invoice is Expired Bool>
       [mtokens]: <Requested Milli-Tokens Value String> (can exceed Number limit)
       network: <Network Name String>
+      [paths]: [{
+        base_fee_mtokens: <Accumulated Base Fee Millitokens String>
+        cltv_delta: <Accumulated CLTV Expiry Delta Number>
+        features: [{
+          bit: <BOLT 09 Feature Bit Number>
+          is_required: <Feature Support is Required To Pay Bool>
+          type: <Feature Type String>
+        }]
+        fee_rate: <Accumulated Fee Rate Millitokens Per Million Number>
+        hops: [{
+          encrypted_data: <Encrypted Recipient Data Hex String>
+          relay_key: <Relaying Node Public Key Hex String>
+        }]
+        introduction_node: <Introduction Node Public Key Hex String>
+        key: <First Hop Path Key Public Key Hex String>
+        max_htlc_mtokens: <Maximum HTLC Millitokens String>
+        min_htlc_mtokens: <Minimum HTLC Millitokens String>
+      }]
       [payment]: <Payment Identifier Hex Encoded String>
       [routes]: [[{
         [base_fee_mtokens]: <Base Fee Millitokens String>

@@ -1,5 +1,11 @@
 # Versions
 
+## 6.2.0
+
+- `createSignedRequest`: Add ephemeral key signing for blinded path requests
+- `createUnsignedRequest`: Add support for bLIP 39 blinded paths in `paths`
+- `parsePaymentRequest`: Add support for bLIP 39 blinded paths in `paths`
+
 ## 6.1.4
 
 - `parsePaymentRequest`: Add support for `signet` payment requests

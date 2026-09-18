@@ -11,7 +11,62 @@ const {parsePaymentRequest} = require('./../../');
 const taggedFields = require('./../../bolt11/conf/tagged_fields');
 const wordsAsBuffer = require('./../../bolt11/words_as_buffer');
 
+const blindedKey = '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad';
 const bufFromHex = hex => Buffer.from(hex, 'hex');
+
+// The bLIP 39 test vector blinded paths
+const blindedPaths = [
+  {
+    base_fee_mtokens: '40',
+    cltv_delta: 130,
+    features: [],
+    fee_rate: 20,
+    hops: [
+      {
+        encrypted_data: '0102030405',
+        relay_key: '03a8c97ed5cd40d474e4ef18c899854b25e5070106504cb225e6d2c112d61a805e',
+      },
+      {
+        encrypted_data: '0504030201',
+        relay_key: '0220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a',
+      },
+      {
+        encrypted_data: '0102030405060708090a0b0c0d0e',
+        relay_key: '02c75eb336a038294eaaf760158b2e851c3c0937262e35401ae64a1bee71a2e40c',
+      },
+    ],
+    introduction_node: '03a8c97ed5cd40d474e4ef18c899854b25e5070106504cb225e6d2c112d61a805e',
+    key: '03f3311e948feb5115242c4e396c81c448ab7ee5fd24c4e24e66c73533cc4f98b8',
+    max_htlc_mtokens: '100',
+    min_htlc_mtokens: '2',
+  },
+  {
+    base_fee_mtokens: '4',
+    cltv_delta: 10,
+    features: [],
+    fee_rate: 2,
+    hops: [{
+      encrypted_data: '0102030405',
+      relay_key: '0220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a',
+    }],
+    introduction_node: '0220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a',
+    key: '02c75eb336a038294eaaf760158b2e851c3c0937262e35401ae64a1bee71a2e40c',
+    max_htlc_mtokens: '10',
+    min_htlc_mtokens: '0',
+  },
+];
+
+// The blinded paths in the BOLT 12 shape where the first hop key is blinded
+const blindedFirstHopPaths = blindedPaths.map(path => ({
+  ...path,
+  hops: path.hops.map((hop, i) => ({
+    encrypted_data: hop.encrypted_data,
+    relay_key: !i ? blindedKey : hop.relay_key,
+  })),
+}));
+
+// The bLIP 39 test vector payment request
+const blindedPathsRequest = 'lnbc20m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5xysxxatsyp3k7enxv4js5fdqqqqq2qqqqqpgqyzqqqqqqqqqqqqyqqqqqqqqqqqvsqqqqlnxy0ffrlt2y2jgtzw89kgr3zg4dlwtlfycn3yuek8x5eucnuchqps82xf0m2u6sx5wnjw7xxgnxz5kf09quqsv5zvkgj7d5kpzttp4qz7q5qsyqcyq5pzq2feycsemrh7wvendc4kw3tsmkt25a36ev6kfehrv7ecfkrp5zs9q5zqxqspqtr4avek5quzjn427asptzews5wrczfhychr2sq6ue9phmn35tjqcrspqgpsgpgxquyqjzstpsxsu59zqqqqqpqqqqqqyqq2qqqqqqqqqqqqqqqqqqqqqqqqpgqqqqk8t6endgpc99824amqzk9japgu8synwf3wx4qp4ej2r0h8rghypsqsygpf8ynzr8vwleenxdhzke69wrwed2nk8t9n2e8xudnm8pxcvxs2q5qsyqcyq5y4rdlhtf84f8rgdj34275juwls2ftxtcfh035863q3p9k6s94hpxhdmzfn5gxpsazdznxs56j4vt3fdhe00g9v2l3szher50hp4xlggqkxf77f';
 
 const tests = [
   {
@@ -44,6 +99,40 @@ const tests = [
     },
     description: 'A known network is required',
     error: 'ExpectedKnownNetworkToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      paths: 'paths',
+    },
+    description: 'Blinded paths are expected as an array',
+    error: 'ExpectedArrayOfBlindedPathsToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      paths: blindedPaths,
+      routes: [[{
+        public_key: '029e03a901b85534ff1e92c43c74431f7ce72046060fcf7a95c37e148f78c77255',
+      }]],
+    },
+    description: 'Blinded paths cannot be combined with routes',
+    error: 'UnexpectedRoutesAndBlindedPathsInPaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      paths: blindedPaths,
+      payment: '1111111111111111111111111111111111111111111111111111111111111111',
+    },
+    description: 'Blinded paths cannot be combined with a payment identifier',
+    error: 'UnexpectedPaymentIdAndBlindedPathsInPaymentRequest',
   },
   {
     args: {
@@ -364,6 +453,47 @@ const tests = [
       private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
     },
   },
+  {
+    args: {
+      created_at: '2017-06-01T10:57:38.000Z',
+      description: '1 cup coffee',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      mtokens: '2000000000',
+      network: 'bitcoin',
+      paths: blindedPaths,
+    },
+    description: 'Payment request with blinded paths',
+    expected: {
+      data: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404081a0a189031bab81031b7b33332b28512d0000002800000014008200000000000000020000000000000064000003f3311e948feb5115242c4e396c81c448ab7ee5fd24c4e24e66c73533cc4f98b80303a8c97ed5cd40d474e4ef18c899854b25e5070106504cb225e6d2c112d61a805e0501020304050220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a05050403020102c75eb336a038294eaaf760158b2e851c3c0937262e35401ae64a1bee71a2e40c0e0102030405060708090a0b0c0d0e50a20000000400000002000a0000000000000000000000000000000a000002c75eb336a038294eaaf760158b2e851c3c0937262e35401ae64a1bee71a2e40c010220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a05010203040500',
+      hash: '503fb76c15e4dfb5df212bdae60297bbe64ab6742219d8704b4808b273e491f6',
+      hrp: 'lnbc20m',
+    },
+    verify: {
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
+  {
+    args: {
+      created_at: '2017-06-01T10:57:38.000Z',
+      description: '1 cup coffee',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      mtokens: '2000000000',
+      network: 'bitcoin',
+      paths: blindedFirstHopPaths,
+    },
+    description: 'Payment request with blinded first hop key blinded paths',
+    expected: {
+      data: '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c1014181c202404081a0a189031bab81031b7b33332b28512d0000002800000014008200000000000000020000000000000064000003f3311e948feb5115242c4e396c81c448ab7ee5fd24c4e24e66c73533cc4f98b80303a8c97ed5cd40d474e4ef18c899854b25e5070106504cb225e6d2c112d61a805e0501020304050220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a05050403020102c75eb336a038294eaaf760158b2e851c3c0937262e35401ae64a1bee71a2e40c0e0102030405060708090a0b0c0d0e50a20000000400000002000a0000000000000000000000000000000a000002c75eb336a038294eaaf760158b2e851c3c0937262e35401ae64a1bee71a2e40c010220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a05010203040500',
+      hash: '503fb76c15e4dfb5df212bdae60297bbe64ab6742219d8704b4808b273e491f6',
+      hrp: 'lnbc20m',
+      paths: blindedPaths,
+    },
+    verify: {
+      destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
 ];
 
 tests.forEach(({args, description, error, expected, verify}) => {
@@ -412,6 +542,10 @@ tests.forEach(({args, description, error, expected, verify}) => {
       equal(parsed.mtokens, args.mtokens, 'Payment request mtokens expected');
     }
 
+    if (!!args.paths) {
+      strictSame(parsed.paths, expected.paths || args.paths, 'Got paths');
+    }
+
     if (!!args.payment) {
       equal(parsed.payment, args.payment, 'Payment identifier expected');
     }
@@ -445,6 +579,34 @@ test('An unexpected tagged field type cannot be encoded', (t, end) => {
   } finally {
     delete taggedFields['99'];
   }
+
+  return end();
+});
+
+// Signing a blinded paths request with the bLIP 39 key gives its test vector
+test('A blinded paths request matches the bLIP 39 test vector', (t, end) => {
+  const {hash, hrp, tags} = createUnsignedRequest({
+    created_at: '2017-06-01T10:57:38.000Z',
+    description: '1 cup coffee',
+    id: '0001020304050607080900010203040506070809000102030405060708090102',
+    mtokens: '2000000000',
+    network: 'bitcoin',
+    paths: blindedPaths,
+  });
+
+  const signature = sign(
+    bufFromHex(hash),
+    bufFromHex('e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734')
+  );
+
+  const {request} = createSignedRequest({
+    hrp,
+    tags,
+    destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+    signature: Buffer.from(signature).toString('hex'),
+  });
+
+  equal(request, blindedPathsRequest, 'Got bLIP 39 test vector request');
 
   return end();
 });

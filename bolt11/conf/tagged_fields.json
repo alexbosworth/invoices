@@ -39,6 +39,11 @@
     "name": "n",
     "type": "public_key"
   },
+  "20": {
+    "label": "blinded_path",
+    "name": "b",
+    "type": "blinded_path"
+  },
   "23": {
     "label": "description_hash",
     "name": "h",

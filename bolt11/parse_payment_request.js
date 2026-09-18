@@ -14,9 +14,11 @@ const wordsAsNumber = require('./words_as_number');
 
 const asHex = arr => Buffer.from(arr).toString('hex');
 const {decode} = bech32;
+const hasBlindedPath = n => n.blinded_path !== undefined;
 const hasDescription = n => n.description !== undefined;
 const hasDescriptionHash = n => n.description_hash !== undefined;
 const hasLnPrefix = n => n.slice(Number(), 'ln'.length).toLowerCase() === 'ln';
+const hasRouteHints = n => n.path !== undefined;
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const isLowSRequired = true;
 const maxRequestLength = 7089;
@@ -27,6 +29,8 @@ const timestampWordLength = 7;
 /** Parse a BOLT 11 payment request into its component data
 
   Note: either description or description_hash will be returned
+
+  `paths` are bLIP 39 blinded paths.
 
   {
     request: <BOLT 11 Payment Request String>
@@ -54,6 +58,24 @@ const timestampWordLength = 7;
     [metadata]: <Payment Metadata Hex String>
     mtokens: <Requested Milli-Tokens Value String> (can exceed Number limit)
     network: <Network Name String>
+    [paths]: [{
+      base_fee_mtokens: <Accumulated Base Fee Millitokens String>
+      cltv_delta: <Accumulated CLTV Expiry Delta Number>
+      features: [{
+        bit: <BOLT 09 Feature Bit Number>
+        is_required: <Feature Support is Required To Pay Bool>
+        type: <Feature Type String>
+      }]
+      fee_rate: <Accumulated Fee Rate Millitokens Per Million Number>
+      hops: [{
+        encrypted_data: <Encrypted Recipient Data Hex String>
+        relay_key: <Relaying Node Public Key Hex String>
+      }]
+      introduction_node: <Introduction Node Public Key Hex String>
+      key: <First Hop Path Key Public Key Hex String>
+      max_htlc_mtokens: <Maximum HTLC Millitokens String>
+      min_htlc_mtokens: <Minimum HTLC Millitokens String>
+    }]
     [payment]: <Payment Identifier Hex Encoded String>
     [routes]: [[{
       [base_fee_mtokens]: <Base Fee Millitokens String>
@@ -107,6 +129,11 @@ module.exports = ({request}) => {
   // Either a description or a description hash is required
   if (!elements.some(hasDescription) && !elements.some(hasDescriptionHash)) {
     throw new Error('ExpectedDescriptionOrDescriptionHashInPaymentRequest');
+  }
+
+  // Blinded paths replace route hints, an invoice cannot have both
+  if (elements.some(hasBlindedPath) && elements.some(hasRouteHints)) {
+    throw new Error('UnexpectedRouteHintsAndBlindedPathsInRequest');
   }
 
   // The destination public key may be specified in a tagged field
