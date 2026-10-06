@@ -1,0 +1,43 @@
+{
+  "error": {
+    "erroneous_field": "1",
+    "error": "5",
+    "suggested_value": "3"
+  },
+  "invoice": {
+    "amount": "170",
+    "blinded_payinfo": "162",
+    "created_at": "164",
+    "fallbacks": "172",
+    "features": "174",
+    "node_id": "176",
+    "paths": "160",
+    "payment_hash": "168",
+    "relative_expiry": "166"
+  },
+  "offer": {
+    "absolute_expiry": "14",
+    "amount": "8",
+    "chains": "2",
+    "currency": "6",
+    "description": "10",
+    "features": "12",
+    "issuer": "18",
+    "issuer_id": "22",
+    "metadata": "4",
+    "paths": "16",
+    "quantity_max": "20"
+  },
+  "request": {
+    "amount": "82",
+    "bip_353_name": "91",
+    "chain": "80",
+    "features": "84",
+    "metadata": "0",
+    "payer_id": "88",
+    "payer_note": "89",
+    "paths": "90",
+    "quantity": "86"
+  },
+  "signature": "240"
+}

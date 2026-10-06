@@ -1,0 +1,395 @@
+{
+  "comment": "BOLT 12 strings produced by other implementations, taken from their test suites. Expected values are the ones those tests assert, in the shape this library returns them. A null expected value means the field is absent.",
+  "offers": [
+    {
+      "description": "Eclair and lightning-kmp minimal offer has only an issuer id",
+      "expected": {
+        "description": null,
+        "features": [],
+        "issuer_id": "030df2e35b922d9e9bbaebd8b3017907f473b1e4774e0038d593e98242d33cf039",
+        "mtokens": null,
+        "paths": null
+      },
+      "offer": "lno1zcssxr0juddeytv7nwawhk9nq9us0arnk8j8wnsq8r2e86vzgtfneupe",
+      "source": "ACINQ/eclair OfferTypesSpec \"minimal offer\", ACINQ/lightning-kmp OfferTypesTestsCommon \"minimal offer\""
+    },
+    {
+      "description": "Eclair and lightning-kmp offer with an amount and an unlimited quantity",
+      "expected": {
+        "description": "offer with quantity",
+        "features": [],
+        "issuer": "alice@bigshop.com",
+        "issuer_id": "030df2e35b922d9e9bbaebd8b3017907f473b1e4774e0038d593e98242d33cf039",
+        "max_quantity": 0,
+        "mtokens": "50",
+        "networks": [
+          "testnet"
+        ]
+      },
+      "offer": "lno1qgsyxjtl6luzd9t3pr62xr7eemp6awnejusgf6gw45q75vcfqqqqqqqgqyeq5ym0venx2u3qwa5hg6pqw96kzmn5d968jys3v9kxjcm9gp3xjemndphhqtnrdak3gqqkyypsmuhrtwfzm85mht4a3vcp0yrlgua3u3m5uqpc6kf7nqjz6v70qwg",
+      "source": "ACINQ/eclair OfferTypesSpec \"offer with amount and quantity\", ACINQ/lightning-kmp OfferTypesTestsCommon \"offer with amount and quantity\""
+    },
+    {
+      "description": "lightning-kmp deterministic offer with a blinded path through a trampoline node and no issuer id",
+      "expected": {
+        "description": null,
+        "expires_at": null,
+        "features": [],
+        "issuer_id": null,
+        "mtokens": null,
+        "paths": [
+          {
+            "hops": [
+              {
+                "encrypted_data": "e6a0647db956152a1aa7585eb505b52613da93cc00f41929365353587809472784ff111160089210e476580c1ec20c75fbb698",
+                "relay_key": "033b4284a0dcb534cbfb1f397da289a168ec072c8115f8a59f370fa2d06720d53f"
+              },
+              {
+                "encrypted_data": "c0d3ae622b866887520ca1a4d4b8e9d6",
+                "relay_key": "03be1b20ec6e0104b0472f4d6db29043490dba65a2c30c2f5b6e478d88f2ba8675"
+              }
+            ],
+            "introduction_node": "03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f",
+            "key": "027cfeea4a32bb61dfa2c2f32ef403392a058a4b90b69cc3a4d6c438c3c72f064e"
+          }
+        ]
+      },
+      "offer": "lno1zrxq8pjw7qjlm68mtp7e3yvxee4y5xrgjhhyf2fxhlphpckrvevh50u0qf70a6j2x2akrhazctejaaqr8y4qtzjtjzmfesay6mzr3s789uryuqsr8dpgfgxuk56vh7cl89769zdpdrkqwtypzhu2t8ehp73dqeeq65lsqvlx5pj8mw2kz54p4f6ct66stdfxz0df8nqq7svjjdjn2dv8sz28y7z07yg3vqyfyy8ywevqc8kzp36lhd5cqwlpkg8vdcqsfvz89axkmv5sgdysmwn95tpsct6mdercmz8jh2r82qqscrf6uc3tse5gw5sv5xjdfw8f6c",
+      "source": "ACINQ/lightning-kmp OfferTypesTestsCommon \"generate deterministic blinded offer through trampoline node\""
+    }
+  ],
+  "requests": [
+    {
+      "description": "Eclair minimal invoice request for a minimal offer",
+      "expected": {
+        "features": [],
+        "metadata": "abcdef",
+        "mtokens": "21000",
+        "network": "bitcoin",
+        "offer": "lno1zcssxr0juddeytv7nwawhk9nq9us0arnk8j8wnsq8r2e86vzgtfneupe",
+        "payer_id": "024dd975c3e7a1df0d717bee91415f25952199bc30ec62ff6226be6c3137b3e5e1",
+        "quantity": null
+      },
+      "request": "lnr1qqp6hn00zcssxr0juddeytv7nwawhk9nq9us0arnk8j8wnsq8r2e86vzgtfneupe2gp9yzzcyypymkt4c0n6rhcdw9a7ay2ptuje2gvehscwcchlvgntump3x7e7tc0sgp9k43qeu892gfnz2hrr7akh2x8erh7zm2tv52884vyl462dm5tfcahgtuzt7j0npy7getf4trv5d4g78a9fkwu3kke6hcxdr6t2n7vz",
+      "source": "ACINQ/eclair OfferTypesSpec \"minimal invoice request\""
+    },
+    {
+      "description": "lightning-kmp minimal invoice request for a minimal offer",
+      "expected": {
+        "features": [],
+        "metadata": "abcdef",
+        "mtokens": "10000",
+        "network": "bitcoin",
+        "offer": "lno1zcssxr0juddeytv7nwawhk9nq9us0arnk8j8wnsq8r2e86vzgtfneupe",
+        "payer_id": "024dd975c3e7a1df0d717bee91415f25952199bc30ec62ff6226be6c3137b3e5e1",
+        "quantity": null
+      },
+      "request": "lnr1qqp6hn00zcssxr0juddeytv7nwawhk9nq9us0arnk8j8wnsq8r2e86vzgtfneupe2gpzwyzcyypymkt4c0n6rhcdw9a7ay2ptuje2gvehscwcchlvgntump3x7e7tc0sgzhxcvjdh925x0jyyxzrdc5s2mwqtmpf4zezd7mg094lmcwqh3xyw2n6jdzkl80jj2euh48s00wtgad9j7wyt67rnth3dqq0fa0usrxm",
+      "source": "ACINQ/lightning-kmp OfferTypesTestsCommon \"minimal invoice request\""
+    }
+  ],
+  "invoices": [
+    {
+      "description": "Core Lightning regtest invoice",
+      "expected": {
+        "invoice": {
+          "features": [],
+          "id": "14805a7006b96286e7b0a3f618c1cd7f1059f76da766044c5bfc3fa31d5e9442",
+          "mtokens": "10000000",
+          "network": "regtest",
+          "node_id": "024cc50d604f657094f8a2ff031ad6d888f9ac220a86b5949cdaaa5a5c03055d69",
+          "quantity": null
+        },
+        "offer": {
+          "description": "yolo",
+          "features": [],
+          "issuer_id": "024cc50d604f657094f8a2ff031ad6d888f9ac220a86b5949cdaaa5a5c03055d69",
+          "networks": [
+            "regtest"
+          ]
+        }
+      },
+      "invoice": "lni1qqgds4gweqxey37gexf5jus4kcrwuq3qqc3xu3s3rg94nj40zfsy866mhu5vxne6tcej5878k2mneuvgjy8s5predakx793pqfxv2rtqfajhp98c5tlsxxkkmzy0ntpzp2rtt9yum2495hqrq4wkj5pqqc3xu3s3rg94nj40zfsy866mhu5vxne6tcej5878k2mneuvgjy84yqucj6q9sggrnl24r93kfmdnatwpy72mxg7ygr9waxu0830kkpqx84pd5j65fhg2pxqzfnzs6cz0v4cff79zlup344kc3ru6cgs2s66ef8x64fd9cqc9t45s954fef6n3ql8urpc4r2vvunc0uv9yq37g485heph6lpuw34ywxadqypwq3hlcrpyk32zdvlrgfsdnx5jegumenll49v502862l9sq5erz3qqxte8tyk308ykd6fqy2lxkrsmeq77d8s5977pzmc68lgvs2xcn0kfvnlzud9fvkv900ggwe7yf9hf7lr6qz3pcqqqqqqqqqqqqqqq5qqqqqqqqqqqqqwjfvkl43fqqqqqqzjqgcuhrdv2sgq5spd8qp4ev2rw0v9r7cvvrntlzpvlwmd8vczycklu87336h55g24q8xykszczzqjvc5xkqnm9wz203ghlqvdddkyglxkzyz5xkk2fek42tfwqxp2ad8cypv26x5zxkyk675ep3v48grwydze6nvvg56cklgmvztuny58t5j0fl3hemx3lvd0ryx89jtf0h069z6r2qwqvjlyrewvzsfqmmfajs70q",
+      "source": "ACINQ/eclair Bolt12InvoiceSpec \"cln invoice\", ACINQ/lightning-kmp Bolt12InvoiceTestsCommon \"cln invoice\""
+    },
+    {
+      "description": "Invoice with non-minimally encoded feature bits",
+      "expected": {
+        "invoice": {
+          "features": [],
+          "mtokens": "1000000000",
+          "network": "regtest"
+        },
+        "offer": {
+          "features": [],
+          "networks": [
+            "regtest"
+          ]
+        }
+      },
+      "invoice": "lni1qqsyzre2s0lc77w5h33ck6540xxsyjehjl66f9tfp83w85zcxqyhltczyqrzymjxzydqkkw24ufxqslttwlj3s608f0rx2slc7etw0833zgs7zqyqh67zqq2qqgwsqktzd0na8g54f2r8secsaemc7ww2d6spl397celwcv20egnau2z8gp83d0dg7gvtkkvklnqlvp0erhq9nh9928rexerg578wnyew6dj6xczq2nqtavvd94k7jq2slng76uk560g6qeu38ru2gjjtdd4w9jxfqcc5qpnvvduearw4k75xdsgrc9ntzs274hwumtk5zwlrcr8yzwn8q0ry40f6lcmarq2nqkz9j2anajrlpchwwfguypms9x0uptvcsspwzjp3vg8srqx27crkqe8v9nzqaktzwwy5szk0rsq9sq7vhqncvv63mseqsx9lzmjraxhfnhc6f9tgnm05v7x0s4dhzwac9gruy44n9yht645cd4jzcssyjvcf2ptqztsenmzyw0e6kpx209mmmpal9ptutxpeygerepwh5rc2qsqvgnwgcg35z6ee2h3yczraddm72xrfua9uve2rlrm9deu7xyfzr6jqsae4jsq2spsyqqqtqss9g4l2s06jx69u2vtvezfmh07puh8pzhp76yddr7yvjpt2q38puqx5r7sgacrnpvghfhfzdzm9rertx4egjnarr2plwp26yfzcnv4ef536h9nu8lq9xyejhphnyv97axrqwr982vvedhfzj3cn5uhdymxwejfh55p2putqvpeskyt5m53x3dj3u34n2u5ff7334qlhq4dzy3vfk2u56gatje7rlsqgllx5cs3433fgn37scpz5ysn7df4tcfvgw5hgn998qut5l63vvmlv85xj4gj9rs6ja6gj45ddfjvwrcq9qthepk3xtpy4x8tsmmaqhas3v8k6chxp4ds8367lgw3q4mtpm5zmlr84tx4xpshtaxa0es0kcjuah80xt23pm08qprase5e2euq8ndvymuzcdznh78qyg28lw65wve2fpphd5zpwy4v3gfpa245dgtmqkp34gg8s4tfxytnx5vxhclwzmpzdy80jlfyznklk9t0karg42yvxqey68py3t0yg5rew5jke2sr6l5akw3r4x4cyp5f9ty27yjqtsn5ucqywkk84sxudl89xdxw34kvvtq67pk64r3kmyzz5dum0c66sjh7a5ylr6u38ycdmdq5rm7pp5m87rmsg7ntkqr4dcateeafrchaw085my236hxg47745nsrdtmjvnhy4a9ppd95g5m3u40wa0pcnmlhcm99xd0flh0484vht6ysx5cg5nmjxzaqsqv33sgptsrgmfuqgwjuvw5v58k379638h6hda8tqvpk4aexfmj27jsskj6y2dc72hhwhsufalmudjjnxh5lmh6n6kt4azgqg7en2fg446vmtj2zgncc9wv4sa8zhyxm60zadqlf664d8mhdx6g5g6cls2glkqdmayuvypt7fuljtswlmz4w5e8nkkpzr8m6txz7gzvfcexj9dmdhuhsx35lnwnmzm52vq2wgr49g25dwk4jlh0n2yq6yufpewngg7llkgxwqpr5nlruajj55sel09axp2tmkhaf2hkh2lsjyth098l2r2kfg7u9440ymwswpwd20j9zdp562ejm0yy0x68q4knmd6a6g4nz0a2nm3842yw4pdx8udqggqkxa03jwmrzzuzwp2mn6az3exhunlqcpmphsks3cur22l3hvzn74vqy0kf70r6hd5cy2va94czl9g594856j287cefqej8qlre5ewyc5l02wtsx0hcjr4jhup6z4rj46lmrylsr034r5w2csnsgcy83yz848lafh5wue9aue8grnpvghfhfzdzm9rertx4egjnarr2plwp26yfzcnv4ef536h9nu8lq86u0a3w8zcxwy9hj9gvdwv8fhahpdauyzmuegpkefl3xc798mft7qvpeskyt5m53x3dj3u34n2u5ff7334qlhq4dzy3vfk2u56gatje7rlsqg0xlmw039msmmqtt4jqkgqts08ervu9dsx05qwzr67dazwklna9yjzdker5mhmeghxde2jlu5gvl4wrshvrg6x6a0j7hqsgpcc3ngm0ucvftuq6k8q0tpgxknk3d3t8nc9p9frafrfndz788hkaut704urzsj06t45qy8qk5hewf9p3sej3m2xrwyk6ny5hg8t24aq50a7re8evssrd0nmtrpjttuj04nlhs8ygteqepyc6sg5lsdajrc63xjp26j7surx83vx5u4326qfk6vw0sqhme6cw9247ef75ymtz4mp3esduvl07ykrnzzre3aq5jgqzrzcj59yjdcvp38nq7uvdqwmnhvy0h7t9062znl8ly02k9d02tyxev6mf6we8ztfjrdu73wc6gctxg5lmgj4a8v8z9lzqdfvlsmcwzyznagl929pqqqqyfjqqqqqpszqcqqqqqqqqqq3xqqqqqqz0490jqqqgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpzvsqqqqqvqsxqqqqqqqqqqyfsqqqqqqnaftusqqzqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqgnyqqqqqrqypsqqqqqqqqqpzvqqqqqqp4rw2vqqqsqqqqqqqqqqqqqqqqqqqqqqqqqzjqg6zm7ju2sgrmk0u67xstmskz34gfjfnjfxwvjltp3jsrd8rn40s7pgk8tzxwt64qgwu6egqtqggzfxvy4q4sp9cvea3z88uatqn98jaaas7ljs479nqujyv3usht6pu0qs8wdac52sykqfjnxg0xhva4fcv00hr4tqzjwkjnkayykkm9dnr97ladr5jjjx4xyjtun7ucye660akfv4nl9tupwnyemp0sasfxapvcw",
+      "source": "ACINQ/eclair Bolt12InvoiceSpec \"invoice with non-minimally encoded feature bits\", ACINQ/lightning-kmp Bolt12InvoiceTestsCommon \"invoice with non-minimally encoded feature bits\""
+    }
+  ],
+  "chains": [
+    {
+      "description": "Eclair minimal tip: an offer with no amount, a request with an amount, and the invoice",
+      "expected": {
+        "offer": {
+          "description": null,
+          "features": [],
+          "issuer_id": "024ff5317f051c7f6eac0266c5cceaeb6c5775a940fab9854e47bfebf6bc7a0407",
+          "mtokens": null,
+          "networks": [
+            "bitcoin"
+          ]
+        },
+        "request": {
+          "features": [],
+          "mtokens": "12000000",
+          "network": "bitcoin",
+          "payer_id": "031ef4439f638914de79220483dda32dfb7a431e799a5ce5a7643fbd70b2118e4e",
+          "quantity": null
+        },
+        "invoice": {
+          "features": [],
+          "id": "85fe476739f06bb8ea9fca1766a184d41ea1b410644fb74f76384e7c09f16afc",
+          "mtokens": "12000000",
+          "network": "bitcoin",
+          "node_id": "024ff5317f051c7f6eac0266c5cceaeb6c5775a940fab9854e47bfebf6bc7a0407",
+          "quantity": null
+        }
+      },
+      "invoice": "lni1qqswluyyp7j9aamd8l2ma23jyvvuvujqu5wq73jp38t02yr72s23evskyypylaf30uz3clmw4spxd3wvat4kc4m449q04wv9ferml6lkh3aqgp6syph79rq2kmcmxukp563ydtnr7a8ex85rvhs45zyudrtpjqqqqqqqq5srkudsqkppqv00gsulvwy3fhneygzg8hdr9hah5sc70xd9eed8vslm6u9jzx8yag9qqf8l2vtlq5w87m4vqfnvtn82adk9wadfgratnp2wg7l7ha4u0gzqwqn0qpkn0eldw8lrrgmjka63dls780dmkw7y8pvs9yp20t04a3gnesqsxg0g87w3v05932duyp376uzlq62skegfe4h4r699mvruu0wzjaywqqavx5zshdrfv9rzaaef8d2vx930fwsle20ec7f6tcnccr99x3c3cxrjhgvemc33ldtymm2fmtns95w0zk6urhthu6pfy06a5yq2y8qqqqqqzqqqqqpqqqcqqqqqqqqqqqzqqqqqqqqqqqq9qqq2gprft7pdtfszqyk2sgy9lerkww0sdwuw4872zan2rpx5r6smgyryf7m57a3cfe7qnut2lj4q8dcmqzczzqj075ch7pgu0ah2cqnxchxw46mv2a66js86hxz5u3ala0mtc7syqlcypxnqhznpyt7dsx3qqlvn2kjkr3a05sh2gsdswg3huur79f2n3znux3jyw944p0u6e3c4xx82y9u8hnn2kdj0hkypqlg5d83wjt2mcrgq",
+      "offer": "lno1zcssynl4x9ls28rld6kqyek9en4wkmzhwk55p74es48y00lt76785pq8",
+      "request": "lnr1qqswluyyp7j9aamd8l2ma23jyvvuvujqu5wq73jp38t02yr72s23evskyypylaf30uz3clmw4spxd3wvat4kc4m449q04wv9ferml6lkh3aqgp6syph79rq2kmcmxukp563ydtnr7a8ex85rvhs45zyudrtpjqqqqqqqq5srkudsqkppqv00gsulvwy3fhneygzg8hdr9hah5sc70xd9eed8vslm6u9jzx8yauzqylul6xp50xd4hn9shs7nhe02yasj9yfxsgkxych4q52hmny95kgtxj73n74m3dkt988r2xppa5xpwxespv8hukqf8mh3m6t277plwmc",
+      "source": "ACINQ/eclair Bolt12InvoiceSpec \"minimal tip\""
+    },
+    {
+      "description": "Eclair minimal offer with an amount, a request paying more, and the invoice",
+      "expected": {
+        "offer": {
+          "description": "minimal offer with amount",
+          "features": [],
+          "issuer_id": "03c48ac97e09f3cbbaeb35b02aaa6d072b57726841a34d25952157caca60a1caf5",
+          "mtokens": "456000000",
+          "networks": [
+            "bitcoin"
+          ]
+        },
+        "request": {
+          "features": [],
+          "mtokens": "456001234",
+          "network": "bitcoin",
+          "payer_id": "033e94f2afd568d128f02ece844ad4a0a1ddf2a4e3a08beb2dba11b3f1134b0517",
+          "quantity": null
+        },
+        "invoice": {
+          "features": [],
+          "id": "2cb0e7b052366787450c33daf6d2f2c3cb6132221326e1c1b49ac97fdd7eb720",
+          "mtokens": "456001234",
+          "network": "bitcoin",
+          "node_id": "03c48ac97e09f3cbbaeb35b02aaa6d072b57726841a34d25952157caca60a1caf5",
+          "quantity": null
+        }
+      },
+      "invoice": "lni1qqswg5pzt6anzaxaypy8y46zknl8zn2a2jqyzrp74gtfm4lp6utpkzcgqsdjuqsqpgvk66twd9kkzmpqdanxvetjypmkjargypsk6mm4de6pvggrcj9vjlsf709m46e4kq425mg89dthy6zp5dxjt9fp2l9v5c9pet64qgr0u2xq4dh3kdevrf4zg6hx8a60jv0gxe0ptgyfc6xkryqqqqqqqpfqgxewqmf9sggr86209t74drgj3upwe6zy449q58wl9f8r5z97ktd6zxelzy6tq5t6pgqrcj9vjlsf709m46e4kq425mg89dthy6zp5dxjt9fp2l9v5c9pet6sxsjzfuhrkcdtmd0xmls7h7w0206ccw75976mtrup24ymhnv590w3qyphwz4l5ypxryqfu620r8ernyfflzf2s5qp0y2553u96r0eaj5rvgsq8gfus2l0sqkesrgr3y8zkjqcsalfvvdg7pjas6pzf3l7lwmg0vnyg6gugzv5p3c4gs2puwyc6eaxtj83yf6cnghr9dj64aapqz3pcqqqqqqsqqqqqgqqxqqqqqqqqqqqqsqqqqqqqqqqqpgqqzjqg62lst26vqsp9j5zqt9su7c9ydn8sazscv767mf09s7tvyezyyexu8qmfxkf0lwhadeq4gzpktsx62czzq7y3tyhuz0newawkdds924x6pet2aexssdrf5je2g2het9xpgw27hcypvvuuadnlmdfjx9kgkq4glat5uzek5589da30zrfef3a6h3mxfgyw3e8n48tptu6pes0znnw0lk3u0tgjluqxz7y0rc3g63hwfffnfgs",
+      "offer": "lno1pqzpktszqq9pjmtfde5k6ctvyphkven9wgs8w6t5dqsxzmt0w4h8g93pq0zg4jt7p8euhwhtxkcz42ndqu44wunggx356fv4y9tu4jnq58902",
+      "request": "lnr1qqswg5pzt6anzaxaypy8y46zknl8zn2a2jqyzrp74gtfm4lp6utpkzcgqsdjuqsqpgvk66twd9kkzmpqdanxvetjypmkjargypsk6mm4de6pvggrcj9vjlsf709m46e4kq425mg89dthy6zp5dxjt9fp2l9v5c9pet64qgr0u2xq4dh3kdevrf4zg6hx8a60jv0gxe0ptgyfc6xkryqqqqqqqpfqgxewqmf9sggr86209t74drgj3upwe6zy449q58wl9f8r5z97ktd6zxelzy6tq5tlqspdwx0zfhzu3mua0q2r7lgstw09p4qwtpgpewyuwytkpy2jm3hyupk52vc9tgx9dwvngdlgtgg335j029h0whqfxy28gkwewyu860g5x",
+      "source": "ACINQ/eclair Bolt12InvoiceSpec \"minimal offer with amount\""
+    },
+    {
+      "description": "Eclair testnet offer with a quantity limit, a request for 72, and the invoice",
+      "expected": {
+        "offer": {
+          "description": "offer with quantity",
+          "features": [],
+          "issuer": "alice@bigshop.com",
+          "issuer_id": "0327afd599da3226f4608b96ab042fe558bf558211d3c5e67ecc8be9963220434f",
+          "max_quantity": 1000,
+          "mtokens": "100000",
+          "networks": [
+            "testnet"
+          ]
+        },
+        "request": {
+          "features": [],
+          "mtokens": "7200000",
+          "network": "testnet",
+          "payer_id": "027c6d03fa8f366e2ef8017cdfaf5d3cf1a3b0123db1318263b662c0aa9ec9c959",
+          "quantity": 72
+        },
+        "invoice": {
+          "features": [],
+          "id": "7e06833dc22a33091199e7eba82906dce95e226f0c2d7dc1fee2f29c8a23c6b0",
+          "mtokens": "7200000",
+          "network": "testnet",
+          "node_id": "0327afd599da3226f4608b96ab042fe558bf558211d3c5e67ecc8be9963220434f",
+          "quantity": 72
+        }
+      },
+      "invoice": "lni1qqs8lqvnh3kg9uj003lxlxyj8hthymgq4p9ms0ag0ryx5uw8gsuus4gzypp5jl7hlqnf2ugg7j3slkwwcwht57vhyzzwjr4dq84rxzgqqqqqqzqrqxr2qzsndanxvetjypmkjargypch2ctww35hg7gjz9skc6trv4qxy6t8wd5x7upwvdhk69qzq05pvggry7hatxw6xgn0gcytj64sgtl9tzl4tqs360z7vlkv305evv3qgd84qgzrf9la07pxj4cs3a9rplvuasawhfuewgyyay826q02xvysqqqqqpfqxmwaqptqzjzcyyp8cmgrl28nvm3wlqqheha0t570rgaszg7mzvvzvwmx9s92nmyujkdq5qpj0t74n8dryfh5vz9ed2cy9lj43064sgga830x0mxgh6vkxgsyxnczw9u9qn6w8u7x0lw4ywwy7rz6npcsehfr7mqmrq86dppv7l6mmvxqzqktdd2vvdc2g3cjwlfj3rh0wa9v76hr4t9m4x5ggu8la3myastj75qr52fm4s6v2ph68j6c45nctru64fgew3pnlkwvnwznfxqekd2n9lp8wztehx9t4n3s4hsgqtr7dnjs0j6z39ph5gv5xzgkd7sspgsuqqqqqqgqqqqqyqqrqqqqqqqqqqqqgqqqqqqqqqqqq5qqpfqyd90c94dxqgqje2pq0crgx0wz9gesjyveul46s2gxmn54ugn0pskhms07utefez3rc6c25qmdm5qtqggry7hatxw6xgn0gcytj64sgtl9tzl4tqs360z7vlkv305evv3qgd8lqsp5r4z5e9guh0up8ce32j9scuc5wrulwp58w0u4pdxgw0sh4t3xrpzd3vdywl85y6aa8muaxj0wzqef8ql3s2jswn3wdqwx5ep9qgza7",
+      "offer": "lno1qgsyxjtl6luzd9t3pr62xr7eemp6awnejusgf6gw45q75vcfqqqqqqqgqvqcdgq2zdhkven9wgs8w6t5dqs8zatpde6xjarezggkzmrfvdj5qcnfvaeksmms9e3k7mg5qgp7s93pqvn6l4vemgezdarq3wt2kpp0u4vt74vzz8futen7ej97n93jypp57",
+      "request": "lnr1qqs8lqvnh3kg9uj003lxlxyj8hthymgq4p9ms0ag0ryx5uw8gsuus4gzypp5jl7hlqnf2ugg7j3slkwwcwht57vhyzzwjr4dq84rxzgqqqqqqzqrqxr2qzsndanxvetjypmkjargypch2ctww35hg7gjz9skc6trv4qxy6t8wd5x7upwvdhk69qzq05pvggry7hatxw6xgn0gcytj64sgtl9tzl4tqs360z7vlkv305evv3qgd84qgzrf9la07pxj4cs3a9rplvuasawhfuewgyyay826q02xvysqqqqqpfqxmwaqptqzjzcyyp8cmgrl28nvm3wlqqheha0t570rgaszg7mzvvzvwmx9s92nmyujk0sgpef8dt57nygu3dnfhglymt6mnle6j8s28rler8wv3zygen07v4ddfplc9qs7nkdzwcelm2rs552slkpv45xxng65ne6y4dlq2764gqv",
+      "source": "ACINQ/eclair Bolt12InvoiceSpec \"offer with quantity\""
+    },
+    {
+      "description": "lightning-kmp minimal tip: an offer with a description but no amount, a request with an amount, and the invoice",
+      "expected": {
+        "offer": {
+          "description": "minimal tip",
+          "features": [],
+          "issuer_id": "024ff5317f051c7f6eac0266c5cceaeb6c5775a940fab9854e47bfebf6bc7a0407",
+          "mtokens": null,
+          "networks": [
+            "bitcoin"
+          ]
+        },
+        "request": {
+          "features": [],
+          "mtokens": "12000000",
+          "network": "bitcoin",
+          "payer_id": "031ef4439f638914de79220483dda32dfb7a431e799a5ce5a7643fbd70b2118e4e",
+          "quantity": null
+        },
+        "invoice": {
+          "features": [],
+          "id": "85fe476739f06bb8ea9fca1766a184d41ea1b410644fb74f76384e7c09f16afc",
+          "mtokens": "12000000",
+          "network": "bitcoin",
+          "node_id": "024ff5317f051c7f6eac0266c5cceaeb6c5775a940fab9854e47bfebf6bc7a0407",
+          "quantity": null
+        }
+      },
+      "invoice": "lni1qqs289chx8swkpmwf3uzexfxr0kk9syavsjcmkuur5qgjqt60ayjdec2pdkkjmnfd4skcgr5d9cpvggzfl6nzlc9r3lkatqzvmzue6htd3tht22ql2uc2nj8hl4ld0r6qsr4qgr0u2xq4dh3kdevrf4zg6hx8a60jv0gxe0ptgyfc6xkryqqqqqqqpfq8dcmqpvzzqc773pe7cufzn08jgsys0w6xt0m0fp3u7v6tnj6weplh4ctyyvwf6s2qqj075ch7pgu0ah2cqnxchxw46mv2a66js86hxz5u3ala0mtc7syqup2a4g7lywy0zytzjzdhlar5uegx8qj8el2a2hpl7z30cv56fxkhwqpqgpnv93lzfep3m5ppkt3jry0kanpk3uxku733nr03snlzqjls3pejqp65tnf8nf8te9h67ge0lgzum5kypuvqrdz50t238n6g0wrdtv49nrgjk7k26rw7a24arfx9z4dup8379etdpw0tfkg3mwtngsuqqqqqqgqqqqqyqqrqqqqqqqqqqqqgqqqqqqqqqqqq5qqpfqyvwv9m2dxqgqje2pqshlyweee7p4m365legtkdgvy6s02rdqsv38mwnmk8p88cz03dt725qahrvqtqggzfl6nzlc9r3lkatqzvmzue6htd3tht22ql2uc2nj8hl4ld0r6qsrlqsxuf5rcjutppkh79vr6q7vma5yccxhf79ghfg5zkc6z4u3zqzyh0nf50g7w7q4gk32hqg97pn7p9kaz0ddm5fza65ztdqj2sry3gw6l2",
+      "offer": "lno1pg9k66twd9kkzmpqw35hq93pqf8l2vtlq5w87m4vqfnvtn82adk9wadfgratnp2wg7l7ha4u0gzqw",
+      "request": "lnr1qqs289chx8swkpmwf3uzexfxr0kk9syavsjcmkuur5qgjqt60ayjdec2pdkkjmnfd4skcgr5d9cpvggzfl6nzlc9r3lkatqzvmzue6htd3tht22ql2uc2nj8hl4ld0r6qsr4qgr0u2xq4dh3kdevrf4zg6hx8a60jv0gxe0ptgyfc6xkryqqqqqqqpfq8dcmqpvzzqc773pe7cufzn08jgsys0w6xt0m0fp3u7v6tnj6weplh4ctyyvwfmcypemfjk6kryqxycnnmu2vp9tuw00eslf0grp6rf3hk6v76aynyn4lclra0fyyk2gxyf9hx73rnm775204tn8cltacw4s0fzd5c0lxm58s",
+      "source": "ACINQ/lightning-kmp Bolt12InvoiceTestsCommon \"minimal tip\""
+    },
+    {
+      "description": "lightning-kmp minimal offer with an amount, a request paying more, and the invoice",
+      "expected": {
+        "offer": {
+          "description": "minimal offer",
+          "features": [],
+          "issuer_id": "03c48ac97e09f3cbbaeb35b02aaa6d072b57726841a34d25952157caca60a1caf5",
+          "mtokens": "456000000",
+          "networks": [
+            "bitcoin"
+          ]
+        },
+        "request": {
+          "features": [],
+          "mtokens": "456001234",
+          "network": "bitcoin",
+          "payer_id": "033e94f2afd568d128f02ece844ad4a0a1ddf2a4e3a08beb2dba11b3f1134b0517",
+          "quantity": null
+        },
+        "invoice": {
+          "features": [],
+          "id": "2cb0e7b052366787450c33daf6d2f2c3cb6132221326e1c1b49ac97fdd7eb720",
+          "mtokens": "456001234",
+          "network": "bitcoin",
+          "node_id": "03c48ac97e09f3cbbaeb35b02aaa6d072b57726841a34d25952157caca60a1caf5",
+          "quantity": null
+        }
+      },
+      "invoice": "lni1qqsf4h8fsnpjkj057gjg9c3eqhv889440xh0z6f5kng9vsaad8pgq7sgqsdjuqsqpgxk66twd9kkzmpqdanxvetjzcss83y2e9lqnu7tht4ntvp24fksw26hwf5yrg6dyk2jz472efs2rjh42qsxlc5vp2m0rvmjcxn2y34wv0m5lyc7sdj7zksgn35dvxgqqqqqqqzjqsdjupkjtqssx05572ha26x39rczan5yft22pgwa72jw8gytavkm5ydn7yf5kpgh5zsq83y2e9lqnu7tht4ntvp24fksw26hwf5yrg6dyk2jz472efs2rjh4qfjynufc627cuspz9lqzyk387xgzs4txcw0q97ugxfqm8x5zgj02gqgz4mnucmtxr620e5ttewtsg0s5n88euljnf7puagqje9j6gvaxk3pqqwsmahw79nhuq05zh8k29jk5qngpuny5l2vhjdrexg8hejukaee8fr7963dfag9q3lpcq9tt23f8s4h89cmjqa43u4fhk6l2y8qqqqqqzqqqqqpqqqcqqqqqqqqqqqzqqqqqqqqqqqq9qqq2gprrnp0zefszqyk2sgpvkrnmq53kv7r52rpnmtmd9ukredsnygsnymsurdy6e9la6l4hyz4qgxewqmftqggrcj9vjlsf709m46e4kq425mg89dthy6zp5dxjt9fp2l9v5c9pet6lqsy3s64amqgnlel7hn6fjrnk32xrn0ugr2xzct22ew28zftgmj70q9x2akqm34que8u2qe643cm38jpka6nfca4lfhuq6hgpnpwkpexrc",
+      "offer": "lno1pqzpktszqq9q6mtfde5k6ctvyphkven9wgtzzq7y3tyhuz0newawkdds924x6pet2aexssdrf5je2g2het9xpgw275",
+      "request": "lnr1qqsf4h8fsnpjkj057gjg9c3eqhv889440xh0z6f5kng9vsaad8pgq7sgqsdjuqsqpgxk66twd9kkzmpqdanxvetjzcss83y2e9lqnu7tht4ntvp24fksw26hwf5yrg6dyk2jz472efs2rjh42qsxlc5vp2m0rvmjcxn2y34wv0m5lyc7sdj7zksgn35dvxgqqqqqqqzjqsdjupkjtqssx05572ha26x39rczan5yft22pgwa72jw8gytavkm5ydn7yf5kpgh7pq2hlvh7twke5830a44wc0zlrs2kph4ghndm60ahwcznhcd0pcpl332qv5xuemksazy3zx5s63kqmqkphrn9jg4ln55pc6syrwqukejeq",
+      "source": "ACINQ/lightning-kmp Bolt12InvoiceTestsCommon \"minimal offer\""
+    },
+    {
+      "description": "lightning-kmp invoice for the Eclair testnet offer with a quantity limit and its request for 72",
+      "expected": {
+        "offer": {
+          "description": "offer with quantity",
+          "features": [],
+          "issuer": "alice@bigshop.com",
+          "issuer_id": "0327afd599da3226f4608b96ab042fe558bf558211d3c5e67ecc8be9963220434f",
+          "max_quantity": 1000,
+          "mtokens": "100000",
+          "networks": [
+            "testnet"
+          ]
+        },
+        "request": {
+          "features": [],
+          "mtokens": "7200000",
+          "network": "testnet",
+          "payer_id": "027c6d03fa8f366e2ef8017cdfaf5d3cf1a3b0123db1318263b662c0aa9ec9c959",
+          "quantity": 72
+        },
+        "invoice": {
+          "features": [],
+          "id": "7e06833dc22a33091199e7eba82906dce95e226f0c2d7dc1fee2f29c8a23c6b0",
+          "mtokens": "7200000",
+          "network": "testnet",
+          "node_id": "0327afd599da3226f4608b96ab042fe558bf558211d3c5e67ecc8be9963220434f",
+          "quantity": 72
+        }
+      },
+      "invoice": "lni1qqs8lqvnh3kg9uj003lxlxyj8hthymgq4p9ms0ag0ryx5uw8gsuus4gzypp5jl7hlqnf2ugg7j3slkwwcwht57vhyzzwjr4dq84rxzgqqqqqqzqrqxr2qzsndanxvetjypmkjargypch2ctww35hg7gjz9skc6trv4qxy6t8wd5x7upwvdhk69qzq05pvggry7hatxw6xgn0gcytj64sgtl9tzl4tqs360z7vlkv305evv3qgd84qgzrf9la07pxj4cs3a9rplvuasawhfuewgyyay826q02xvysqqqqqpfqxmwaqptqzjzcyyp8cmgrl28nvm3wlqqheha0t570rgaszg7mzvvzvwmx9s92nmyujkdq5qpj0t74n8dryfh5vz9ed2cy9lj43064sgga830x0mxgh6vkxgsyxnczgew6pkkhja3cl3dfxthumcmp6gkp446ha4tcj884eqch6g57newqzquqmar5nynwtg9lknq98yzslwla3vdxefulhq2jkwnqnsf7umpl5cqr58qkj63hkpl7ffyd6f3qgn3m5kuegehhakvxw7fuw29tf3r5wgj37uecjdw2th4t5fp7f99xvk4f3gwl0wyf2a558wqa9w3pcqqqqqqsqqqqqgqqxqqqqqqqqqqqqsqqqqqqqqqqqpgqqzjqgcuctck2vqsp9j5zqlsxsv7uy23npygenelt4q5sdh8ftc3x7rpd0hqlachjnj9z834s4gpkmhgqkqssxfa06kva5v3x73sgh94tqsh72k9l2kppr579uelvezlfjcezqs607pqxa3afljxyf2ua9dlqs33wrfzakt5tpraklpzfpn63uxa7el475x4sc0w4hs75e3nhe689slfz4ldqlwja3zaq0w3mnz79f4ne0c3r3c",
+      "offer": "lno1qgsyxjtl6luzd9t3pr62xr7eemp6awnejusgf6gw45q75vcfqqqqqqqgqvqcdgq2zdhkven9wgs8w6t5dqs8zatpde6xjarezggkzmrfvdj5qcnfvaeksmms9e3k7mg5qgp7s93pqvn6l4vemgezdarq3wt2kpp0u4vt74vzz8futen7ej97n93jypp57",
+      "request": "lnr1qqs8lqvnh3kg9uj003lxlxyj8hthymgq4p9ms0ag0ryx5uw8gsuus4gzypp5jl7hlqnf2ugg7j3slkwwcwht57vhyzzwjr4dq84rxzgqqqqqqzqrqxr2qzsndanxvetjypmkjargypch2ctww35hg7gjz9skc6trv4qxy6t8wd5x7upwvdhk69qzq05pvggry7hatxw6xgn0gcytj64sgtl9tzl4tqs360z7vlkv305evv3qgd84qgzrf9la07pxj4cs3a9rplvuasawhfuewgyyay826q02xvysqqqqqpfqxmwaqptqzjzcyyp8cmgrl28nvm3wlqqheha0t570rgaszg7mzvvzvwmx9s92nmyujk0sgpef8dt57nygu3dnfhglymt6mnle6j8s28rler8wv3zygen07v4ddfplc9qs7nkdzwcelm2rs552slkpv45xxng65ne6y4dlq2764gqv",
+      "source": "ACINQ/lightning-kmp Bolt12InvoiceTestsCommon \"offer with quantity\""
+    }
+  ],
+  "invalid": [
+    {
+      "comment": "Eclair decodes this invoice, but its request has a quantity for an offer without a maximum quantity, which BOLT 12 says to reject",
+      "description": "Eclair invoice with many fields has a quantity for an offer without a quantity",
+      "error": "UnexpectedQuantityInInvoiceRequestForOffer",
+      "invoice": "lni1qqx2n6mw2fh2ckwdnwylkgqzypp5jl7hlqnf2ugg7j3slkwwcwht57vhyzzwjr4dq84rxzgqqqqqqzqrq83yqzscd9h8vmmfvdjjqamfw35zqmtpdeujqenfv4kxgucvqqfq2ctvd93k293pq0zxw03kpc8tc2vv3kfdne0kntqhq8p70wtdncwq2zngaqp529mmc5pqgdyhl4lcy62hzz855v8annkr46a8n9eqsn5satgpagesjqqqqqq9yqcpufq9vqfetqssyj5djm6dz0zzr8eprw9gu762k75f3lgm96gzwn994peh48k6xalctyr5jfmdyppx7cneqvqsyqaq5qpugee7xc8qa0pf3jxe9k0976dvzuqu8eaedk0pcpg2dr5qx3gh00qzn8pc426xsh6l6ekdhr2hdpge0euhhp9frv6w04zjcqhhf6ru2wrqzqnjsxh8zmlm0gkeuq8qyxcy28uzhzljqkq22epc4mmdrx6vtm0eyyqr4agrvpkfuutftvf7f6paqewk3ysql3h8ukfz3phgmap5we4wsq3c97205a96r6f3hsd705jl29xt8yj3cu8vpm6z8lztjw3pcqqqpy5sqqqzl5q5gqqqqqqqqqqraqqqqqqqqqq7ysqqqzjqgc4qq6l2vqswzz5zq5v4r4x98jgyqd0sk2fae803crnevusngv9wq7jl8cf5e5eny56p4gpsrcjq4sfqgqqyzg74d7qxqqywkwkudz29aasp4cqtqggrc3nnudswp67znrydjtv7ta56c9cpc0nmjmv7rszs568gqdz3w770qsx3axhvq3e7npme2pwslgxa8kfcnqjqyeztg5r5wgzjpufjswx4crvd6kzlqjzukq5e707kp9ez98mj0zkckeggkm8cp6g6vgzh3j2q0lgp8ypt4ws",
+      "source": "ACINQ/eclair Bolt12InvoiceSpec \"encode/decode invoice with many fields\""
+    },
+    {
+      "description": "lightning-kmp offer with a currency but no amount",
+      "error": "ExpectedAmountInOfferWithCurrency",
+      "offer": "lno1qcpgqsg2q4q5cj2rg5tzzqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqgpqyqszqg",
+      "source": "ACINQ/lightning-kmp OfferTypesTestsCommon \"decode offers\""
+    },
+    {
+      "description": "lightning-kmp offer with an invalid record length",
+      "error": "ExpectedValidTlvStreamToDecodeRecords",
+      "offer": "lno1l6jm7eelleemqeee",
+      "source": "ACINQ/lightning-kmp OfferTypesTestsCommon \"decode offers\""
+    },
+    {
+      "description": "lightning-kmp minimal offer with a corrupted record length",
+      "error": "ExpectedValidTlvStreamToDecodeRecords",
+      "offer": "lno1zmls9mk8y3wkklfvevcrszlmu23kfrxh49px20665dqwmn4p72pksese",
+      "source": "ACINQ/lightning-kmp OfferTypesTestsCommon \"decode offers\""
+    },
+    {
+      "description": "lightning-kmp offer with empty chains and amount records",
+      "error": "ExpectedChainsInOfferChains",
+      "offer": "lno1qgqpqqq",
+      "source": "ACINQ/lightning-kmp OfferTypesTestsCommon \"decode offers\""
+    },
+    {
+      "description": "LDK offer data with an invoice prefix",
+      "error": "UnexpectedPrefixInBolt12String",
+      "offer": "lni1pqps7sjqpgtyzm3qv4uxzmtsd3jjqer9wd3hy6tsw35k7msjzfpy7nz5yqcnygrfdej82um5wf5k2uckyypwa3eyt44h6txtxquqh7lz5djge4afgfjn7k4rgrkuag0jsd5xvxg",
+      "source": "lightningdevkit/rust-lightning offers/parse.rs fails_parsing_bech32_encoded_offer_with_invalid_hrp"
+    },
+    {
+      "description": "LDK offer with leading whitespace",
+      "error": "UnexpectedPrefixInBolt12String",
+      "offer": "\u000blno1pqpzwyq2p32x2um5ypmx2cm5dae8x93pqthvwfzadd7jejes8q9lhc4rvjxd022zv5l44g6qah+\u000b\u000b\u000b\u000b82ru5rdpnpj",
+      "source": "lightningdevkit/rust-lightning offers/parse.rs fails_parsing_bech32_encoded_offer_with_leading_whitespace"
+    },
+    {
+      "description": "LDK offer with a character outside of the bech32 character set",
+      "error": "ExpectedBech32CharactersInBolt12String",
+      "offer": "lno1pqps7sjqpgtyzm3qv4uxzmtsd3jjqer9wd3hy6tsw35k7msjzfpy7nz5yqcnygrfdej82um5wf5k2uckyypwa3eyt44h6txtxquqh7lz5djge4afgfjn7k4rgrkuag0jsd5xvxo",
+      "source": "lightningdevkit/rust-lightning offers/parse.rs fails_parsing_bech32_encoded_offer_with_invalid_bech32_data"
+    },
+    {
+      "description": "LDK offer with invalid TLV data",
+      "error": "ExpectedValidTlvStreamToDecodeRecords",
+      "offer": "lno1pqps7sjqpgtyzm3qv4uxzmtsd3jjqer9wd3hy6tsw35k7msjzfpy7nz5yqcnygrfdej82um5wf5k2uckyypwa3eyt44h6txtxquqh7lz5djge4afgfjn7k4rgrkuag0jsd5xvxgqqqqq",
+      "source": "lightningdevkit/rust-lightning offers/parse.rs fails_parsing_bech32_encoded_offer_with_invalid_tlv_data"
+    }
+  ]
+}

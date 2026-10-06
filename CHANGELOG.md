@@ -1,5 +1,18 @@
 # Versions
 
+## 6.3.0
+
+- `createInvoiceError`: Add method to create a BOLT 12 invoice error
+- `createOffer`: Add method to create a BOLT 12 offer
+- `createSignedInvoice`: Add method to sign a BOLT 12 invoice
+- `createSignedInvoiceRequest`: Add method to sign a BOLT 12 invoice request
+- `createUnsignedInvoice`: Add method to create a BOLT 12 invoice for a request
+- `createUnsignedInvoiceRequest`: Add method to create a BOLT 12 invoice request
+- `parseInvoice`: Add method to parse a BOLT 12 invoice
+- `parseInvoiceError`: Add method to parse a BOLT 12 invoice error
+- `parseInvoiceRequest`: Add method to parse a BOLT 12 invoice request
+- `parseOffer`: Add method to parse a BOLT 12 offer
+
 ## 6.2.0
 
 - `createSignedRequest`: Add ephemeral key signing for blinded path requests

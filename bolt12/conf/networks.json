@@ -1,0 +1,26 @@
+{
+  "bitcoin": {
+    "bech32": "bc",
+    "chain": "6fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d6190000000000"
+  },
+  "regtest": {
+    "bech32": "bcrt",
+    "chain": "06226e46111a0b59caaf126043eb5bbf28c34f3a5e332a1fc7b2b73cf188910f"
+  },
+  "signet": {
+    "bech32": "tb",
+    "chain": "f61eee3b63a380a477a063af32b2bbc97c9ff9f01f2c4225e973988108000000"
+  },
+  "simnet": {
+    "bech32": "sb",
+    "chain": "f67ad7695d9b662a72ff3d8edbbb2de0bfa67b13974bb9910d116d5cbd863e68"
+  },
+  "testnet": {
+    "bech32": "tb",
+    "chain": "43497fd7f826957108f4a30fd9cec3aeba79972084e90ead01ea330900000000"
+  },
+  "testnet4": {
+    "bech32": "tb",
+    "chain": "43f08bdab050e35b567c864b91f47f50ae725ae2de53bcfbbaf284da00000000"
+  }
+}

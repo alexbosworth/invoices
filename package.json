@@ -1,25 +1,37 @@
 {
-  "author": "Alex Bosworth",
+  "author": {
+    "name": "Alex Bosworth",
+    "url": "https://x.com/alexbosworth"
+  },
   "bugs": {
     "url": "https://github.com/alexbosworth/invoices/issues"
   },
   "dependencies": {
-    "@alexbosworth/blockchain": "4.8.0",
+    "@alexbosworth/blockchain": "4.10.0",
     "bech32": "2.0.0",
-    "bolt01": "4.0.0",
+    "bolt01": "4.0.1",
     "bolt07": "2.0.0",
     "bolt09": "3.0.0",
     "tiny-secp256k1": "2.2.4"
   },
-  "description": "Methods for working with BOLT 11 payment requests",
+  "description": "Methods for working with LN invoices",
   "engines": {
     "node": ">=22"
   },
+  "files": [
+    "CHANGELOG.md",
+    "bolt00",
+    "bolt11",
+    "bolt12",
+    "index.js"
+  ],
   "keywords": [
     "bolt11",
+    "bolt12",
     "invoice",
     "lightning",
     "lightning-network",
+    "offer",
     "payment-request"
   ],
   "license": "MIT",
@@ -27,10 +39,10 @@
   "name": "invoices",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexbosworth/invoices.git"
+    "url": "git+https://github.com/alexbosworth/invoices.git"
   },
   "scripts": {
     "test": "node --experimental-test-coverage --test"
   },
-  "version": "6.2.0"
+  "version": "6.3.0"
 }
