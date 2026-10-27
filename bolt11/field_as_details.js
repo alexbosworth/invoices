@@ -88,9 +88,9 @@ module.exports = ({code, network, words}) => {
       throw new Error('FailedToParsePaymentRequestDescriptionHash');
     }
 
-    // Skip over description hash fields that have unexpected data lengths
+    // A description hash field must have the expected data length
     if (words.length !== descriptionHashWordLength) {
-      return {};
+      throw new Error('UnexpectedDescriptionHashLengthInPaymentRequest');
     }
 
     return {description_hash: wordsAsBuffer({trim, words}).toString('hex')};
@@ -109,9 +109,9 @@ module.exports = ({code, network, words}) => {
       throw new Error('FailedToParsePaymentRequestDestinationKey');
     }
 
-    // Skip over destination key fields that have unexpected data lengths
+    // A destination key field must have the expected data length
     if (words.length !== destinationKeyWordLength) {
-      return {};
+      throw new Error('UnexpectedDestinationKeyLengthInPaymentRequest');
     }
 
     return {destination: bufferAsHex(wordsAsBuffer({trim, words}))};
@@ -148,9 +148,9 @@ module.exports = ({code, network, words}) => {
       throw new Error('FailedToParsePaymentRequestPaymentHash');
     }
 
-    // Skip over payment hash fields that have unexpected data lengths
+    // A payment hash field must have the expected data length
     if (words.length !== paymentHashWordLength) {
-      return {};
+      throw new Error('UnexpectedPaymentHashLengthInPaymentRequest');
     }
 
     return {id: wordsAsBuffer({trim, words}).toString('hex')};
@@ -162,9 +162,9 @@ module.exports = ({code, network, words}) => {
       throw new Error('FailedToParsePaymentRequestPaymentIdentifier');
     }
 
-    // Skip over payment identifier fields that have unexpected data lengths
+    // A payment identifier field must have the expected data length
     if (words.length !== paymentIdentifierWordLength) {
-      return {};
+      throw new Error('UnexpectedPaymentIdentifierLengthInPaymentRequest');
     }
 
     return {payment: bufferAsHex(wordsAsBuffer({trim, words}))};

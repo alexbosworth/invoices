@@ -1,8 +1,12 @@
 # Versions
 
+## 6.3.2
+
+- `parsePaymentRequest`: Fail on `p`, `h`, `s`, `n` fields of unexpected length
+
 ## 6.3.1
 
-- `parsePaymentRequest`: Fix error thrown when a signature cannot recover a public key
+- `parsePaymentRequest`: Fix error for signatures that cannot recover a key
 
 ## 6.3.0
 

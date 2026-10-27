@@ -66,8 +66,8 @@ const tests = [
   },
   {
     args: {code: 23, network: 'bitcoin', words: []},
-    description: 'A description hash with an unexpected length is skipped',
-    expected: {},
+    description: 'A description hash must have the expected length',
+    error: 'UnexpectedDescriptionHashLengthInPaymentRequest',
   },
   {
     args: {code: 13, network: 'bitcoin'},
@@ -91,8 +91,8 @@ const tests = [
   },
   {
     args: {code: 1, network: 'bitcoin', words: [0]},
-    description: 'A payment hash with an unexpected length is skipped',
-    expected: {},
+    description: 'A payment hash must have the expected length',
+    error: 'UnexpectedPaymentHashLengthInPaymentRequest',
   },
   {
     args: {code: 16, network: 'bitcoin'},
@@ -101,8 +101,8 @@ const tests = [
   },
   {
     args: {code: 16, network: 'bitcoin', words: [0]},
-    description: 'A payment identifier with an unexpected length is skipped',
-    expected: {},
+    description: 'A payment identifier must have the expected length',
+    error: 'UnexpectedPaymentIdentifierLengthInPaymentRequest',
   },
   {
     args: {code: 19, network: 'bitcoin'},
@@ -111,8 +111,8 @@ const tests = [
   },
   {
     args: {code: 19, network: 'bitcoin', words: [0]},
-    description: 'A destination public key with an unexpected length is skipped',
-    expected: {},
+    description: 'A destination public key must have the expected length',
+    error: 'UnexpectedDestinationKeyLengthInPaymentRequest',
   },
 ];
 

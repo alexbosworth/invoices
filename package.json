@@ -44,5 +44,5 @@
   "scripts": {
     "test": "node --experimental-test-coverage --test"
   },
-  "version": "6.3.1"
+  "version": "6.3.2"
 }
