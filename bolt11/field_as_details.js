@@ -10,6 +10,7 @@ const wordsAsNumber = require('./words_as_number');
 const bufferAsHex = buffer => buffer.toString('hex');
 const descriptionHashWordLength = 52;
 const destinationKeyWordLength = 53;
+const hasLeadingZero = words => words.length > 1 && words[0] === 0;
 const paymentHashWordLength = 52;
 const paymentIdentifierWordLength = 52;
 const trim = true;
@@ -126,9 +127,19 @@ module.exports = ({code, network, words}) => {
     }
 
   case feature.expiry:
+    // Leading zero words are a non-minimal encoding
+    if (hasLeadingZero(words)) {
+      throw new Error('ExpectedMinimalExpiryEncodingInPaymentRequest');
+    }
+
     return {expiry_seconds: wordsAsNumber({words})};
 
   case feature.feature_bits:
+    // Leading zero words are a non-minimal encoding
+    if (hasLeadingZero(words)) {
+      throw new Error('ExpectedMinimalFeatureBitsEncodingInPaymentRequest');
+    }
+
     return {features: featureFlagsFromWords({words}).features};
 
   case feature.metadata:
@@ -139,6 +150,11 @@ module.exports = ({code, network, words}) => {
     }
 
   case feature.min_final_cltv_expiry:
+    // Leading zero words are a non-minimal encoding
+    if (hasLeadingZero(words)) {
+      throw new Error('ExpectedMinimalCltvDeltaEncodingInPaymentRequest');
+    }
+
     return {cltv_delta: wordsAsNumber({words})};
 
   case feature.payment_hash:

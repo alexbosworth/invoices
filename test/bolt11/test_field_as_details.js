@@ -60,6 +60,21 @@ const tests = [
     },
   },
   {
+    args: {code: 6, network: 'bitcoin', words: [0, 1]},
+    description: 'A non-minimal expiry encoding is rejected',
+    error: 'ExpectedMinimalExpiryEncodingInPaymentRequest',
+  },
+  {
+    args: {code: 24, network: 'bitcoin', words: [0, 1]},
+    description: 'A non-minimal cltv delta encoding is rejected',
+    error: 'ExpectedMinimalCltvDeltaEncodingInPaymentRequest',
+  },
+  {
+    args: {code: 5, network: 'bitcoin', words: [0, 1]},
+    description: 'A non-minimal feature bits encoding is rejected',
+    error: 'ExpectedMinimalFeatureBitsEncodingInPaymentRequest',
+  },
+  {
     args: {code: 23, network: 'bitcoin'},
     description: 'Description hash is invalid',
     error: 'FailedToParsePaymentRequestDescriptionHash',

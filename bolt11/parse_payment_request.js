@@ -9,6 +9,7 @@ const hrpAsMtokens = require('./hrp_as_mtokens');
 const requestDetails = require('./request_details');
 const signatureFromWords = require('./signature_from_words');
 const signatureHashFromWords = require('./signature_hash_from_words');
+const singleUseFields = require('./conf/single_use_fields');
 const taggedFields = require('./tagged_fields');
 const wordsAsNumber = require('./words_as_number');
 
@@ -18,12 +19,16 @@ const hasBlindedPath = n => n.blinded_path !== undefined;
 const hasDescription = n => n.description !== undefined;
 const hasDescriptionHash = n => n.description_hash !== undefined;
 const hasLnPrefix = n => n.slice(Number(), 'ln'.length).toLowerCase() === 'ln';
+const hasPaymentHash = n => n.id !== undefined;
 const hasRouteHints = n => n.path !== undefined;
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
+const isAscii = n => /^[\x21-\x7e]+$/.test(n);
 const isLowSRequired = true;
+const {keys} = Object;
 const maxRequestLength = 7089;
 const msPerSec = 1e3;
 const sigWordsCount = 104;
+const singleField = 1;
 const timestampWordLength = 7;
 
 /** Parse a BOLT 11 payment request into its component data
@@ -102,6 +107,11 @@ module.exports = ({request}) => {
     throw new Error('ExpectedPaymentRequestWithinMaximumLength');
   }
 
+  // Non-ASCII characters like the Kelvin sign can lowercase into bech32 chars
+  if (!isAscii(request)) {
+    throw new Error('ExpectedAsciiCharactersInPaymentRequest');
+  }
+
   const {prefix, words} = decode(request, maxRequestLength);
 
   const signatureWords = words.slice(-sigWordsCount);
@@ -129,6 +139,20 @@ module.exports = ({request}) => {
   // Either a description or a description hash is required
   if (!elements.some(hasDescription) && !elements.some(hasDescriptionHash)) {
     throw new Error('ExpectedDescriptionOrDescriptionHashInPaymentRequest');
+  }
+
+  // Legacy requests predate `s` fields so only a payment hash is mandatory
+  if (!elements.some(hasPaymentHash)) {
+    throw new Error('ExpectedPaymentHashInPaymentRequest');
+  }
+
+  // Only fallback addresses, route hints and blinded paths may be repeated
+  const duplicate = keys(singleUseFields).find(key => {
+    return elements.filter(n => n[key] !== undefined).length > singleField;
+  });
+
+  if (!!duplicate) {
+    throw new Error(singleUseFields[duplicate]);
   }
 
   // Blinded paths replace route hints, an invoice cannot have both
@@ -165,7 +189,7 @@ module.exports = ({request}) => {
     timestamp: wordsAsNumber({words: timestampWords}) * msPerSec,
   });
 
-  details.is_expired = details.expires_at < new Date().toISOString();
+  details.is_expired = Date.parse(details.expires_at) < Date.now();
 
   if (!details.description && !details.description_hash) {
     details.description = String();

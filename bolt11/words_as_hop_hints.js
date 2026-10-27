@@ -4,6 +4,7 @@ const {encodeChanId} = require('bolt07');
 const wordsAsBuffer = require('./words_as_buffer');
 
 const decodeChanIdBuffer = buf => decodeChanId({id: buf.toString('hex')});
+const hopByteLength = 51;
 
 /** Words as hop hints
 
@@ -35,6 +36,11 @@ module.exports = ({words}) => {
 
   const hints = [];
   let routesBuffer = wordsAsBuffer({words, trim: true});
+
+  // Route hints are one or more complete hop entries
+  if (!routesBuffer.length || !!(routesBuffer.length % hopByteLength)) {
+    throw new Error('UnexpectedRouteHintsLengthInPaymentRequest');
+  }
 
   while (routesBuffer.length > 0) {
     const baseFee = parseInt(routesBuffer.slice(41, 45).toString('hex'), 16);

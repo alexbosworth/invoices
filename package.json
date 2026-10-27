@@ -12,7 +12,7 @@
     "bolt01": "4.0.1",
     "bolt07": "2.0.0",
     "bolt09": "3.0.0",
-    "tiny-secp256k1": "2.2.4"
+    "tiny-secp256k1": "2.2.5"
   },
   "description": "Methods for working with LN invoices",
   "engines": {

@@ -4,6 +4,7 @@ const asDateString = ms => new Date(ms).toISOString();
 const defaultCltvDelta = 18;
 const defaultExpireSeconds = 3600;
 const defaultMtokens = '0';
+const maxDateMs = 8.64e15;
 const msPerSec = 1e3;
 
 /** Get consolidated payment request details from field elements
@@ -127,7 +128,14 @@ module.exports = ({destination, details, mtokens, network, timestamp}) => {
     }
 
     if (!!n.expiry_seconds) {
-      sum.expires_at = asDateString((n.expiry_seconds * msPerSec) + timestamp);
+      const expiresAt = (n.expiry_seconds * msPerSec) + timestamp;
+
+      // Dates past the Date range cannot be represented as ISO 8601 strings
+      if (expiresAt > maxDateMs) {
+        throw new Error('ExpectedExpiryWithinDateRangeInPaymentRequest');
+      }
+
+      sum.expires_at = asDateString(expiresAt);
     }
 
     if (!!n.features) {

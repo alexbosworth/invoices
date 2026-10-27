@@ -1,0 +1,11 @@
+{
+  "cltv_delta": "UnexpectedDuplicateCltvDeltaInPaymentRequest",
+  "description": "UnexpectedDuplicateDescriptionInPaymentRequest",
+  "description_hash": "UnexpectedDuplicateDescriptionHashInPaymentRequest",
+  "destination": "UnexpectedDuplicateDestinationKeyInPaymentRequest",
+  "expiry_seconds": "UnexpectedDuplicateExpiryInPaymentRequest",
+  "features": "UnexpectedDuplicateFeatureBitsInPaymentRequest",
+  "id": "UnexpectedDuplicatePaymentHashInPaymentRequest",
+  "metadata": "UnexpectedDuplicateMetadataInPaymentRequest",
+  "payment": "UnexpectedDuplicatePaymentIdentifierInPaymentRequest"
+}

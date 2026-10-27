@@ -38,8 +38,13 @@ const tests = [
   },
   {
     args: {words: []},
-    description: 'No words yields no hop hints',
-    expected: {hints: []},
+    description: 'At least one hop hint is required',
+    error: 'UnexpectedRouteHintsLengthInPaymentRequest',
+  },
+  {
+    args: {words: asWords(hops.slice(Number(), 1)).slice(Number(), -2)},
+    description: 'A truncated hop hint is rejected',
+    error: 'UnexpectedRouteHintsLengthInPaymentRequest',
   },
   {
     args: {words: asWords(hops.slice(Number(), 1))},
