@@ -1,13 +1,16 @@
 # Versions
 
-## 6.3.2
+## 6.3.3
 
-- `parsePaymentRequest`: Fail on `p`, `h`, `s`, `n` fields of unexpected length
 - `parsePaymentRequest`: Fail on a missing `p` or duplicated single-use fields
 - `parsePaymentRequest`: Fail on non-minimal `x`, `c` and `9` field encodings
 - `parsePaymentRequest`: Fail on empty or truncated `r` route hints
 - `parsePaymentRequest`: Fail on non-ASCII characters in the request
 - `parsePaymentRequest`: Fix error for an expiry beyond the `Date` range
+
+## 6.3.2
+
+- `parsePaymentRequest`: Fail on `p`, `h`, `s`, `n` fields of unexpected length
 
 ## 6.3.1
 
