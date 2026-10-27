@@ -1,5 +1,9 @@
 # Versions
 
+## 6.3.1
+
+- `parsePaymentRequest`: Fix error thrown when a signature cannot recover a public key
+
 ## 6.3.0
 
 - `createInvoiceError`: Add method to create a BOLT 12 invoice error

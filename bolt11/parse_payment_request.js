@@ -149,9 +149,17 @@ module.exports = ({request}) => {
     throw new Error('InvalidSignatureForDestinationPublicKey');
   }
 
+  // Without a destination key the public key is recovered from the signature
+  const recovered = key || recover(hash, signature, recovery, true);
+
+  // Recovery fails when the signature does not correspond to a curve point
+  if (!recovered) {
+    throw new Error('ExpectedRecoverableSignatureInPaymentRequest');
+  }
+
   const details = requestDetails({
     network,
-    destination: key || asHex(recover(hash, signature, recovery, true)),
+    destination: key || asHex(recovered),
     details: elements,
     mtokens: hrpAsMtokens({amount, units}).mtokens,
     timestamp: wordsAsNumber({words: timestampWords}) * msPerSec,

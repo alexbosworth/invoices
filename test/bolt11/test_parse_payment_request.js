@@ -118,6 +118,11 @@ const tests = [
     request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp4qvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc7h7364g7pfuhh9etce8y399rcr0ap87drcl7l6af6syrjsalrthw5qxdugelrlcswc355cla0pnmctlgnf5jgagg9fs0xyq4jg5kverqp6ryc0z',
   },
   {
+    description: 'A signature must recover to a public key',
+    error: 'ExpectedRecoverableSignatureInPaymentRequest',
+    request: 'lnbc25m1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq5vdhkven9v5sxyetpdeessp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygs9q5sqqqqqqqqqqqqqqqqsgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqsqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqgzky20nr',
+  },
+  {
     description: 'A low-S signature is required with a destination public key',
     error: 'InvalidSignatureForDestinationPublicKey',
     request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp4qvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc738hxj8g6cccxpyv7v9azt5ephff75xmpd5az8zwgdl28zjevj9l07stkxrymwcyecs06fh3tvd7nkjdcttxc4jfly0ehlu5xpejmdjqq27lun0',
