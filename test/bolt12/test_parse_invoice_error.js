@@ -36,6 +36,15 @@ const tests = [
     error: 'ExpectedValidUtf8ErrorMessageInInvoiceError',
   },
   {
+    args: {encoded: '05010a'},
+    description: 'An error message with a control character is parsed',
+    expected: {
+      erroneous_field: undefined,
+      message: '\n',
+      suggested_value: undefined,
+    },
+  },
+  {
     args: {encoded: '050e416d6f756e7420746f6f206c6f77'},
     description: 'An invoice error is parsed',
     expected: {

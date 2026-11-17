@@ -225,6 +225,39 @@ const tests = [
     request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdq2vdhkven9v5sp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsnp4qvdcf32k0vfxgsyet5ldt246q4jaw8scx3sysx0lnstlt6w4m5rc738hxj8g6cccxpyv7v9azt5ephff75xmpd5az8zwgdl28zjevj9l07stkxrymwcyecs06fh3tvd7nkjdcttxc4jfly0ehlu5xpejmdjqq27lun0',
   },
   {
+    description: 'A description must be valid UTF-8',
+    error: 'InvalidDescriptionInPaymentRequest',
+    request:
+      'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfq' +
+      'ypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsdqvvdh' +
+      'kven9vhlsrr0h60eu2t8e4d5dms5djkxmad6g69mjmfn60ar2u4axx68p5qq9dvs' +
+      'am4vak8vujxfxcq9940g729zampuudcqjxfjv9j0833f9e3qpf8aw85',
+  },
+  {
+    description: 'A description with a control character is parsed',
+    expected: {
+      cltv_delta: 18,
+      created_at: '2017-06-01T10:57:38.000Z',
+      description: 'coffee\nbeans',
+      destination:
+        '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      expires_at: '2017-06-01T11:57:38.000Z',
+      features: [],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      is_expired: true,
+      mtokens: '0',
+      network: 'bitcoin',
+      payment:
+        '1111111111111111111111111111111111111111111111111111111111111111',
+      tokens: 0,
+    },
+    request:
+      'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfq' +
+      'ypqsp5zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsdq5vdh' +
+      'kven9v59xyetpdeeshdrhp42l2lau3tengp8vdukfuydyy346fmfwl9992ydzq8m' +
+      'yy4qrmhs2fz8cd5gwfeaw2wdvzsnx8ptaf372zk6c0uanv4svuw8pnnspe4zva3',
+  },
+  {
     description: "Test word length",
     expected: {
       cltv_delta: 144,

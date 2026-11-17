@@ -1,5 +1,22 @@
 # Versions
 
+## 6.3.4
+
+- `createSignedInvoiceRequest`: Reject expired offers and disallowed Unicode in
+    payer notes and copied offer text
+- `createInvoiceError`, `createOffer`, and `createUnsignedInvoiceRequest`:
+    Reject disallowed Unicode characters in text
+- `createUnsignedInvoice`: Reject requests with disallowed Unicode characters
+    in payer notes
+- `createUnsignedInvoiceRequest`: Reject offers with disallowed Unicode
+    characters in text
+- `createUnsignedRequest`: Reject invalid dates, invalid CLTV deltas (including
+    zero), invalid `features`, oversized tagged fields, and disallowed Unicode
+    characters in `description`
+- `parseInvoice`, `parseInvoiceRequest`, and `parseOffer`: Reject non-minimal
+    feature bit encodings
+- `parsePaymentRequest`: Reject invalid UTF-8 in descriptions
+
 ## 6.3.3
 
 - `parsePaymentRequest`: Fail on a missing `p` or duplicated single-use fields
@@ -23,7 +40,8 @@
 - `createSignedInvoice`: Add method to sign a BOLT 12 invoice
 - `createSignedInvoiceRequest`: Add method to sign a BOLT 12 invoice request
 - `createUnsignedInvoice`: Add method to create a BOLT 12 invoice for a request
-- `createUnsignedInvoiceRequest`: Add method to create a BOLT 12 invoice request
+- `createUnsignedInvoiceRequest`: Add method to create a BOLT 12 invoice
+    request
 - `parseInvoice`: Add method to parse a BOLT 12 invoice
 - `parseInvoiceError`: Add method to parse a BOLT 12 invoice error
 - `parseInvoiceRequest`: Add method to parse a BOLT 12 invoice request
@@ -81,18 +99,21 @@
 
 ### Breaking Change
 
-- `parsePaymentRequest`: Change undefined to zero for `mtokens`, `safe_tokens`, `tokens`
+- `parsePaymentRequest`: Change undefined to zero for `mtokens`, `safe_tokens`,
+    `tokens`
 
 ## 1.2.1
 
-Fix issues with millitoken value invoices and add additional test coverage for sub-token requests.
+Fix issues with millitoken value invoices and add additional test coverage for
+sub-token requests.
 
 - `byteDecodeRequest`: Fix decoding issue, add required word count argument
 - `byteEncodeRequest`: Return word count with encoding
 
 ## 1.2.0
 
-- `byteDecodeRequest`: Add method to derive a payment request from request bytes
+- `byteDecodeRequest`: Add method to derive a payment request from request
+    bytes
 - `byteEncodeRequest`: Add method to derive bytes from a payment request
 
 ## 1.1.7

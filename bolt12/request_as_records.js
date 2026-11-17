@@ -7,6 +7,7 @@ const blindedPathsAsHex = require('./blinded_paths_as_hex');
 const featuresAsHex = require('./features_as_hex');
 const networkAsChain = require('./network_as_chain');
 const numberAsTruncated = require('./number_as_truncated');
+const {textValidity} = require('./../bolt00');
 const types = require('./conf/tlv_types');
 
 const bitcoinNetwork = 'bitcoin';
@@ -19,6 +20,7 @@ const isHex = n => !(n.length % 2) && /^[0-9A-F]*$/i.test(n);
 const {isSafeInteger} = Number;
 const isNumber = n => typeof n === 'string' && /^\d+$/.test(n);
 const isString = n => typeof n === 'string';
+const isText = n => textValidity({text: n}).is_writable;
 const pointByteLength = 33;
 const utf8AsHex = utf8 => Buffer.from(utf8, 'utf8').toString('hex');
 
@@ -105,6 +107,10 @@ module.exports = args => {
 
   if (args.payer_note !== undefined && !isString(args.payer_note)) {
     throw new Error('ExpectedPayerNoteStringToCreateInvoiceRequest');
+  }
+
+  if (args.payer_note !== undefined && !isText(args.payer_note)) {
+    throw new Error('ExpectedValidUtf8PayerNoteToCreateInvoiceRequest');
   }
 
   if (args.paths !== undefined && !isArray(args.paths)) {

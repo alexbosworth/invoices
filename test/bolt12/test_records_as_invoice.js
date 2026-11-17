@@ -163,6 +163,13 @@ const tests = [
     error: 'UnexpectedUnknownRequiredFeatureBitInInvoice',
   },
   {
+    args: makeArgs({
+      records: [].concat(records, {type: '174', value: '00020000'}),
+    }),
+    description: 'Minimally encoded feature bits are required',
+    error: 'ExpectedMinimalFeatureBitsEncodingInInvoice',
+  },
+  {
     args: makeArgs({records: replace('160', '00')}),
     description: 'Valid blinded paths are required',
     error: 'ExpectedValidBlindedPathsInInvoice',

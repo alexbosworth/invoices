@@ -37,6 +37,10 @@ const timestampWordLength = 7;
 
   `paths` are bLIP 39 blinded paths.
 
+  BOLT 11 payer checks are deliberately left to payment flows. For example,
+  parsing can succeed when a request omits a `payment` identifier required for
+  payment.
+
   {
     request: <BOLT 11 Payment Request String>
   }
@@ -141,7 +145,7 @@ module.exports = ({request}) => {
     throw new Error('ExpectedDescriptionOrDescriptionHashInPaymentRequest');
   }
 
-  // Legacy requests predate `s` fields so only a payment hash is mandatory
+  // The payment hash is required and the payment identifier is optional
   if (!elements.some(hasPaymentHash)) {
     throw new Error('ExpectedPaymentHashInPaymentRequest');
   }

@@ -34,6 +34,7 @@ const {request} = byteDecodeRequest({
   encoded: paymentRequestDetailsHexString,
   mtokens: '0',
   network: 'bitcoin',
+  words: paymentRequestWordsCount,
 });
 ```
 
@@ -62,7 +63,7 @@ Example:
 const {byteEncodeRequest} = require('invoices');
 
 // Get the bytes for a payment request
-const {encoded, mtokens, network} = byteEncodeRequest({
+const {encoded, mtokens, network, words} = byteEncodeRequest({
   request: bolt11EncodedPaymentRequestString,
 });
 ```
@@ -401,9 +402,11 @@ Create an unsigned payment request
 `paths` are bLIP 39 blinded paths. If using, omit `destination`, `payment`, and
 `routes`
 
+Omit `cltv_delta` to use the BOLT 11 default of 18 blocks.
+
     {
       [chain_addresses]: [<Chain Address String>]
-      [cltv_delta]: <CLTV Delta Number>
+      [cltv_delta]: <Positive CLTV Delta Number>
       [created_at]: <Invoice Creation Date ISO 8601 String>
       [description]: <Description String>
       [description_hash]: <Description Hash Hex String>
@@ -688,6 +691,10 @@ Parse a BOLT 11 payment request into its component data
 Note: either description or description_hash will be returned
 
 `paths` are bLIP 39 blinded paths.
+
+BOLT 11 payer checks are deliberately left to payment flows. For example,
+parsing can succeed when a request omits a `payment` identifier required for
+payment.
 
     {
       request: <BOLT 11 Payment Request String>

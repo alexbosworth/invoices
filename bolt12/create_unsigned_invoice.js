@@ -4,6 +4,7 @@ const parseInvoiceRequest = require('./parse_invoice_request');
 const parseOffer = require('./parse_offer');
 const recordRange = require('./record_range');
 const recordsAsInvoice = require('./records_as_invoice');
+const {textValidity} = require('./../bolt00');
 const unsignedDetails = require('./unsigned_details');
 
 const asLowerCase = n => isString(n) ? n.toLowerCase() : n;
@@ -16,6 +17,7 @@ const isHexString = n => isString(n) && /^([0-9a-f]{2})*$/i.test(n);
 const isInvoiceType = type => recordRange({type}).range === 'invoice';
 const {isNaN} = Number;
 const isNumber = n => isString(n) && /^\d+$/.test(n);
+const isReadable = n => n === undefined || textValidity({text: n}).is_readable;
 const isRecord = n => !!n && isNumber(n.type) && isHexString(n.value);
 const isSignatureType = type => recordRange({type}).range === 'signature';
 const isString = n => typeof n === 'string';
@@ -93,6 +95,11 @@ module.exports = args => {
     encoded: args.encoded,
     request: args.request,
   });
+
+  // A request with disallowed characters in its payer note is rejected
+  if (!isReadable(request.payer_note)) {
+    throw new Error('ExpectedValidUtf8PayerNoteToCreateInvoice');
+  }
 
   if (args.created_at !== undefined && isNaN(parse(args.created_at))) {
     throw new Error('ExpectedValidCreatedAtDateToCreateInvoice');

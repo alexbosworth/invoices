@@ -95,6 +95,11 @@ const tests = [
     error: 'UnexpectedUnknownRequiredFeatureBitInInvoiceRequest',
   },
   {
+    args: {records: [metadata, {type: '84', value: '0002'}, payerId]},
+    description: 'Minimally encoded feature bits are required',
+    error: 'ExpectedMinimalFeatureBitsEncodingInInvoiceRequest',
+  },
+  {
     args: {records: [metadata, {type: '86', value: '0001'}, payerId]},
     description: 'A minimally encoded quantity is required',
     error: 'ExpectedValidQuantityInInvoiceRequest',

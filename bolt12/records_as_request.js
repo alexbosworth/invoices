@@ -12,6 +12,7 @@ const types = require('./conf/tlv_types');
 const chainByteLength = 32;
 const defaultNetwork = 'bitcoin';
 const findRecord = (records, type) => records.find(n => n.type === type);
+const hasLeadingZeroByte = hex => /^00/.test(hex);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const hexByteLength = hex => hex.length / 2;
 const {isArray} = Array;
@@ -125,6 +126,11 @@ module.exports = ({records}) => {
     } catch (err) {
       throw new Error('ExpectedValidAmountInInvoiceRequest');
     }
+  }
+
+  // Leading zero bytes are a non-minimal encoding of the feature bits
+  if (!!features && hasLeadingZeroByte(features.value)) {
+    throw new Error('ExpectedMinimalFeatureBitsEncodingInInvoiceRequest');
   }
 
   if (!!features) {

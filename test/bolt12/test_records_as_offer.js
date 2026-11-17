@@ -80,6 +80,11 @@ const tests = [
     error: 'ExpectedValidQuantityMaxInOffer',
   },
   {
+    args: {records: [issuerId, {type: '12', value: '0002'}]},
+    description: 'Minimally encoded feature bits are required',
+    error: 'ExpectedMinimalFeatureBitsEncodingInOffer',
+  },
+  {
     args: {records: [{type: '10', value: '00'}]},
     description: 'An issuer id or paths is required',
     error: 'ExpectedIssuerIdOrPathsInOffer',

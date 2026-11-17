@@ -12,6 +12,7 @@ const asDateString = ms => new Date(ms).toISOString();
 const chainByteLength = 32;
 const defaultNetworks = ['bitcoin'];
 const findRecord = (records, type) => records.find(n => n.type === type);
+const hasLeadingZeroByte = hex => /^00/.test(hex);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const hexByteLength = hex => hex.length / 2;
 const {isArray} = Array;
@@ -188,6 +189,11 @@ module.exports = args => {
     } catch (err) {
       throw new Error('ExpectedValidUtf8IssuerInOffer');
     }
+  }
+
+  // Leading zero bytes are a non-minimal encoding of the feature bits
+  if (!!features && hasLeadingZeroByte(features.value)) {
+    throw new Error('ExpectedMinimalFeatureBitsEncodingInOffer');
   }
 
   if (!!features) {

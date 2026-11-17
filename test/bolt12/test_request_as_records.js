@@ -75,6 +75,11 @@ const tests = [
     error: 'ExpectedPayerNoteStringToCreateInvoiceRequest',
   },
   {
+    args: makeArgs({payer_note: 'thanks\n'}),
+    description: 'A payer note cannot have a control character',
+    error: 'ExpectedValidUtf8PayerNoteToCreateInvoiceRequest',
+  },
+  {
     args: makeArgs({paths: 'paths'}),
     description: 'An array of paths is required',
     error: 'ExpectedArrayOfBlindedPathsToCreateInvoiceRequest',

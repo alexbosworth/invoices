@@ -4,6 +4,7 @@ const taggedFields = require('./conf/tagged_fields');
 const wordsAsBlindedPath = require('./words_as_blinded_path');
 const wordsAsBuffer = require('./words_as_buffer');
 const wordsAsChainAddress = require('./words_as_chain_address');
+const wordsAsDescription = require('./words_as_description');
 const wordsAsHopHints = require('./words_as_hop_hints');
 const wordsAsNumber = require('./words_as_number');
 
@@ -98,7 +99,7 @@ module.exports = ({code, network, words}) => {
 
   case feature.description:
     try {
-      return {description: wordsAsBuffer({trim, words}).toString('utf8')};
+      return {description: wordsAsDescription({words}).description};
     } catch (err) {
       throw new Error('InvalidDescriptionInPaymentRequest');
     }

@@ -1,11 +1,13 @@
 const {encodeTlvStream} = require('bolt01');
 
 const numberAsTruncated = require('./number_as_truncated');
+const {textValidity} = require('./../bolt00');
 const types = require('./conf/tlv_types');
 
 const isHex = n => !(n.length % 2) && /^[0-9A-F]*$/i.test(n);
 const isNumber = n => typeof n === 'string' && /^\d+$/.test(n);
 const isString = n => typeof n === 'string';
+const isText = n => textValidity({text: n}).is_writable;
 const utf8AsHex = utf8 => Buffer.from(utf8, 'utf8').toString('hex');
 
 /** Create a BOLT 12 invoice error for a problem with a request or an invoice
@@ -36,6 +38,10 @@ module.exports = args => {
 
   if (!args.message || !isString(args.message)) {
     throw new Error('ExpectedErrorMessageStringToCreateInvoiceError');
+  }
+
+  if (!isText(args.message)) {
+    throw new Error('ExpectedValidUtf8ErrorMessageToCreateInvoiceError');
   }
 
   const hasSuggestion = args.suggested_value !== undefined;

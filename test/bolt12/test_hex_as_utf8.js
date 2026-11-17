@@ -45,6 +45,11 @@ const tests = [
     description: 'A leading U+FEFF character is preserved',
     expected: {string: '\ufeffCoffee'},
   },
+  {
+    args: {hex: '436f666665650a'},
+    description: 'A control character is decoded',
+    expected: {string: 'Coffee\n'},
+  },
 ];
 
 tests.forEach(({args, description, error, expected}) => {

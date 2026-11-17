@@ -8,22 +8,31 @@ const currencyCodes = require('./conf/bech32_currency_codes');
 const descriptionAsWords = require('./description_as_words');
 const hexAsWords = require('./hex_as_words');
 const hopAsHex = require('./hop_as_hex');
+const isDate = require('./is_date');
 const mtokensAsHrp = require('./mtokens_as_hrp');
 const numberAsWords = require('./number_as_words');
+const padWords = require('./pad_words');
+const tagLengthAsWords = require('./tag_length_as_words');
 const taggedFields = require('./conf/tagged_fields');
+const {textValidity} = require('./../bolt00');
 const wordsAsBuffer = require('./words_as_buffer');
 
 const decBase = 10;
-const defaultExpireMs = 1e3 * 60 * 60 * 24;
 const flatten = arr => [].concat(...arr);
 const {floor} = Math;
 const {isArray} = Array;
+const {isInteger} = Number;
+const isPositiveSafeInteger = n => Number.isSafeInteger(n) && n > 0;
+const isText = n => textValidity({text: n}).is_writable;
 const {keys} = Object;
 const maxDescriptionLen = 639;
+const maxFeatureBit = 1023 * 5 - 1;
+const maxTimestamp = Math.pow(2, 35) - 1;
 const msPerSec = 1e3;
 const mtokPerTok = 1e3;
 const {now} = Date;
 const {parse} = Date;
+const timestampWordLength = 7;
 const tokensAsMtokens = n => !n ? '0' : (BigInt(n) * BigInt(1e3)).toString();
 
 /** Create an unsigned payment request
@@ -33,7 +42,7 @@ const tokensAsMtokens = n => !n ? '0' : (BigInt(n) * BigInt(1e3)).toString();
 
   {
     [chain_addresses]: [<Chain Address String>]
-    [cltv_delta]: <CLTV Delta Number>
+    [cltv_delta]: <Positive CLTV Delta Number>
     [created_at]: <Invoice Creation Date ISO 8601 String>
     [description]: <Description String>
     [description_hash]: <Description Hash Hex String>
@@ -81,6 +90,17 @@ const tokensAsMtokens = n => !n ? '0' : (BigInt(n) * BigInt(1e3)).toString();
   }
 */
 module.exports = args => {
+  const cltvDelta = args.cltv_delta;
+
+  if (cltvDelta !== undefined && !isPositiveSafeInteger(cltvDelta)) {
+    throw new Error('ExpectedValidCltvDeltaToEncodePaymentRequest');
+  }
+
+  // An explicit creation date must be a valid ISO 8601 date
+  if (args.created_at !== undefined && !isDate(args.created_at)) {
+    throw new Error('ExpectedValidCreatedAtDateToEncodePaymentRequest');
+  }
+
   if (args.description === undefined && !args.description_hash) {
     throw new Error('ExpectedPaymentDescriptionOrDescriptionHashForPayReq');
   }
@@ -89,8 +109,32 @@ module.exports = args => {
     throw new Error('ExpectedPaymentDescriptionWithinDescriptionByteLimit');
   }
 
+  if (!isText(args.description || '')) {
+    throw new Error('ExpectedValidUtf8DescriptionToEncodePaymentRequest');
+  }
+
+  // An explicit expiration date must be a valid ISO 8601 date
+  if (args.expires_at !== undefined && !isDate(args.expires_at)) {
+    throw new Error('ExpectedValidExpiresAtDateToEncodePaymentRequest');
+  }
+
   if (!args.id) {
     throw new Error('ExpectedPaymentHashWhenEncodingPaymentRequest');
+  }
+
+  if (args.features !== undefined && !isArray(args.features)) {
+    throw new Error('ExpectedArrayOfFeaturesToEncodePaymentRequest');
+  }
+
+  const features = args.features || [];
+
+  if (!features.every(n => !!n && isInteger(n.bit) && n.bit >= Number())) {
+    throw new Error('ExpectedFeatureBitNumbersToEncodePaymentRequest');
+  }
+
+  // A tagged field holds up to 1023 words that each have 5 feature bits
+  if (!features.every(n => n.bit <= maxFeatureBit)) {
+    throw new Error('ExpectedFeatureBitWithinMaximumToEncodePaymentRequest');
   }
 
   if (args.paths !== undefined && !isArray(args.paths)) {
@@ -107,13 +151,22 @@ module.exports = args => {
     throw new Error('UnexpectedPaymentIdAndBlindedPathsInPaymentRequest');
   }
 
-  const createdAt = floor((parse(args.created_at) || now()) / msPerSec);
+  const createdAtMs = !args.created_at ? now() : parse(args.created_at);
 
-  const defaultExpiresAt = new Date(createdAt + defaultExpireMs).toISOString();
+  const createdAt = floor(createdAtMs / msPerSec);
 
-  const expiresAt = args.expires_at || defaultExpiresAt;
+  // The timestamp is 35 bits of seconds: from 1970 until late in 3058
+  if (createdAt < Number() || createdAt > maxTimestamp) {
+    throw new Error('ExpectedCreatedAtDateWithinRangeToEncodePaymentRequest');
+  }
 
-  const expiresAtEpochTime = floor(parse(expiresAt) / msPerSec);
+  const expirySeconds = args.expires_at === undefined ?
+    undefined : floor(parse(args.expires_at) / msPerSec) - createdAt;
+
+  // The expiry is encoded as seconds after the creation date, zero is expired
+  if (expirySeconds !== undefined && expirySeconds <= 0) {
+    throw new Error('ExpectedExpiresAtAfterCreatedAtToEncodePaymentRequest');
+  }
 
   const currencyPrefix = keys(currencyCodes)
     .map(code => ({code, network: currencyCodes[code]}))
@@ -123,7 +176,14 @@ module.exports = args => {
     throw new Error('ExpectedKnownNetworkToEncodePaymentRequest');
   }
 
-  const createdAtWords = numberAsWords({number: floor(createdAt)}).words;
+  const timestamp = numberAsWords({number: createdAt}).words;
+
+  // The timestamp has a fixed length: an early date has leading zero words
+  const {words: createdAtWords} = padWords({
+    word_count: timestampWordLength,
+    words: timestamp,
+  });
+
   const mtokens = args.mtokens || tokensAsMtokens(args.tokens);
 
   const hrp = `ln${currencyPrefix.code}${mtokensAsHrp({mtokens}).hrp}`;
@@ -163,21 +223,22 @@ module.exports = args => {
       };
 
     case 'expiry':
-      if (!args.expires_at) {
+      if (expirySeconds === undefined) {
         return {};
       }
 
       return {
         field,
-        words: numberAsWords({number: expiresAtEpochTime - createdAt}).words,
+        words: numberAsWords({number: expirySeconds}).words,
       };
 
     case 'feature_bits':
-      if (!args.features) {
+      // The features field is left out when there are no feature bits to set
+      if (!features.length) {
         return {};
       }
 
-      const bits = args.features.map(n => n.bit);
+      const bits = features.map(n => n.bit);
 
       return {
         field,
@@ -205,13 +266,13 @@ module.exports = args => {
       };
 
     case 'min_final_cltv_expiry':
-      if (!args.cltv_delta) {
+      if (cltvDelta === undefined) {
         return {};
       }
 
       return {
         field,
-        words: numberAsWords({number: args.cltv_delta}).words,
+        words: numberAsWords({number: cltvDelta}).words,
       };
 
     case 'payment_hash':
@@ -268,13 +329,10 @@ module.exports = args => {
   }));
 
   const tagWords = fieldWords.filter(n => !!n.words).map(({field, words}) => {
+    const sizeWords = tagLengthAsWords(words.length);
     const typeWord = [parseInt(field, decBase)];
 
-    const dataLengthWords = numberAsWords({number: words.length}).words;
-
-    const dataLengthPadded = [0].concat(dataLengthWords).slice(-2);
-
-    return [].concat(typeWord).concat(dataLengthPadded).concat(words);
+    return [].concat(typeWord).concat(sizeWords).concat(words);
   });
 
   const allTags = flatten(createdAtWords.concat(tagWords));

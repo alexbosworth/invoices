@@ -57,6 +57,16 @@ const tests = [
     error: 'ExpectedDescriptionStringToCreateOffer',
   },
   {
+    args: makeArgs({description: 'Test\nvectors'}),
+    description: 'A description cannot have a control character',
+    error: 'ExpectedValidUtf8DescriptionToCreateOffer',
+  },
+  {
+    args: makeArgs({description: 'Test\uffffvectors'}),
+    description: 'A description cannot have an unassigned character',
+    error: 'ExpectedValidUtf8DescriptionToCreateOffer',
+  },
+  {
     args: makeArgs({description: undefined, mtokens: '1'}),
     description: 'A description is required for an amount',
     error: 'ExpectedDescriptionForAmountToCreateOffer',
@@ -80,6 +90,11 @@ const tests = [
     args: makeArgs({issuer: 1}),
     description: 'An issuer string is required',
     error: 'ExpectedIssuerStringToCreateOffer',
+  },
+  {
+    args: makeArgs({issuer: 'issuer\u200d'}),
+    description: 'An issuer cannot have a format character',
+    error: 'ExpectedValidUtf8IssuerToCreateOffer',
   },
   {
     args: makeArgs({issuer_id: undefined}),

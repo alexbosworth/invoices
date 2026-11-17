@@ -5,13 +5,16 @@ const parseOffer = require('./parse_offer');
 const requestAsRecords = require('./request_as_records');
 const requestDetails = require('./request_details');
 const stringAsHex = require('./string_as_hex');
+const {textValidity} = require('./../bolt00');
 const types = require('./conf/tlv_types');
 const unsignedDetails = require('./unsigned_details');
 
 const bitcoinNetwork = 'bitcoin';
 const {floor} = Math;
 const {isNaN} = Number;
+const isReadable = n => n === undefined || textValidity({text: n}).is_readable;
 const isString = n => typeof n === 'string';
+const isText = n => textValidity({text: n}).is_writable;
 const message = 'invoice_request';
 const msPerSec = 1e3;
 const offerPrefix = 'lno';
@@ -110,6 +113,10 @@ module.exports = args => {
     throw new Error('ExpectedDescriptionToCreateInvoiceRequestWithoutOffer');
   }
 
+  if (!args.offer && !isText(args.description)) {
+    throw new Error('ExpectedValidUtf8DescriptionToCreateInvoiceRequest');
+  }
+
   if (!args.offer && args.mtokens === undefined) {
     throw new Error('ExpectedMillitokensToCreateInvoiceRequestWithoutOffer');
   }
@@ -122,10 +129,19 @@ module.exports = args => {
     throw new Error('ExpectedIssuerStringToCreateInvoiceRequest');
   }
 
+  if (args.issuer !== undefined && !isText(args.issuer)) {
+    throw new Error('ExpectedValidUtf8IssuerToCreateInvoiceRequest');
+  }
+
   const offer = !args.offer ? undefined : parseOffer({offer: args.offer});
 
   if (!!offer && offer.is_expired) {
     throw new Error('ExpectedUnexpiredOfferToCreateInvoiceRequest');
+  }
+
+  // An offer with disallowed characters in its text is not responded to
+  if (!!offer && ![offer.description, offer.issuer].every(isReadable)) {
+    throw new Error('ExpectedValidUtf8OfferTextToCreateInvoiceRequest');
   }
 
   // The request chain is set to an offer chain when bitcoin is not an option

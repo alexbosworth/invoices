@@ -4,6 +4,7 @@ const blindedPathsAsHex = require('./blinded_paths_as_hex');
 const featuresAsHex = require('./features_as_hex');
 const networkAsChain = require('./network_as_chain');
 const numberAsTruncated = require('./number_as_truncated');
+const {textValidity} = require('./../bolt00');
 const types = require('./conf/tlv_types');
 
 const bitcoinNetwork = 'bitcoin';
@@ -18,6 +19,7 @@ const isNumber = n => typeof n === 'string' && /^\d+$/.test(n);
 const isOptional = n => !!(n.bit % 2);
 const {isSafeInteger} = Number;
 const isString = n => typeof n === 'string';
+const isText = n => textValidity({text: n}).is_writable;
 const msPerSec = 1e3;
 const {parse} = Date;
 const pointByteLength = 33;
@@ -100,6 +102,10 @@ module.exports = args => {
     throw new Error('ExpectedDescriptionStringToCreateOffer');
   }
 
+  if (args.description !== undefined && !isText(args.description)) {
+    throw new Error('ExpectedValidUtf8DescriptionToCreateOffer');
+  }
+
   // A description is required to describe what the amount is paying for
   if (amount !== undefined && args.description === undefined) {
     throw new Error('ExpectedDescriptionForAmountToCreateOffer');
@@ -115,6 +121,10 @@ module.exports = args => {
 
   if (args.issuer !== undefined && !isString(args.issuer)) {
     throw new Error('ExpectedIssuerStringToCreateOffer');
+  }
+
+  if (args.issuer !== undefined && !isText(args.issuer)) {
+    throw new Error('ExpectedValidUtf8IssuerToCreateOffer');
   }
 
   if (!args.issuer_id && !args.paths) {

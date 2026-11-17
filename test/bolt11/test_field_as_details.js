@@ -90,6 +90,16 @@ const tests = [
     error: 'InvalidDescriptionInPaymentRequest',
   },
   {
+    args: {code: 13, network: 'bitcoin', words: hexAsWords({hex: 'ff'}).words},
+    description: 'A description must be valid UTF-8',
+    error: 'InvalidDescriptionInPaymentRequest',
+  },
+  {
+    args: {code: 13, network: 'bitcoin', words: hexAsWords({hex: '0a'}).words},
+    description: 'A description can have a control character',
+    expected: {description: '\n'},
+  },
+  {
     args: {code: 9, network: 'bitcoin'},
     description: 'Fallback address is invalid',
     error: 'FailedToParsePaymentRequestFallbackAddress',

@@ -16,6 +16,11 @@ const tests = [
     error: 'ExpectedErrorMessageStringToCreateInvoiceError',
   },
   {
+    args: {message: 'Amount\ntoo low'},
+    description: 'An error message cannot have a control character',
+    error: 'ExpectedValidUtf8ErrorMessageToCreateInvoiceError',
+  },
+  {
     args: {message: 'message', suggested_value: 1},
     description: 'A suggested value string is required',
     error: 'ExpectedSuggestedValueHexStringToCreateInvoiceError',

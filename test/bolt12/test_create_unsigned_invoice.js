@@ -8,6 +8,9 @@ const {createOffer} = require('./../../');
 const {createSignedInvoiceRequest} = require('./../../');
 const {createUnsignedInvoice} = require('./../../');
 const {createUnsignedInvoiceRequest} = require('./../../');
+const hexAsString = require('./../../bolt12/hex_as_string');
+const signStream = require('./../../bolt12/sign_stream');
+const types = require('./../../bolt12/conf/tlv_types');
 
 const alice =
   '02eec7245d6b7d2ccb30380bfbe2a3648cd7a942653f5aa340edcea1f283686619';
@@ -49,6 +52,18 @@ const sign = unsigned => createSignedInvoiceRequest({
   secret: bobSecret,
 });
 
+// Simulate requests signed by peers with more permissive validation
+const signIncomingRequest = ({encoded}) => {
+  const signed = signStream({
+    encoded,
+    message: 'invoice_request',
+    secret: bobSecret,
+    type: types.request.payer_id,
+  });
+
+  return hexAsString({hex: signed.encoded, prefix: 'lnr'}).string;
+};
+
 // A request for an offer with an amount and a quantity
 const quantityRequest = createUnsignedInvoiceRequest({
   metadata,
@@ -71,6 +86,30 @@ const expiredRequest = encodeTlvStream({
     {type: '22', value: alice},
     {type: '82', value: '03e8'},
     {type: '88', value: bob},
+  ],
+});
+
+// A request with a line break in its payer note, which is not responded to
+const lineBreakNoteRequest = encodeTlvStream({
+  records: [
+    {type: '0', value: metadata},
+    {type: '10', value: '5465737420766563746f7273'},
+    {type: '22', value: alice},
+    {type: '82', value: '03e8'},
+    {type: '88', value: bob},
+    {type: '89', value: '0a'},
+  ],
+});
+
+// A request with an unassigned character in its payer note, which is allowed
+const unassignedNoteRequest = encodeTlvStream({
+  records: [
+    {type: '0', value: metadata},
+    {type: '10', value: '5465737420766563746f7273'},
+    {type: '22', value: alice},
+    {type: '82', value: '03e8'},
+    {type: '88', value: bob},
+    {type: '89', value: 'efbfbf'},
   ],
 });
 
@@ -158,6 +197,11 @@ const tests = [
     error: 'ExpectedEncodedRequestOrRequestToParseInvoiceRequest',
   },
   {
+    args: makeArgs({request: signIncomingRequest(lineBreakNoteRequest)}),
+    description: 'A payer note cannot have a control character',
+    error: 'ExpectedValidUtf8PayerNoteToCreateInvoice',
+  },
+  {
     args: makeArgs({mtokens: undefined}),
     description: 'An amount is required for a currency offer',
     error: 'ExpectedMillitokensToCreateInvoiceForRequest',
@@ -195,7 +239,7 @@ const tests = [
   {
     args: makeArgs({
       mtokens: undefined,
-      request: sign(expiredRequest).request,
+      request: signIncomingRequest(expiredRequest),
     }),
     description: 'An invoice cannot be created for an expired offer',
     error: 'ExpectedUnexpiredOfferToCreateInvoice',
@@ -316,6 +360,20 @@ const tests = [
         `a6020e10${paymentHash}aa0203e8b021${alice}`,
       hash: 'a062cc1cf76c40d8e2d8739e3f8e69ea345de30fa5325d7e041e21405946fd3c',
       root: '1d593e4fc3fcfc54835a68190d38a398bdaa5c21031925cbc229d410f943d944',
+    },
+  },
+  {
+    args: makeArgs({
+      mtokens: undefined,
+      request: signIncomingRequest(unassignedNoteRequest),
+    }),
+    description: 'A payer note can have an unassigned character',
+    expected: {
+      tag,
+      encoded: `${unassignedNoteRequest.encoded}${paths}${payinfo}a40101` +
+        `${paymentHash}aa0203e8b021${alice}`,
+      hash: '246354a2dc96af346dc65b6fbd8a75070e38fcd082270afe62394f38d98feee8',
+      root: 'c559b457de720537f79a5ea5ea0b7eb48458006ffcf49347f2afb620e339b349',
     },
   },
   {

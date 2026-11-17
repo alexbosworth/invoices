@@ -1,10 +1,14 @@
+const {encodeTlvStream} = require('bolt01');
+
 const strictSame = require('node:assert').strict.deepStrictEqual;
 const test = require('node:test');
 const {throws} = require('node:assert').strict;
 
 const {createSignedInvoiceRequest} = require('./../../');
 const {createUnsignedInvoiceRequest} = require('./../../');
+const hexAsRecords = require('./../../bolt12/hex_as_records');
 const {parseInvoiceRequest} = require('./../../');
+const types = require('./../../bolt12/conf/tlv_types');
 
 const bob =
   '0324653eac434488002cc06bbfb7f10fe18991e35f9fe4302dbea6d2353dc0ab1c';
@@ -39,6 +43,19 @@ const refund = createUnsignedInvoiceRequest({
   payer_id: bob,
 });
 
+// Supply encoded fields directly to exercise the signing entry point
+const withRecord = (type, value) => {
+  const {records} = hexAsRecords({hex: encoded});
+
+  return encodeTlvStream({
+    records: records.filter(n => n.type !== type).concat({type, value}),
+  }).encoded;
+};
+
+const withText = (type, text) => {
+  return withRecord(type, Buffer.from(text, 'utf8').toString('hex'));
+};
+
 const tests = [
   {
     args: {signature},
@@ -69,6 +86,36 @@ const tests = [
     args: {secret, encoded: `${encoded}fe773594020100`},
     description: 'An unknown even experimental request record is rejected',
     error: 'UnexpectedUnknownEvenRecordTypeInInvoiceRequest',
+  },
+  {
+    args: {secret, encoded: withRecord(types.offer.absolute_expiry, '01')},
+    description: 'A request requires an unexpired offer when signed',
+    error: 'ExpectedUnexpiredOfferToCreateInvoiceRequest',
+  },
+  {
+    args: {secret, encoded: withText('89', 'thanks\n')},
+    description: 'A raw payer note cannot contain a control character',
+    error: 'ExpectedValidUtf8PayerNoteToCreateInvoiceRequest',
+  },
+  {
+    args: {secret, encoded: withText('89', 'thanks\uffff')},
+    description: 'A raw payer note rejects an unassigned code point',
+    error: 'ExpectedValidUtf8PayerNoteToCreateInvoiceRequest',
+  },
+  {
+    args: {secret, encoded: withText('18', 'issuer\u200d')},
+    description: 'Copied offer text cannot contain a format character',
+    error: 'ExpectedValidUtf8OfferTextToCreateInvoiceRequest',
+  },
+  {
+    args: {secret, encoded: withText('10', 'description\uffff')},
+    description: 'Copied offer text can contain an unassigned character',
+    expected: {},
+  },
+  {
+    args: {secret, encoded: withText('89', 'thanks\u{1fffd}')},
+    description: 'A raw payer note can contain a reserved pictograph',
+    expected: {},
   },
   {
     args: {encoded, signature},

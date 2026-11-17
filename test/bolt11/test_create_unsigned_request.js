@@ -13,6 +13,16 @@ const wordsAsBuffer = require('./../../bolt11/words_as_buffer');
 
 const blindedKey = '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad';
 const bufFromHex = hex => Buffer.from(hex, 'hex');
+const routeWithHops = count => [
+  {public_key: blindedKey},
+  ...Array.from({length: count}, () => ({
+    base_fee_mtokens: '1',
+    channel: '66051x263430x1800',
+    cltv_delta: 3,
+    fee_rate: 20,
+    public_key: blindedKey,
+  })),
+];
 
 // The bLIP 39 test vector blinded paths
 const blindedPaths = [
@@ -87,6 +97,24 @@ const tests = [
     error: 'ExpectedPaymentDescriptionWithinDescriptionByteLimit',
   },
   {
+    args: {
+      description: 'coffee\nbeans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A description cannot have a control character',
+    error: 'ExpectedValidUtf8DescriptionToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee\uffffbeans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A description cannot have an unassigned character',
+    error: 'ExpectedValidUtf8DescriptionToEncodePaymentRequest',
+  },
+  {
     args: {description: 'coffee beans', network: 'bitcoin'},
     description: 'A payment hash is required',
     error: 'ExpectedPaymentHashWhenEncodingPaymentRequest',
@@ -137,6 +165,229 @@ const tests = [
   {
     args: {
       created_at: '2017-06-01T10:57:38.000Z',
+      description: 'coffee beans',
+      expires_at: '2017-06-01T10:57:37.000Z',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'An expiration date cannot be before the creation date',
+    error: 'ExpectedExpiresAtAfterCreatedAtToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      expires_at: '2017-06-01T10:57:38.000Z',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A past expiration date cannot be used for a new request',
+    error: 'ExpectedExpiresAtAfterCreatedAtToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: '2017-06-01T10:57:38.000Z',
+      description: 'coffee beans',
+      expires_at: '2017-06-01T10:57:38.999Z',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'An expiration date cannot be in the same second as creation',
+    error: 'ExpectedExpiresAtAfterCreatedAtToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      expires_at: 'date',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'An expiration date has to be a valid date',
+    error: 'ExpectedValidExpiresAtDateToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: '2025-04-01T00:00:00Z',
+      description: 'coffee beans',
+      expires_at: '2025-04-31T00:00:00+02:00',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'An expiration date cannot roll over into the next month',
+    error: 'ExpectedValidExpiresAtDateToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      expires_at: 0,
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'An expiration date of zero is not a valid date',
+    error: 'ExpectedValidExpiresAtDateToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: 'date',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A creation date has to be a valid date',
+    error: 'ExpectedValidCreatedAtDateToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: '2025-02-29T00:00:00Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A creation date cannot fall on leap day in a common year',
+    error: 'ExpectedValidCreatedAtDateToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: 0,
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A creation date of zero is not a valid date',
+    error: 'ExpectedValidCreatedAtDateToEncodePaymentRequest',
+  },
+  {
+    args: {
+      cltv_delta: -1,
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A negative cltv delta cannot be encoded',
+    error: 'ExpectedValidCltvDeltaToEncodePaymentRequest',
+  },
+  {
+    args: {
+      cltv_delta: 0,
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'An explicit zero CLTV delta cannot be encoded',
+    error: 'ExpectedValidCltvDeltaToEncodePaymentRequest',
+  },
+  {
+    args: {
+      cltv_delta: 'delta',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A cltv delta has to be a number',
+    error: 'ExpectedValidCltvDeltaToEncodePaymentRequest',
+  },
+  {
+    args: {
+      cltv_delta: 1.5,
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A cltv delta has to be a whole number',
+    error: 'ExpectedValidCltvDeltaToEncodePaymentRequest',
+  },
+  {
+    args: {
+      cltv_delta: 2 ** 53,
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A cltv delta has to be within the safe integer range',
+    error: 'ExpectedValidCltvDeltaToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: '1969-12-31T23:59:59.000Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A creation date before 1970 cannot be encoded',
+    error: 'ExpectedCreatedAtDateWithinRangeToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: '3058-10-26T03:46:08.000Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A date beyond the 35-bit timestamp limit is rejected',
+    error: 'ExpectedCreatedAtDateWithinRangeToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      metadata: 'ab'.repeat(640),
+      network: 'bitcoin',
+    },
+    description: 'Metadata over 639 bytes cannot be encoded',
+    error: 'ExpectedTaggedFieldWithinLimitToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      routes: [routeWithHops(13)],
+    },
+    description: 'A route with 13 encoded hops cannot be encoded',
+    error: 'ExpectedTaggedFieldWithinLimitToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      features: [{bit: 5115}],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A feature bit over the 1023 word limit cannot be encoded',
+    error: 'ExpectedFeatureBitWithinMaximumToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      features: [null],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A feature has to have a feature bit',
+    error: 'ExpectedFeatureBitNumbersToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      features: [{bit: 1.5}],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A feature bit has to be a whole number',
+    error: 'ExpectedFeatureBitNumbersToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      features: [{bit: -1}],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A feature bit cannot be negative',
+    error: 'ExpectedFeatureBitNumbersToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: '2017-06-01T10:57:38.000Z',
       description_hash: '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
       id: '0001020304050607080900010203040506070809000102030405060708090102',
       mtokens: '2000000000',
@@ -151,6 +402,98 @@ const tests = [
     verify: {
       destination: '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
       private_key: 'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
+  {
+    args: {
+      created_at: '2017-06-01T10:57:38.000Z',
+      description_hash:
+        '3925b6f67e2c340036ed12093dd44e0368df1b6ea26c53dbe4811f58fd5db8c1',
+      features: [],
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      mtokens: '2000000000',
+      network: 'bitcoin',
+    },
+    description: 'No feature bits means the features field is left out',
+    expected: {
+      data:
+        '0b25fe64410d00004080c1014181c20240004080c1014181c20240004080c101' +
+        '4181c202404082e1a1c92db7b3f161a001b7689049eea2701b46f8db7513629e' +
+        'df2408fac7eaedc60800',
+      hash: 'b6025e8a10539dddbcbe6840a9650707ae3f147b8dcfda338561ada710508916',
+      hrp: 'lnbc20m',
+    },
+    verify: {
+      destination:
+        '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key:
+        'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
+  {
+    args: {
+      created_at: '1970-01-01T00:00:00.000Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A creation date at the epoch is a timestamp of zero words',
+    expected: {
+      data:
+        '00000000010d00004080c1014181c20240004080c1014181c20240004080c101' +
+        '4181c202404081a0a31b7b33332b2903132b0b739800',
+      hash: '0cfc618cfe7d80c2cabfe861594c554366605e1c4e148714708048bb296f025a',
+      hrp: 'lnbc',
+    },
+    verify: {
+      destination:
+        '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key:
+        'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
+  {
+    args: {
+      created_at: '2004-01-10T13:37:03.000Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A creation date before 2004 has a leading zero word',
+    expected: {
+      data:
+        '07ffffffe10d00004080c1014181c20240004080c1014181c20240004080c101' +
+        '4181c202404081a0a31b7b33332b2903132b0b739800',
+      hash: '47630d20a207494fdad119c98e1eac93513886e3ef7450352b498a3606cded7e',
+      hrp: 'lnbc',
+    },
+    verify: {
+      destination:
+        '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key:
+        'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
+    },
+  },
+  {
+    args: {
+      created_at: '3058-10-26T03:46:07.000Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'The last creation date of the 35 bit timestamp is encoded',
+    expected: {
+      data:
+        'ffffffffe10d00004080c1014181c20240004080c1014181c20240004080c101' +
+        '4181c202404081a0a31b7b33332b2903132b0b739800',
+      hash: '3a37943fc55e88aeafb508dc9feda5afd157c27e2c5fcaef2527fa87312d77ed',
+      hrp: 'lnbc',
+    },
+    verify: {
+      destination:
+        '03e7156ae33b0a208d0744199163177e909e80176e55d97a2f221ede0f934dd9ad',
+      private_key:
+        'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734',
     },
   },
   {
@@ -557,6 +900,97 @@ tests.forEach(({args, description, error, expected, verify}) => {
     if (!!args.tokens) {
       equal(parsed.tokens, args.tokens, 'Payment request tokens as expected');
     }
+
+    return end();
+  });
+});
+
+test('A leap day expiration can have a time zone offset', () => {
+  const args = {
+    description: 'coffee beans',
+    id: '0001020304050607080900010203040506070809000102030405060708090102',
+    network: 'bitcoin',
+  };
+
+  const expected = createUnsignedRequest({
+    ...args,
+    created_at: '2024-02-28T00:00:00Z',
+    expires_at: '2024-02-28T22:30:00Z',
+  });
+
+  const actual = createUnsignedRequest({
+    ...args,
+    created_at: '2024-02-28',
+    expires_at: '2024-02-29T00:30:00+02:00',
+  });
+
+  strictSame(actual, expected, 'Dates encode to the same UTC times');
+});
+
+// Supplied features must not be silently discarded when they are not an array
+const invalidFeatures = [
+  null, false, 0, 15, '', 'features', {bit: 15}, {length: 0},
+];
+
+invalidFeatures.forEach(features => {
+  const name = `Non-array features ${JSON.stringify(features)} are rejected`;
+
+  return test(name, (t, end) => {
+    throws(
+      () => createUnsignedRequest({
+        features,
+        description: 'coffee beans',
+        id: '0001020304050607080900010203040506070809000102030405060708090102',
+        network: 'bitcoin',
+      }),
+      new Error('ExpectedArrayOfFeaturesToEncodePaymentRequest'),
+      'Got features array validation error'
+    );
+
+    return end();
+  });
+});
+
+[
+  {
+    args: {metadata: 'ab'.repeat(639)},
+    description: 'Metadata at the 639 byte limit round trips',
+  },
+  {
+    args: {routes: [routeWithHops(12), routeWithHops(12)]},
+    description: 'Multiple routes with 12 encoded hops each round trip',
+  },
+  {
+    args: {features: [{bit: 5114, is_required: true, type: undefined}]},
+    description: 'A tagged field at the 1023 word limit round trips',
+  },
+].forEach(({args, description}) => {
+  return test(description, (t, end) => {
+    const {hash, hrp, tags} = createUnsignedRequest({
+      ...args,
+      created_at: '2017-06-01T10:57:38.000Z',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    });
+
+    const privateKey =
+      'e126f68f7eafcc8b74f54d269fe206be715000f94dac067d1c04a8ca3b2db734';
+
+    const signature = sign(bufFromHex(hash), bufFromHex(privateKey));
+
+    const {request} = createSignedRequest({
+      hrp,
+      tags,
+      destination: blindedKey,
+      signature: Buffer.from(signature).toString('hex'),
+    });
+
+    const parsed = parsePaymentRequest({request});
+
+    Object.keys(args).forEach(field => {
+      strictSame(parsed[field], args[field], 'Field data round trips');
+    });
 
     return end();
   });

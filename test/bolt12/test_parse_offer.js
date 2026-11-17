@@ -36,6 +36,13 @@ const repeatedChainsOffer = asOffer([
   {type: '22', value: issuerId},
 ]);
 
+// An offer with a line break in its description and a joiner in its issuer
+const formattedOffer = asOffer([
+  {type: '10', value: Buffer.from('Test\nvectors').toString('hex')},
+  {type: '18', value: Buffer.from('issuer\u200d').toString('hex')},
+  {type: '22', value: issuerId},
+]);
+
 // An offer that expired one second after the epoch
 const expiredOffer = 'lno1pgx9getnwss8vetrw3hhyucwqyq3vggzamrjghtt05kvkvpcp0' +
   'a79gmy3nt6jsn98ad2xs8de6sl9qmgvcvs';
@@ -343,6 +350,24 @@ const tests = [
     },
     description: 'An offer with a truncated currency UTF-8 sequence is invalid',
     error: 'ExpectedValidUtf8CurrencyInOffer',
+  },
+  {
+    args: {offer: formattedOffer},
+    description: 'Control and format characters in offer text are parsed',
+    expected: makeExpected(formattedOffer, {
+      description: 'Test\nvectors',
+      issuer: 'issuer\u200d',
+    }),
+  },
+  {
+    args: {
+      offer: asOffer([
+        {type: '12', value: '0002'},
+        {type: '22', value: issuerId},
+      ]),
+    },
+    description: 'An offer with non-minimal feature bits is invalid',
+    error: 'ExpectedMinimalFeatureBitsEncodingInOffer',
   },
 ];
 

@@ -1,5 +1,6 @@
 const strictSame = require('node:assert').strict.deepStrictEqual;
 const test = require('node:test');
+const {throws} = require('node:assert').strict;
 
 const numberAsWords = require('./../../bolt11/number_as_words');
 
@@ -34,11 +35,25 @@ const tests = [
     description: 'A week of expiration seconds is converted to words',
     expected: {words: [18, 14, 20, 0]},
   },
+  {
+    args: {number: -1},
+    description: 'A negative number cannot be converted to words',
+    error: 'ExpectedUnsignedFiniteNumberToConvertNumberToWords',
+  },
+  {
+    args: {number: Infinity},
+    description: 'An infinite number cannot be converted to words',
+    error: 'ExpectedUnsignedFiniteNumberToConvertNumberToWords',
+  },
 ];
 
-tests.forEach(({args, description, expected}) => {
+tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
-    strictSame(numberAsWords(args), expected, 'Got expected words');
+    if (!!error) {
+      throws(() => numberAsWords(args), new Error(error), 'Got error');
+    } else {
+      strictSame(numberAsWords(args), expected, 'Got expected words');
+    }
 
     return end();
   });

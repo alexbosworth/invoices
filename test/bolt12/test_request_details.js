@@ -10,7 +10,7 @@ const chains = {
   value: '6fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d6190000000000',
 };
 const description = {type: '10', value: '5465737420766563746f7273'};
-const features = {type: '12', value: '00'};
+const features = {type: '12', value: '02'};
 const metadata = {type: '0', value: '0000000000000000'};
 const quantityMax = {type: '20', value: '05'};
 const unlimitedQuantity = {type: '20', value: ''};

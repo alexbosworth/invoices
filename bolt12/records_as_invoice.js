@@ -12,6 +12,7 @@ const asDateString = ms => new Date(ms).toISOString();
 const defaultExpirySeconds = 7200;
 const findRecord = (records, type) => records.find(n => n.type === type);
 const hashByteLength = 32;
+const hasLeadingZeroByte = hex => /^00/.test(hex);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const hexByteLength = hex => hex.length / 2;
 const {isArray} = Array;
@@ -173,6 +174,11 @@ module.exports = ({network, records}) => {
     } catch (err) {
       throw new Error('ExpectedValidRelativeExpiryInInvoice');
     }
+  }
+
+  // Leading zero bytes are a non-minimal encoding of the feature bits
+  if (!!features && hasLeadingZeroByte(features.value)) {
+    throw new Error('ExpectedMinimalFeatureBitsEncodingInInvoice');
   }
 
   if (!!features) {

@@ -62,6 +62,39 @@ const experimentalOffer = hexAsString({
   prefix: 'lno',
 }).string;
 
+// An offer with a line break in its description, which is not responded to
+const lineBreakOffer = hexAsString({
+  hex: encodeTlvStream({
+    records: [
+      {type: '10', value: Buffer.from('Test\nvectors').toString('hex')},
+      {type: '22', value: alice},
+    ],
+  }).encoded,
+  prefix: 'lno',
+}).string;
+
+// An offer with a joiner in its issuer, which is not responded to
+const joinerOffer = hexAsString({
+  hex: encodeTlvStream({
+    records: [
+      {type: '18', value: Buffer.from('issuer\u200d').toString('hex')},
+      {type: '22', value: alice},
+    ],
+  }).encoded,
+  prefix: 'lno',
+}).string;
+
+// An offer with an unassigned character, which a reader is allowed to accept
+const unassignedOffer = hexAsString({
+  hex: encodeTlvStream({
+    records: [
+      {type: '10', value: Buffer.from('Test\uffffvectors').toString('hex')},
+      {type: '22', value: alice},
+    ],
+  }).encoded,
+  prefix: 'lno',
+}).string;
+
 // The BOLT 12 signature test vectors invoice request for Alice's offer
 const expected = {
   tag,
@@ -97,6 +130,13 @@ const testnetRequest = `0008${metadata}` +
 const multiNetworkRequest = `0008${metadata}` +
   `0240${testnet}${bitcoin}` +
   testVectors +
+  `1621${alice}` +
+  '520203e8' +
+  `5821${bob}`;
+
+// The text of an offer is copied into the request as it is
+const unassignedRequest = `0008${metadata}` +
+  `0a0e${Buffer.from('Test\uffffvectors').toString('hex')}` +
   `1621${alice}` +
   '520203e8' +
   `5821${bob}`;
@@ -157,6 +197,11 @@ const tests = [
     error: 'ExpectedDescriptionToCreateInvoiceRequestWithoutOffer',
   },
   {
+    args: makeArgs({description: 'refund\n', offer: undefined}),
+    description: 'A description cannot have a control character',
+    error: 'ExpectedValidUtf8DescriptionToCreateInvoiceRequest',
+  },
+  {
     args: makeArgs({description: 'refund', offer: undefined}),
     description: 'An amount is required without an offer',
     error: 'ExpectedMillitokensToCreateInvoiceRequestWithoutOffer',
@@ -182,9 +227,29 @@ const tests = [
     error: 'ExpectedIssuerStringToCreateInvoiceRequest',
   },
   {
+    args: makeArgs({
+      description: 'refund',
+      issuer: 'issuer\u200d',
+      mtokens: '1',
+      offer: undefined,
+    }),
+    description: 'An issuer cannot have a format character',
+    error: 'ExpectedValidUtf8IssuerToCreateInvoiceRequest',
+  },
+  {
     args: makeArgs({offer: expiredOffer}),
     description: 'An unexpired offer is required',
     error: 'ExpectedUnexpiredOfferToCreateInvoiceRequest',
+  },
+  {
+    args: makeArgs({offer: lineBreakOffer}),
+    description: 'An offer description cannot have a control character',
+    error: 'ExpectedValidUtf8OfferTextToCreateInvoiceRequest',
+  },
+  {
+    args: makeArgs({offer: joinerOffer}),
+    description: 'An offer issuer cannot have a format character',
+    error: 'ExpectedValidUtf8OfferTextToCreateInvoiceRequest',
   },
   {
     args: makeArgs({quantity: 1}),
@@ -237,6 +302,16 @@ const tests = [
       encoded: multiNetworkRequest,
       hash: '72b7731eaf5c270ab9a62aa194b7e82ccd7fa4306a0ded6b85f814a451c90761',
       root: '57eeb3445ec42f92d1bafff0c3df6cbe267b30a437eb885c7ac148d94361ec53',
+    },
+  },
+  {
+    args: makeArgs({mtokens: '1000', offer: unassignedOffer}),
+    description: 'An offer with an unassigned character is responded to',
+    expected: {
+      tag,
+      encoded: unassignedRequest,
+      hash: 'f81dd84885cceb7ab7dbe316c925159853bab0abc7fd2e61035e22614ae547be',
+      root: '79111d759ea2b3f91955678073281f175112863d3d8c646636ba6d682a0f6159',
     },
   },
   {
