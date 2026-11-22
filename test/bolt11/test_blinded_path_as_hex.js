@@ -86,6 +86,16 @@ const tests = [
     error: 'ExpectedFeatureBitsToConvertBlindedPathToHex',
   },
   {
+    args: makeArgs({features: [{bit: -1}]}),
+    description: 'A feature bit cannot be negative',
+    error: 'ExpectedFeatureBitsToConvertBlindedPathToHex',
+  },
+  {
+    args: makeArgs({features: [{bit: 524280}]}),
+    description: 'A feature bit cannot be past the features length limit',
+    error: 'ExpectedFeatureBitInRangeToConvertBlindedPathToHex',
+  },
+  {
     args: makeArgs({fee_rate: undefined}),
     description: 'A fee rate is required',
     error: 'ExpectedFeeRateToConvertBlindedPathToHex',

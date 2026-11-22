@@ -18,7 +18,7 @@ const hops = [
     base_fee_mtokens: '10',
     channel: '600000x2000x3',
     cltv_delta: 40,
-    public_key: '021111111111111111111111111111111111111111111111111111111111111111',
+    public_key: '0220293926219d8efe733336e2b674570dd96aa763acb3564e6e367b384d861a0a',
     fee_rate: 100,
   },
 ];
@@ -29,6 +29,10 @@ const asWords = hints => {
 
   return hexAsWords({hex}).words;
 };
+
+// The first hop hint with a key that is not a point on the curve
+const [hop] = hops;
+const offCurve = `02${'ff'.repeat(32)}${hopAsHex(hop).hex.slice(66)}`;
 
 const tests = [
   {
@@ -45,6 +49,11 @@ const tests = [
     args: {words: asWords(hops.slice(Number(), 1)).slice(Number(), -2)},
     description: 'A truncated hop hint is rejected',
     error: 'UnexpectedRouteHintsLengthInPaymentRequest',
+  },
+  {
+    args: {words: hexAsWords({hex: offCurve}).words},
+    description: 'A hop hint public key must be a point on the curve',
+    error: 'ExpectedValidRouteHintPublicKeyInPaymentRequest',
   },
   {
     args: {words: asWords(hops.slice(Number(), 1))},

@@ -24,6 +24,16 @@ const tests = [
     error: 'UnknownCurrencyCodeInPaymentRequest',
   },
   {
+    args: makeArgs({prefix: 'lnconstructor'}),
+    description: 'An inherited name is not a network prefix',
+    error: 'UnknownCurrencyCodeInPaymentRequest',
+  },
+  {
+    args: makeArgs({prefix: `ln${'2'.repeat(1e5)}!!`}),
+    description: 'A long prefix without a currency code is rejected',
+    error: 'InvalidPaymentRequestPrefix',
+  },
+  {
     args: makeArgs({}),
     description: 'A prefix is decoded',
     expected: {amount: '1', network: 'bitcoin', units: 'p'},

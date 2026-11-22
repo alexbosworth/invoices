@@ -13,9 +13,24 @@ const tests = [
     error: 'ExpectedPaymentRequestToByteEncode',
   },
   {
+    args: {request: ['lnbc1']},
+    description: 'A payment request string is expected',
+    error: 'ExpectedPaymentRequestToByteEncode',
+  },
+  {
+    args: {request: 'lnbc2500u'},
+    description: 'A valid bech32 encoding is expected',
+    error: 'ExpectedBech32EncodedRequestToByteEncode',
+  },
+  {
     args: {request: 'request'},
     description: 'A bech32 encoded payment request is expected',
     error: 'ExpectedLnPrefixToByteEncodePaymentRequest',
+  },
+  {
+    args: {request: 'LNBC1\u212a'},
+    description: 'A payment request cannot have a non-ASCII character',
+    error: 'ExpectedAsciiCharactersToByteEncodePaymentRequest',
   },
   {
     args: {

@@ -4,11 +4,13 @@ const bufferAsHex = buffer => buffer.toString('hex');
 const charset = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 const {from} = Array;
 const {fromWords} = bech32;
+const isAscii = n => /^[\x21-\x7e]+$/.test(n);
 const isConsistentCase = n => isLowerCase(n) || isUpperCase(n);
 const isLowerCase = n => n === n.toLowerCase();
 const isString = n => typeof n === 'string';
 const isUpperCase = n => n === n.toUpperCase();
 const joinPattern = /\+\s*/;
+const maxDataLength = Math.ceil(32768 * 8 / 5);
 const separator = '1';
 
 /** Decode a BOLT 12 bech32 style string into its hex encoded data
@@ -48,6 +50,11 @@ module.exports = ({prefix, string}) => {
 
   const joined = parts.join(String());
 
+  // A stream is at most 32768 bytes and a character encodes 5 bits of it
+  if (joined.length > `${prefix}${separator}`.length + maxDataLength) {
+    throw new Error('ExpectedBolt12StringWithinMaximumLength');
+  }
+
   // The string is either entirely upper case or entirely lower case
   if (!isConsistentCase(joined)) {
     throw new Error('ExpectedConsistentCaseInBolt12String');
@@ -57,6 +64,11 @@ module.exports = ({prefix, string}) => {
 
   if (!lowercase.startsWith(`${prefix}${separator}`)) {
     throw new Error('UnexpectedPrefixInBolt12String');
+  }
+
+  // Non-ASCII characters like the Kelvin sign can lowercase into bech32 chars
+  if (!isAscii(joined)) {
+    throw new Error('ExpectedAsciiCharactersInBolt12String');
   }
 
   const data = lowercase.slice(`${prefix}${separator}`.length);

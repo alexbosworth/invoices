@@ -25,9 +25,19 @@ const tests = [
     error: 'ExpectedBaseFeeMillitokensToConvertHopToHex',
   },
   {
+    args: makeArgs({base_fee_mtokens: '0x10'}),
+    description: 'Base fee millitokens are a decimal number string',
+    error: 'ExpectedEncodeableBaseFeeMtokensToConvertHopToHex',
+  },
+  {
     args: makeArgs({channel: undefined}),
     description: 'A channel id is required',
     error: 'ExpectedChannelToConvertHopToHex',
+  },
+  {
+    args: makeArgs({channel: '598695x1105'}),
+    description: 'A channel id has a height, an index and an output',
+    error: 'ExpectedStandardFormatChannelToConvertHopToHex',
   },
   {
     args: makeArgs({cltv_delta: undefined}),
@@ -43,6 +53,16 @@ const tests = [
     args: makeArgs({public_key: undefined}),
     description: 'A public key is required',
     error: 'ExpectedHopPublicKeyToConvertHopToHex',
+  },
+  {
+    args: makeArgs({public_key: '03e7156a'}),
+    description: 'A public key must be a hex encoded public key',
+    error: 'ExpectedHexHopPublicKeyToConvertHopToHex',
+  },
+  {
+    args: makeArgs({public_key: `02${'ff'.repeat(32)}`}),
+    description: 'A public key must be a point on the curve',
+    error: 'ExpectedValidHopPublicKeyToConvertHopToHex',
   },
   {
     args: makeArgs({}),

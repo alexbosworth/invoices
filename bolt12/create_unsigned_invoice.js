@@ -41,6 +41,9 @@ const {parse} = Date;
   Sign `hash` directly with a BIP 340 signature or sign `root` with `tag` as
   the tagged hash tag using the `node_id` key
 
+  The offer in a request is not checked to be an offer that was issued: check
+  the request `offer` against issued offers before signing an invoice for it
+
   `records` are added to the invoice, and have to be in the experimental
   range of invoice records, from 3000000000 to 3999999999
 

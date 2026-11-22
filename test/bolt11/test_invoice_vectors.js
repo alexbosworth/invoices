@@ -32,14 +32,13 @@ const accepted = {
   },
 };
 
-// Errors from the bech32 decoder, which end with the request that was decoded
-const decodeErrors = {
-  'Bech32 checksum is invalid': 'Invalid checksum for',
-  'Malformed bech32 string (mixed case)': 'Mixed-case string',
-};
-
 // Errors for the invalid BOLT 11 invoice test vectors
 const errors = {
+  'Bech32 checksum is invalid': 'ExpectedValidBech32EncodedPaymentRequest',
+  'Malformed bech32 string (mixed case)':
+    'ExpectedValidBech32EncodedPaymentRequest',
+  'Signature is not recoverable':
+    'ExpectedRecoverableSignatureInPaymentRequest',
   'Same, but with an `n` field of invalid length':
     'UnexpectedDestinationKeyLengthInPaymentRequest',
   'Missing required `p` field': 'ExpectedPaymentHashInPaymentRequest',
@@ -59,11 +58,6 @@ const errors = {
     'UnexpectedDuplicatePaymentIdentifierInPaymentRequest',
 };
 
-// Type errors from the signature library, for a signature it will not recover
-const signatureErrors = {
-  'Signature is not recoverable': 'Bad Recovery Id',
-};
-
 // Details of valid test vectors, when they are not the usual details
 const unusual = {
   // The S value is negated but the recovery flag is not, so the key changes
@@ -74,30 +68,11 @@ const unusual = {
   },
 };
 
-// The error that is expected for an invalid test vector
-const expectedError = ({description, invoice}) => {
-  if (!!decodeErrors[description]) {
-    return new Error(`${decodeErrors[description]} ${invoice}`);
-  }
-
-  if (!!signatureErrors[description]) {
-    return new TypeError(signatureErrors[description]);
-  }
-
-  return new Error(errors[description]);
-};
-
 // A reworded test vector description should not silently drop an expectation
 test('Every expected result is for an invoice test vector', (t, end) => {
   const descriptions = vectors.map(n => n.description);
 
-  const expectations = [
-    accepted,
-    decodeErrors,
-    errors,
-    signatureErrors,
-    unusual,
-  ];
+  const expectations = [accepted, errors, unusual];
 
   expectations.forEach(expected => {
     return keys(expected).forEach(description => {
@@ -114,7 +89,7 @@ vectors.forEach(({description, invoice, valid}) => {
 
     // An invalid vector fails with an error unless it is parsed by choice
     if (!valid && !accepted[description]) {
-      const error = expectedError({description, invoice});
+      const error = new Error(errors[description]);
 
       throws(() => parsePaymentRequest({request}), error, 'Got error');
 

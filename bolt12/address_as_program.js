@@ -82,6 +82,8 @@ module.exports = ({address}) => {
     }
   }
 
+  // Later versions are not held to a length, as only version zero has fixed
+  // lengths: a 2 byte version one program is a valid pay to anchor address
   if (length < minProgramByteLength || length > maxProgramByteLength) {
     throw new Error('ExpectedWitnessProgramByteLengthInChainAddress');
   }

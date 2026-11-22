@@ -32,6 +32,22 @@ const tests = [
     error: 'ExpectedValidAddressToDeriveChainDetails',
   },
   {
+    args: makeArgs({address: 'bc1pfeessrawgf', network: 'bitcoin'}),
+    description: 'A pay to anchor address is converted to details',
+    expected: {hash: '4e73', version: 1},
+  },
+  {
+    args: makeArgs({
+      address: 'bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0',
+      network: 'bitcoin',
+    }),
+    description: 'A Taproot address is converted to details',
+    expected: {
+      hash: '79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798',
+      version: 1,
+    },
+  },
+  {
     args: makeArgs({}),
     description: 'A chain address is converted to words',
     expected: {

@@ -86,6 +86,14 @@ const tests = [
     error: 'ExpectedSignatureForPaymentRequestWithoutBlindedPaths',
   },
   {
+    args: {
+      hrp: blinded.prefix,
+      tags: blindedTags.concat(Array(7089).fill(Number())),
+    },
+    description: 'A signed request within the maximum length is required',
+    error: 'ExpectedSignedPaymentRequestWithinMaximumLength',
+  },
+  {
     args: makeArgs({}),
     description: 'A signed payment request is assembled',
     expected: {request},

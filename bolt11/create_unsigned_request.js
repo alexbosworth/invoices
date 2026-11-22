@@ -1,6 +1,7 @@
 const {createHash} = require('crypto');
 
 const {featureFlagsAsWords} = require('bolt09');
+const {isPoint} = require('tiny-secp256k1');
 
 const blindedPathAsHex = require('./blinded_path_as_hex');
 const chainAddressAsWords = require('./chain_address_as_words');
@@ -20,18 +21,26 @@ const wordsAsBuffer = require('./words_as_buffer');
 const decBase = 10;
 const flatten = arr => [].concat(...arr);
 const {floor} = Math;
+const hashHexLength = 64;
+const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
+const isHash = n => isHex(n) && n.length === hashHexLength;
+const isHex = n => typeof n === 'string' && /^([0-9a-f]{2})*$/i.test(n);
 const {isInteger} = Number;
+const isKey = n => isHex(n) && keyPattern.test(n) && isPoint(hexAsBuffer(n));
 const isPositiveSafeInteger = n => Number.isSafeInteger(n) && n > 0;
 const isText = n => textValidity({text: n}).is_writable;
+const keyPattern = /^0[23][0-9a-f]{64}$/i;
 const {keys} = Object;
 const maxDescriptionLen = 639;
 const maxFeatureBit = 1023 * 5 - 1;
+const maxRequestLength = 7089;
 const maxTimestamp = Math.pow(2, 35) - 1;
 const msPerSec = 1e3;
 const mtokPerTok = 1e3;
 const {now} = Date;
 const {parse} = Date;
+const signedOverheadLength = 1 + 104 + 6;
 const timestampWordLength = 7;
 const tokensAsMtokens = n => !n ? '0' : (BigInt(n) * BigInt(1e3)).toString();
 
@@ -96,6 +105,12 @@ module.exports = args => {
     throw new Error('ExpectedValidCltvDeltaToEncodePaymentRequest');
   }
 
+  const addresses = args.chain_addresses;
+
+  if (addresses !== undefined && !isArray(addresses)) {
+    throw new Error('ExpectedArrayOfChainAddressesToEncodePaymentRequest');
+  }
+
   // An explicit creation date must be a valid ISO 8601 date
   if (args.created_at !== undefined && !isDate(args.created_at)) {
     throw new Error('ExpectedValidCreatedAtDateToEncodePaymentRequest');
@@ -113,6 +128,21 @@ module.exports = args => {
     throw new Error('ExpectedValidUtf8DescriptionToEncodePaymentRequest');
   }
 
+  const descriptionHash = args.description_hash;
+
+  // A request has either a description or a description hash, not both
+  if (args.description !== undefined && descriptionHash !== undefined) {
+    throw new Error('UnexpectedDescriptionAndHashToEncodePaymentRequest');
+  }
+
+  if (descriptionHash !== undefined && !isHash(descriptionHash)) {
+    throw new Error('ExpectedValidDescriptionHashToEncodePaymentRequest');
+  }
+
+  if (args.destination !== undefined && !isKey(args.destination)) {
+    throw new Error('ExpectedValidDestinationKeyToEncodePaymentRequest');
+  }
+
   // An explicit expiration date must be a valid ISO 8601 date
   if (args.expires_at !== undefined && !isDate(args.expires_at)) {
     throw new Error('ExpectedValidExpiresAtDateToEncodePaymentRequest');
@@ -120,6 +150,11 @@ module.exports = args => {
 
   if (!args.id) {
     throw new Error('ExpectedPaymentHashWhenEncodingPaymentRequest');
+  }
+
+  // Hex that is not valid would be cut short when it is encoded
+  if (!isHash(args.id)) {
+    throw new Error('ExpectedValidPaymentHashToEncodePaymentRequest');
   }
 
   if (args.features !== undefined && !isArray(args.features)) {
@@ -137,6 +172,12 @@ module.exports = args => {
     throw new Error('ExpectedFeatureBitWithinMaximumToEncodePaymentRequest');
   }
 
+  const {metadata} = args;
+
+  if (metadata !== undefined && (!metadata || !isHex(metadata))) {
+    throw new Error('ExpectedHexMetadataToEncodePaymentRequest');
+  }
+
   if (args.paths !== undefined && !isArray(args.paths)) {
     throw new Error('ExpectedArrayOfBlindedPathsToEncodePaymentRequest');
   }
@@ -149,6 +190,16 @@ module.exports = args => {
   // A path id in the encrypted data replaces the payment identifier
   if (!!args.paths && !!args.payment) {
     throw new Error('UnexpectedPaymentIdAndBlindedPathsInPaymentRequest');
+  }
+
+  if (args.payment !== undefined && !isHash(args.payment)) {
+    throw new Error('ExpectedValidPaymentIdentifierToEncodePaymentRequest');
+  }
+
+  const isRoutes = n => isArray(n) && n.every(route => isArray(route));
+
+  if (args.routes !== undefined && !isRoutes(args.routes)) {
+    throw new Error('ExpectedArrayOfRoutesToEncodePaymentRequest');
   }
 
   const createdAtMs = !args.created_at ? now() : parse(args.created_at);
@@ -336,6 +387,14 @@ module.exports = args => {
   });
 
   const allTags = flatten(createdAtWords.concat(tagWords));
+
+  // Signing adds a separator, 104 signature words and a 6 character checksum
+  const signedLength = hrp.length + allTags.length + signedOverheadLength;
+
+  // A request that would be over the limit when signed is refused up front
+  if (signedLength > maxRequestLength) {
+    throw new Error('ExpectedLengthWithinLimitToEncodePaymentRequest');
+  }
 
   const preimage = Buffer.concat([
     Buffer.from(hrp, 'ascii'),

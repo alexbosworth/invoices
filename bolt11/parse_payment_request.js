@@ -14,6 +14,7 @@ const taggedFields = require('./tagged_fields');
 const wordsAsNumber = require('./words_as_number');
 
 const asHex = arr => Buffer.from(arr).toString('hex');
+const attempt = method => { try { return method(); } catch (err) { return; } };
 const {decode} = bech32;
 const hasBlindedPath = n => n.blinded_path !== undefined;
 const hasDescription = n => n.description !== undefined;
@@ -24,6 +25,7 @@ const hasRouteHints = n => n.path !== undefined;
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const isAscii = n => /^[\x21-\x7e]+$/.test(n);
 const isLowSRequired = true;
+const isString = n => typeof n === 'string';
 const {keys} = Object;
 const maxRequestLength = 7089;
 const msPerSec = 1e3;
@@ -98,7 +100,7 @@ const timestampWordLength = 7;
   }
 */
 module.exports = ({request}) => {
-  if (!request) {
+  if (!request || !isString(request)) {
     throw new Error('ExpectedPaymentRequest');
   }
 
@@ -106,7 +108,8 @@ module.exports = ({request}) => {
     throw new Error('ExpectedLnPrefix');
   }
 
-  // A QR code constrains the maximum length of a payment request
+  // lnd and LDK do not accept a longer request: the limit is the digits that
+  // a QR code can hold, which is far more than the request that fits in one
   if (request.length > maxRequestLength) {
     throw new Error('ExpectedPaymentRequestWithinMaximumLength');
   }
@@ -116,7 +119,14 @@ module.exports = ({request}) => {
     throw new Error('ExpectedAsciiCharactersInPaymentRequest');
   }
 
-  const {prefix, words} = decode(request, maxRequestLength);
+  // Decoding fails on a bad checksum, mixed case or a non-bech32 character
+  const decoded = attempt(() => decode(request, maxRequestLength));
+
+  if (!decoded) {
+    throw new Error('ExpectedValidBech32EncodedPaymentRequest');
+  }
+
+  const {prefix, words} = decoded;
 
   const signatureWords = words.slice(-sigWordsCount);
   const wordsWithoutSig = words.slice(Number(), -sigWordsCount);
@@ -172,15 +182,21 @@ module.exports = ({request}) => {
     throw new Error('InvalidDestinationPublicKeyInPaymentRequest');
   }
 
+  const isSigned = () => {
+    return verify(hash, hexAsBuffer(key), signature, isLowSRequired);
+  };
+
   // A specified destination key is used to check the signature directly
-  if (!!key && !verify(hash, hexAsBuffer(key), signature, isLowSRequired)) {
+  if (!!key && !attempt(isSigned)) {
     throw new Error('InvalidSignatureForDestinationPublicKey');
   }
 
   // Without a destination key the public key is recovered from the signature
-  const recovered = key || recover(hash, signature, recovery, true);
+  const recovered = key || attempt(() => {
+    return recover(hash, signature, recovery, true);
+  });
 
-  // Recovery fails when the signature does not correspond to a curve point
+  // Recovery fails when the signature is out of range or is not on the curve
   if (!recovered) {
     throw new Error('ExpectedRecoverableSignatureInPaymentRequest');
   }

@@ -1,5 +1,6 @@
 const {decodeChanId} = require('bolt07');
 const {encodeChanId} = require('bolt07');
+const {isPoint} = require('tiny-secp256k1');
 
 const wordsAsBuffer = require('./words_as_buffer');
 
@@ -48,6 +49,11 @@ module.exports = ({words}) => {
     const feeRate = parseInt(routesBuffer.slice(45, 49).toString('hex'), 16);
     const idComponents = decodeChanIdBuffer(routesBuffer.slice(33, 41));
     const publicKey = routesBuffer.slice(0, 33).toString('hex');
+
+    // A key that is not a point on the curve cannot be routed through
+    if (!isPoint(routesBuffer.slice(0, 33))) {
+      throw new Error('ExpectedValidRouteHintPublicKeyInPaymentRequest');
+    }
 
     routesBuffer = routesBuffer.slice(51);
 

@@ -231,6 +231,17 @@ Assemble a signed payment request
 
 `signature` is not required when using blinded paths in the request
 
+A request longer than 7089 characters is refused: lnd, LDK and
+`parsePaymentRequest` do not accept a longer request. BOLT 11 has no limit and
+Core Lightning applies none, so this is a limit for compatibility and not a
+rule of the format. `createUnsignedRequest` refuses a request that would be
+longer than that when signed. `byteEncodeRequest` and `byteDecodeRequest` have
+no limit, as they only change the encoding of a request.
+
+The limit is the one that lnd set, the number of digits that a QR code can
+hold. It is not a size at which a request fits in a QR code: that is at most
+4296 characters, for an upper case request.
+
     {
       [destination]: <Destination Public Key Hex String>
       hrp: <Request Human Readable Part String>
@@ -271,6 +282,9 @@ Either `encoded` or `request` is required
 
 `node_id` is required when the request offer has no `issuer_id`, otherwise it
 defaults to the offer `issuer_id`
+
+The offer in a request is not checked to be an offer that was issued: check
+the request `offer` against issued offers before signing an invoice for it
 
 `records` are experimental invoice records, with types from 3000000000 to
 3999999999

@@ -14,6 +14,7 @@ const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const hopsCountByteLength = 1;
 const htlcMtokensByteLength = 8;
 const {isArray} = Array;
+const isBit = n => !!n && isInteger(n.bit) && n.bit >= 0;
 const isHex = n => !(n.length % 2) && /^[0-9A-F]*$/i.test(n);
 const {isInteger} = Number;
 const isHexString = n => typeof n === 'string' && isHex(n);
@@ -21,6 +22,7 @@ const isMtokens = n => typeof n === 'string' && /^\d+$/.test(n);
 const isUnsigned = (n, max) => isInteger(n) && n >= 0 && n <= max;
 const maxBaseFeeMtokens = BigInt(4294967295);
 const maxCltvDelta = 65535;
+const maxFeatureBit = 65535 * 8 - 1;
 const maxFeeRate = 4294967295;
 const maxHopsCount = 255;
 const maxHtlcMtokens = BigInt('18446744073709551615');
@@ -81,8 +83,13 @@ module.exports = args => {
     throw new Error('ExpectedArrayOfFeaturesToConvertBlindedPathToHex');
   }
 
-  if (!!args.features && !args.features.every(n => !!n && isInteger(n.bit))) {
+  if (!!args.features && !args.features.every(isBit)) {
     throw new Error('ExpectedFeatureBitsToConvertBlindedPathToHex');
+  }
+
+  // The features length is a 2 byte number
+  if (!!args.features && !args.features.every(n => n.bit <= maxFeatureBit)) {
+    throw new Error('ExpectedFeatureBitInRangeToConvertBlindedPathToHex');
   }
 
   if (args.fee_rate === undefined) {

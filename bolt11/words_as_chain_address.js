@@ -48,7 +48,8 @@ module.exports = ({network, words}) => {
   case addressVersions.p2sh:
     return {chain_address: asB58(hash, net.scriptHash)};
 
-  // SegWit and Taproot use bech32 address encoding
+  // SegWit and Taproot use bech32 address encoding. Version 1 is not held to
+  // the Taproot length: a 2 byte program is a valid pay to anchor address
   case addressVersions.witnessV0:
   case addressVersions.witnessV1:
     const {address} = encodeBech32Address({

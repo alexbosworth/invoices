@@ -1,4 +1,5 @@
 const {rawChanId} = require('bolt07');
+const {isPoint} = require('tiny-secp256k1');
 
 const unsignedAsBuffer = require('./unsigned_as_buffer');
 
@@ -6,10 +7,15 @@ const baseFeeByteLength = 4;
 const bufferAsHex = buffer => buffer.toString('hex');
 const cltvDeltaByteLength = 2;
 const feeRateByteLength = 4;
+const hexAsBuffer = hex => Buffer.from(hex, 'hex');
+const isChannel = n => typeof n === 'string' && /^\d+x\d+x\d+$/.test(n);
+const isMtokens = n => typeof n === 'string' && /^\d+$/.test(n);
+const isPublicKey = n => typeof n === 'string' && publicKey.test(n);
 const isUnsigned = (n, max) => Number.isInteger(n) && n >= 0 && n <= max;
 const maxBaseFeeMtokens = 4294967295;
 const maxCltvDelta = 65535;
 const maxFeeRate = 4294967295;
+const publicKey = /^0[23][0-9a-f]{64}$/i;
 
 /** Hop as raw hop hint hex data
 
@@ -34,12 +40,20 @@ module.exports = args => {
     throw new Error('ExpectedBaseFeeMillitokensToConvertHopToHex');
   }
 
-  if (!isUnsigned(Number(args.base_fee_mtokens), maxBaseFeeMtokens)) {
+  const baseFee = args.base_fee_mtokens;
+
+  // Only decimal digits are a number of millitokens: 0x10 is not sixteen
+  if (!isMtokens(baseFee) || !isUnsigned(Number(baseFee), maxBaseFeeMtokens)) {
     throw new Error('ExpectedEncodeableBaseFeeMtokensToConvertHopToHex');
   }
 
   if (!args.channel) {
     throw new Error('ExpectedChannelToConvertHopToHex');
+  }
+
+  // A channel id that is missing a part would be encoded as a different id
+  if (!isChannel(args.channel)) {
+    throw new Error('ExpectedStandardFormatChannelToConvertHopToHex');
   }
 
   if (!args.cltv_delta) {
@@ -62,9 +76,19 @@ module.exports = args => {
     throw new Error('ExpectedHopPublicKeyToConvertHopToHex');
   }
 
+  // Hex that is not valid would be cut short when it is encoded
+  if (!isPublicKey(args.public_key)) {
+    throw new Error('ExpectedHexHopPublicKeyToConvertHopToHex');
+  }
+
+  // A key that is not a point on the curve cannot be routed through
+  if (!isPoint(hexAsBuffer(args.public_key))) {
+    throw new Error('ExpectedValidHopPublicKeyToConvertHopToHex');
+  }
+
   const encoded = Buffer.concat([
-    Buffer.from(args.public_key, 'hex'),
-    Buffer.from(rawChanId({channel: args.channel}).id, 'hex'),
+    hexAsBuffer(args.public_key),
+    hexAsBuffer(rawChanId({channel: args.channel}).id),
     unsignedAsBuffer({number: args.base_fee_mtokens, size: baseFeeByteLength}),
     unsignedAsBuffer({number: args.fee_rate, size: feeRateByteLength}),
     unsignedAsBuffer({number: args.cltv_delta, size: cltvDeltaByteLength}),

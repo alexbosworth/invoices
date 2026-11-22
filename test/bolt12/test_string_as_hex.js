@@ -43,6 +43,21 @@ const tests = [
     error: 'ExpectedValidBech32PaddingInBolt12String',
   },
   {
+    args: {prefix: 'lno', string: `lno1${'q'.repeat(52430)}`},
+    description: 'A string cannot be longer than the largest stream',
+    error: 'ExpectedBolt12StringWithinMaximumLength',
+  },
+  {
+    args: {prefix: 'lno', string: 'LNO1\u212a'},
+    description: 'A Kelvin sign is not an upper case bech32 character',
+    error: 'ExpectedAsciiCharactersInBolt12String',
+  },
+  {
+    args: {prefix: 'lno', string: `lno1${'q'.repeat(52429)}`},
+    description: 'A string for the largest stream is decoded',
+    expected: {hex: '00'.repeat(32768)},
+  },
+  {
     args: {prefix: 'lno', string: 'lno1pgqcq'},
     description: 'A short string is decoded',
     expected: {hex: '0a0180'},

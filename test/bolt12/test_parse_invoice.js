@@ -283,6 +283,17 @@ const tests = [
   },
   {
     args: {
+      encoded: resign(
+        n => n.type !== '170' ? n : {...n, value: '01'},
+        aliceSecret,
+        hexAsRecords({hex: pathInvoice.encoded}).records
+      ),
+    },
+    description: 'The amount must be the offer amount when none is requested',
+    error: 'ExpectedInvoiceAmountToBeOfferAmountForQuantity',
+  },
+  {
+    args: {
       encoded: encodeTlvStream({
         records: records.map(n => n.type !== '240' ? n : {...n, value: '00'}),
       }).encoded,

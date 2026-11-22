@@ -123,6 +123,103 @@ const tests = [
     args: {
       description: 'coffee beans',
       id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      routes: Array.from({length: 8}, () => routeWithHops(12)),
+    },
+    description: 'A request cannot be over the length limit when it is signed',
+    error: 'ExpectedLengthWithinLimitToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      description_hash: '00'.repeat(32),
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A description and a description hash are exclusive',
+    error: 'UnexpectedDescriptionAndHashToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description_hash: 'zz'.repeat(32),
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A description hash must be a hex encoded hash',
+    error: 'ExpectedValidDescriptionHashToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      destination: '02' + '11'.repeat(31),
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A destination must be a public key',
+    error: 'ExpectedValidDestinationKeyToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      destination: '02' + 'ff'.repeat(32),
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A destination must be a valid public key',
+    error: 'ExpectedValidDestinationKeyToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: 'zz'.repeat(32),
+      network: 'bitcoin',
+    },
+    description: 'A payment hash must be hex encoded',
+    error: 'ExpectedValidPaymentHashToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '00'.repeat(31),
+      network: 'bitcoin',
+    },
+    description: 'A payment hash must be 32 bytes',
+    error: 'ExpectedValidPaymentHashToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      metadata: 'metadata',
+      network: 'bitcoin',
+    },
+    description: 'Metadata must be hex encoded',
+    error: 'ExpectedHexMetadataToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      metadata: '',
+      network: 'bitcoin',
+    },
+    description: 'Empty metadata is not ignored',
+    error: 'ExpectedHexMetadataToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      payment: '00'.repeat(31),
+    },
+    description: 'A payment identifier must be 32 bytes',
+    error: 'ExpectedValidPaymentIdentifierToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
       network: 'network',
     },
     description: 'A known network is required',
@@ -234,6 +331,46 @@ const tests = [
     },
     description: 'A creation date has to be a valid date',
     error: 'ExpectedValidCreatedAtDateToEncodePaymentRequest',
+  },
+  {
+    args: {
+      created_at: '2017-06-01 at noon',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'A creation date has to have a valid time',
+    error: 'ExpectedValidCreatedAtDateToEncodePaymentRequest',
+  },
+  {
+    args: {
+      chain_addresses: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+    },
+    description: 'Chain addresses are expected as an array',
+    error: 'ExpectedArrayOfChainAddressesToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      routes: 'routes',
+    },
+    description: 'Routes are expected as an array',
+    error: 'ExpectedArrayOfRoutesToEncodePaymentRequest',
+  },
+  {
+    args: {
+      description: 'coffee beans',
+      id: '0001020304050607080900010203040506070809000102030405060708090102',
+      network: 'bitcoin',
+      routes: ['route'],
+    },
+    description: 'A route is expected as an array of hops',
+    error: 'ExpectedArrayOfRoutesToEncodePaymentRequest',
   },
   {
     args: {

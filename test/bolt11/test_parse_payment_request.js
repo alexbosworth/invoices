@@ -13,6 +13,11 @@ const tests = [
     error: 'ExpectedPaymentRequest',
   },
   {
+    description: 'A payment request string is required',
+    error: 'ExpectedPaymentRequest',
+    request: ['lnbc1'],
+  },
+  {
     description: 'A request with the ln prefix is required',
     error: 'ExpectedLnPrefix',
     request: 'bcrt1qw508d6qejxtdg4y5r3zarvary0c5xw7kygt080',
@@ -24,12 +29,12 @@ const tests = [
   },
   {
     description: 'A payment request with a valid checksum is required',
-    error: 'Invalid checksum for lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaq8rkx3yf5tcsyz3d73gafnh3cax9rn449d9p5uxz9ezhhypd0elx87sjle52x86fux2ypatgddc6k63n7erqz25le42c4u4ecky03ylcqca784x',
+    error: 'ExpectedValidBech32EncodedPaymentRequest',
     request: 'lnbc1pvjluezpp5qqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqqqsyqcyq5rqwzqfqypqdpl2pkx2ctnv5sxxmmwwd5kgetjypeh2ursdae8g6twvus8g6rfwvs8qun0dfjkxaq8rkx3yf5tcsyz3d73gafnh3cax9rn449d9p5uxz9ezhhypd0elx87sjle52x86fux2ypatgddc6k63n7erqz25le42c4u4ecky03ylcqca784x',
   },
   {
     description: 'A payment request with consistent letter case is required',
-    error: 'Mixed-case string lnbc2500u1PvJlUeZ',
+    error: 'ExpectedValidBech32EncodedPaymentRequest',
     request: 'lnbc2500u1PvJlUeZ',
   },
   {
@@ -39,7 +44,7 @@ const tests = [
   },
   {
     description: 'A payment request with a separator character is required',
-    error: 'No separator character for lnbc2500u',
+    error: 'ExpectedValidBech32EncodedPaymentRequest',
     request: 'lnbc2500u',
   },
   {

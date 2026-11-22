@@ -1,7 +1,8 @@
 const bech32CurrencyCodes = require('./conf/bech32_currency_codes');
 
+const {hasOwn} = Object;
 const simplePrefixPattern = /^ln(\S+)$/;
-const standardPrefixPattern = /^ln(\S+?)(\d*)([a-zA-Z]?)$/;
+const standardPrefixPattern = /^ln([a-zA-Z]+?)(\d*)([a-zA-Z]?)$/;
 
 /** Decode payment request prefix
 
@@ -32,11 +33,10 @@ module.exports = ({prefix}) => {
 
   const [, currency, amount, units] = prefixElements;
 
-  const network = bech32CurrencyCodes[currency];
-
-  if (!network) {
+  // Only own keys are currency codes, names like constructor are inherited
+  if (!hasOwn(bech32CurrencyCodes, currency)) {
     throw new Error('UnknownCurrencyCodeInPaymentRequest');
   }
 
-  return {amount, network, units};
+  return {amount, units, network: bech32CurrencyCodes[currency]};
 };

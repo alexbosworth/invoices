@@ -1,5 +1,13 @@
 # Versions
 
+## 6.3.5
+
+- `createSignedRequest` and `createUnsignedRequest`: Reject requests longer
+    than 7089 characters
+- `createUnsignedRequest`: Reject a description together with a description
+    hash
+- `parsePaymentRequest`: Return error codes for bech32 decoding failures
+
 ## 6.3.4
 
 - `createSignedInvoiceRequest`: Reject expired offers and disallowed Unicode in

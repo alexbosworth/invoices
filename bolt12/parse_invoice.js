@@ -5,6 +5,7 @@ const hexAsRecords = require('./hex_as_records');
 const hexAsString = require('./hex_as_string');
 const recordRange = require('./record_range');
 const recordsAsInvoice = require('./records_as_invoice');
+const recordsAsOffer = require('./records_as_offer');
 const requestDetails = require('./request_details');
 const {safeTokens} = require('./../bolt00');
 const stringAsHex = require('./string_as_hex');
@@ -13,9 +14,11 @@ const unsignedDetails = require('./unsigned_details');
 const verifySignature = require('./verify_signature');
 
 const allowedRanges = ['invoice', 'offer', 'request', 'signature'];
+const defaultQuantity = 1;
 const findRecord = (records, type) => records.find(n => n.type === type);
 const isEven = type => !(BigInt(type) % BigInt(2));
 const isHex = n => !(n.length % 2) && /^[0-9A-F]*$/i.test(n);
+const isIssuerOptional = true;
 const isSignatureType = type => recordRange({type}).range === 'signature';
 const isString = n => typeof n === 'string';
 const last = arr => arr[arr.length - [arr].length];
@@ -177,6 +180,20 @@ module.exports = args => {
   // An invoice for a specific requested amount must be for that amount
   if (hasRequestedAmount && request.mtokens !== details.mtokens) {
     throw new Error('ExpectedInvoiceAmountToBeRequestedAmount');
+  }
+
+  const offer = recordsAsOffer({
+    records,
+    is_issuer_optional: isIssuerOptional,
+  });
+
+  const quantity = BigInt(request.quantity || defaultQuantity);
+
+  // Without a requested amount the invoice is for the offer amount
+  if (!hasRequestedAmount && offer.mtokens !== undefined) {
+    if (BigInt(details.mtokens) !== BigInt(offer.mtokens) * quantity) {
+      throw new Error('ExpectedInvoiceAmountToBeOfferAmountForQuantity');
+    }
   }
 
   const {hash} = unsignedDetails({message, records});

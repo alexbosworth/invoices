@@ -15,6 +15,7 @@ const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
 const {keys} = Object;
 const {MAX_SAFE_INTEGER} = Number;
+const maxRequestLength = 7089;
 const padding = '0';
 const recoveryFlags = [0, 1, 2, 3];
 const timestampWordLength = 7;
@@ -22,6 +23,8 @@ const timestampWordLength = 7;
 /** Assemble a signed payment request
 
   `signature` is not required when using blinded paths in the request
+
+  A request longer than 7089 characters is refused, as lnd and LDK refuse one
 
   {
     [destination]: <Destination Public Key Hex String>
@@ -113,5 +116,15 @@ module.exports = ({destination, hrp, signature, tags}) => {
 
   const words = [].concat(tags).concat(sigWords.words);
 
-  return {request: encode(hrp, words, MAX_SAFE_INTEGER)};
+  const request = encode(hrp, words, MAX_SAFE_INTEGER);
+
+  // lnd and LDK will not create or parse a request over 7089 characters and
+  // neither will parsePaymentRequest, so a longer request is refused. BOLT 11
+  // has no limit and Core Lightning applies none. The number is the digits
+  // that a QR code can hold: a request of that length does not fit in one
+  if (request.length > maxRequestLength) {
+    throw new Error('ExpectedSignedPaymentRequestWithinMaximumLength');
+  }
+
+  return {request};
 };

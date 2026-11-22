@@ -8,7 +8,10 @@ const wordsAsChainAddress = require('./../../bolt11/words_as_chain_address');
 const asWords = address => chainAddressAsWords({address, network: 'bitcoin'});
 
 // Fallback addresses from the BOLT 11 spec examples
+const p2aAddress = 'bc1pfeessrawgf';
 const p2pkhAddress = '1RustyRX2oai4EYYDpQGWvEL62BBGqN9T';
+const p2trAddress =
+  'bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0';
 const p2shAddress = '3EktnHQD7RiAE6uzMj2ZifT9YgRrkSgzQX';
 const p2wpkhAddress = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4';
 const signetAddress = 'tb1q6qh9jsxr9tsf4fu5q29p26fmc8zh8m3rsjsp3c';
@@ -62,6 +65,16 @@ const tests = [
     }),
     description: 'Words are converted to a signet chain address',
     expected: {chain_address: signetAddress},
+  },
+  {
+    args: makeArgs({words: asWords(p2aAddress).words}),
+    description: 'Words are converted to a pay to anchor chain address',
+    expected: {chain_address: p2aAddress},
+  },
+  {
+    args: makeArgs({words: asWords(p2trAddress).words}),
+    description: 'Words are converted to a Taproot chain address',
+    expected: {chain_address: p2trAddress},
   },
   {
     args: makeArgs({words: [9, 1, 2, 3]}),
