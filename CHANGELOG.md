@@ -1,6 +1,6 @@
 # Versions
 
-## 6.3.5
+## 6.3.6
 
 - `createSignedRequest` and `createUnsignedRequest`: Reject requests longer
     than 7089 characters
